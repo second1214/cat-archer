@@ -89,6 +89,19 @@ export class Renderer {
     });
     items.push({ y: w.hero.y, f: () => this.drawHero(w) });
     items.sort((a, b) => a.y - b.y).forEach((it) => it.f());
+    // レーザー
+    for (const b of w.beams) {
+      const a = 1 - b.t / 0.14;
+      g.lineCap = "round";
+      g.strokeStyle = `rgba(255,40,60,${0.35 * a})`;
+      g.lineWidth = s * (b.extra ? 0.22 : 0.3);
+      g.beginPath(); g.moveTo(this.X(b.x1), this.Y(b.y1)); g.lineTo(this.X(b.x2), this.Y(b.y2)); g.stroke();
+      g.strokeStyle = b.crit ? `rgba(255,240,120,${a})` : `rgba(255,220,225,${a})`;
+      g.lineWidth = s * (b.extra ? 0.06 : 0.09);
+      g.beginPath(); g.moveTo(this.X(b.x1), this.Y(b.y1)); g.lineTo(this.X(b.x2), this.Y(b.y2)); g.stroke();
+      g.fillStyle = `rgba(255,80,90,${a})`;
+      g.beginPath(); g.arc(this.X(b.x2), this.Y(b.y2), s * 0.12, 0, Math.PI * 2); g.fill();
+    }
     // 毛玉
     for (const sh of w.shots) {
       const col = w.skills.fire ? "#ff8a3d" : w.skills.ice ? "#7fd8ff" : w.skills.poison ? "#8fd36a" : "#ff8fb8";

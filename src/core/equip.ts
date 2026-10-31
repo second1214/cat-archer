@@ -38,6 +38,8 @@ export interface Trait {
   /** プレイのはじめから持っているスキルのような効果 */
   bounce?: number;
   pierce?: boolean;
+  /** 毛玉の代わりに レーザー（敵をつらぬく） */
+  laser?: boolean;
   regen?: number; // ステージをクリアするたびに 体力の上限のこの割合 回復
 }
 
@@ -56,6 +58,8 @@ export const ITEMS: readonly ItemDef[] = [
     traits: [{ at: 2, desc: "毛玉が壁で1回はねる", bounce: 1 }, { at: 3, desc: "攻撃力 +15%", stats: { atkPct: 0.15 } }] },
   { id: "hone", slot: "weapon", name: "魚の骨", icon: "🦴", base: { atk: 14, aspd: -0.15 },
     traits: [{ at: 2, desc: "毛玉が敵をつらぬく", pierce: true }, { at: 3, desc: "会心の出やすさ +10%", stats: { crit: 0.1 } }] },
+  { id: "laser", slot: "weapon", name: "レーザーポインター", icon: "🔴", base: { atk: 8 },
+    traits: [{ at: 0, desc: "毛玉の代わりに レーザー（敵をつらぬく）", laser: true }, { at: 2, desc: "攻撃の速さ +10%", stats: { aspd: 0.1 } }, { at: 3, desc: "攻撃力 +20%", stats: { atkPct: 0.2 } }] },
   { id: "jarashi", slot: "weapon", name: "ねこじゃらし", icon: "🌾", base: { atk: 7, aspd: 0.2 },
     traits: [{ at: 2, desc: "攻撃の速さ +10%", stats: { aspd: 0.1 } }, { at: 3, desc: "攻撃力 +20%", stats: { atkPct: 0.2 } }] },
   { id: "akai", slot: "collar", name: "赤い首輪", icon: "❤️", base: { hp: 60 },

@@ -101,18 +101,20 @@ export interface Loadout {
   hp: number;
   bounce: number;
   pierce: boolean;
+  laser: boolean;
   regen: number;
 }
 
 /** 装備をふくめた、プレイ開始時の力。 */
 export function loadoutOf(save: SaveData): Loadout {
   let st = emptyStats();
-  let bounce = 0, pierce = false, regen = 0;
+  let bounce = 0, pierce = false, laser = false, regen = 0;
   for (const it of equippedItems(save)) {
     st = addStats(st, itemStats(it));
     for (const t of activeTraits(it)) {
       bounce += t.bounce ?? 0;
       pierce ||= !!t.pierce;
+      laser ||= !!t.laser;
       regen += t.regen ?? 0;
     }
   }
@@ -120,7 +122,7 @@ export function loadoutOf(save: SaveData): Loadout {
     stats: st,
     atk: (BASE_ATK + st.atk) * (1 + st.atkPct),
     hp: Math.round((BASE_HP + st.hp) * (1 + st.hpPct)),
-    bounce, pierce, regen,
+    bounce, pierce, laser, regen,
   };
 }
 
