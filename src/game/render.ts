@@ -27,6 +27,17 @@ type CatFrame = (typeof CAT_FRAMES)[number];
 const CAT_PX = 122;
 
 const imgs = new Map<CatFrame, HTMLImageElement>();
+/** 助っ人ねこの絵（猫ごとに 走る絵を1枚。はじめて出たときに読む） */
+const helperImgs = new Map<string, HTMLImageElement | null>();
+function helperImg(cat: string): HTMLImageElement | null {
+  if (!helperImgs.has(cat)) {
+    helperImgs.set(cat, null);
+    const im = new Image();
+    im.onload = () => helperImgs.set(cat, im);
+    im.src = `cat/${cat}/run2.png`;
+  }
+  return helperImgs.get(cat) ?? null;
+}
 let loadedCat = "";
 /** 主人公の猫の絵を読む（ちがう猫にしたら 入れかえる）。 */
 export function loadCatImages(cat: string): Promise<void> {
@@ -118,6 +129,7 @@ export class Renderer {
       g.fillStyle = gr;
       g.beginPath(); g.arc(x, y, rr * 1.6, 0, Math.PI * 2); g.fill();
     }
+    this.drawHelpers(w);
     this.drawFx(w);
     if (stick.active) {
       g.globalAlpha = 0.35;
@@ -362,6 +374,44 @@ export class Renderer {
       const bw = Math.max(r * 2.4, 0.7) * s, by = y - r * s * 1.3 - s * 0.3;
       g.fillStyle = "rgba(40,20,10,.6)"; g.fillRect(x - bw / 2, by, bw, 4);
       g.fillStyle = "#ff5a5a"; g.fillRect(x - bw / 2, by, bw * Math.max(0, e.hp / e.maxHp), 4);
+    }
+  }
+
+  /** 助っ人ねこ（ストライク）と またたび */
+  private drawHelpers(w: World): void {
+    const g = this.g, s = this.s;
+    for (const p of w.strikes.pickups) {
+      const x = this.X(p.x), y = this.Y(p.y) - Math.abs(Math.sin(p.t * 3)) * s * 0.12;
+      g.fillStyle = "rgba(140,220,120,.35)";
+      g.beginPath(); g.arc(x, y - s * 0.2, s * 0.42, 0, Math.PI * 2); g.fill();
+      g.strokeStyle = "#6b4a2a"; g.lineWidth = Math.max(2, s * 0.07); g.lineCap = "round";
+      g.beginPath(); g.moveTo(x - s * 0.18, y); g.lineTo(x + s * 0.2, y - s * 0.4); g.stroke();
+      g.fillStyle = "#5fae4a";
+      for (const [ox, oy, a] of [[-0.05, -0.15, -0.6], [0.1, -0.3, 0.5], [0.12, -0.08, -0.2]]) {
+        g.beginPath(); g.ellipse(x + ox * s, y + oy * s, s * 0.17, s * 0.08, a, 0, Math.PI * 2); g.fill();
+      }
+    }
+    for (const st of w.strikes.list) {
+      const im = helperImg(st.cat);
+      const k = st.kind === "dragon" ? 0.95 : st.kind === "mini" ? 0.4 : 0.6;
+      const x = this.X(st.x), y = this.Y(st.y);
+      // うしろに 光の すじ
+      const sp = Math.hypot(st.vx, st.vy) || 1;
+      g.strokeStyle = st.kind === "dragon" ? "rgba(255,200,60,.55)" : "rgba(255,255,255,.45)";
+      g.lineWidth = s * k * 0.35; g.lineCap = "round";
+      g.beginPath(); g.moveTo(x, y); g.lineTo(x - (st.vx / sp) * s * k * 1.1, y - (st.vy / sp) * s * k * 1.1); g.stroke();
+      if (st.kind === "dragon") {
+        const gr = g.createRadialGradient(x, y, 0, x, y, s * 0.8);
+        gr.addColorStop(0, "rgba(255,210,80,.55)"); gr.addColorStop(1, "rgba(255,210,80,0)");
+        g.fillStyle = gr; g.beginPath(); g.arc(x, y, s * 0.8, 0, Math.PI * 2); g.fill();
+      }
+      if (!im) { g.fillStyle = "#f2b06a"; g.beginPath(); g.arc(x, y, s * 0.25 * k, 0, Math.PI * 2); g.fill(); continue; }
+      const dw = (im.width / CAT_PX) * s * k, dh = (im.height / CAT_PX) * s * k;
+      g.save();
+      g.translate(x, y);
+      g.scale(st.vx < 0 ? -1 : 1, 1);
+      g.drawImage(im, -dw / 2, -dh / 2, dw, dh);
+      g.restore();
     }
   }
 

@@ -1,5 +1,6 @@
 // セーブ（ブラウザの localStorage）。読みこむときに 形をととのえる（古い・こわれたデータでも動くように）。
 import { CAT_IDS } from "./cats";
+import { G, minGrade, MAX_GRADE, RUNE_MAP, RUNE_SLOTS, RUNE_TYPES, runeEffects, type Rune, type RuneEffects, type RuneType } from "./runes";
 import { activeTraits, addStats, emptyStats, ITEM_MAP, itemStats, MAX_LEVEL, SLOTS, type Item, type Rarity, type Slot, type Stats } from "./equip";
 
 const KEY = "cat-archer/save";
@@ -20,8 +21,14 @@ export interface SaveData {
   chapter: number;
   /** 主人公の猫（見た目） */
   cat: string;
+  /** ルーン（持ち物）と、種類ごとの枠（uid か null） */
+  runes: Rune[];
+  runeSlots: Record<RuneType, (number | null)[]>;
   seed: number;
 }
+
+export const emptyRuneSlots = (): Record<RuneType, (number | null)[]> =>
+  Object.fromEntries(RUNE_TYPES.map((t) => [t, Array<number | null>(RUNE_SLOTS[t]).fill(null)])) as Record<RuneType, (number | null)[]>;
 
 export function newSave(): SaveData {
   return {
@@ -34,6 +41,8 @@ export function newSave(): SaveData {
     unlocked: 1,
     chapter: 1,
     cat: "chatora",
+    runes: [],
+    runeSlots: emptyRuneSlots(),
     seed: Math.floor(Math.random() * 2 ** 31),
   };
 }
@@ -60,16 +69,35 @@ export function normalize(raw: unknown): SaveData {
   const best: Record<number, number> = {};
   if (r.best && typeof r.best === "object") for (const [k, v] of Object.entries(r.best)) best[Number(k)] = Math.max(0, Math.min(10, Math.floor(num(v, 0))));
   const unlocked = Math.max(1, Math.min(CHAPTERS, Math.floor(num(r.unlocked, 1))));
+  const runes: Rune[] = Array.isArray(r.runes)
+    ? r.runes.filter((x): x is Rune => !!x && typeof x === "object" && typeof x.uid === "number" && typeof x.id === "string" && x.id in RUNE_MAP)
+      .map((x) => ({ uid: x.uid, id: x.id, g: Math.max(minGrade(RUNE_MAP[x.id].type), Math.min(MAX_GRADE, Math.floor(num(x.g, 0)))) }))
+    : [];
+  const runeSlots = emptyRuneSlots();
+  const used = new Set<number>();
+  for (const t of RUNE_TYPES) {
+    const src = (r.runeSlots as Record<string, unknown> | undefined)?.[t];
+    if (!Array.isArray(src)) continue;
+    runeSlots[t] = runeSlots[t].map((_, i) => {
+      const uid = src[i];
+      const ru = runes.find((x) => x.uid === uid);
+      if (!ru || RUNE_MAP[ru.id].type !== t || used.has(ru.uid)) return null;
+      used.add(ru.uid);
+      return ru.uid;
+    });
+  }
   return {
     version: SAVE_VERSION,
     coins: Math.max(0, Math.floor(num(r.coins, 0))),
     items,
     equipped,
-    nextUid: Math.max(num(r.nextUid, 1), ...items.map((x) => x.uid + 1), 1),
+    nextUid: Math.max(num(r.nextUid, 1), ...items.map((x) => x.uid + 1), ...runes.map((x) => x.uid + 1), 1),
     best,
     unlocked,
     chapter: Math.max(1, Math.min(unlocked, Math.floor(num(r.chapter, 1)))),
     cat: typeof r.cat === "string" && CAT_IDS.has(r.cat) ? r.cat : base.cat,
+    runes,
+    runeSlots,
     seed: Math.floor(num(r.seed, base.seed)),
   };
 }
@@ -103,12 +131,29 @@ export interface Loadout {
   pierce: boolean;
   laser: boolean;
   regen: number;
+  rune: RuneEffects;
+}
+
+export const equippedRunes = (save: SaveData): Rune[] =>
+  RUNE_TYPES.flatMap((t) => save.runeSlots[t]).map((uid) => save.runes.find((x) => x.uid === uid)).filter((x): x is Rune => !!x);
+
+/** 銘刻の枠: 付けている 祝福・能力・強化が ぜんぶ エピック以上で1つめ、レジェンドで2つめ、レジェンド+2で3つめ */
+export function etchedSlotsOpen(save: SaveData): number {
+  const std = (["blessing", "ability", "enhancement"] as const).flatMap((t) => save.runeSlots[t])
+    .map((uid) => save.runes.find((x) => x.uid === uid)).filter((x): x is Rune => !!x);
+  if (!std.length) return 0;
+  const low = Math.min(...std.map((x) => x.g));
+  return low >= G.legend2 ? 3 : low >= G.legend ? 2 : low >= G.epic ? 1 : 0;
 }
 
 /** 装備をふくめた、プレイ開始時の力。 */
 export function loadoutOf(save: SaveData): Loadout {
   let st = emptyStats();
   let bounce = 0, pierce = false, laser = false, regen = 0;
+  // 銘刻は 開いている枠の分だけ 効く
+  const open = etchedSlotsOpen(save);
+  const runes = equippedRunes(save).filter((x) => RUNE_MAP[x.id].type !== "etched" || save.runeSlots.etched.indexOf(x.uid) < open);
+  const rune = runeEffects(runes);
   for (const it of equippedItems(save)) {
     st = addStats(st, itemStats(it));
     for (const t of activeTraits(it)) {
@@ -120,9 +165,9 @@ export function loadoutOf(save: SaveData): Loadout {
   }
   return {
     stats: st,
-    atk: (BASE_ATK + st.atk) * (1 + st.atkPct),
-    hp: Math.round((BASE_HP + st.hp) * (1 + st.hpPct)),
-    bounce, pierce, laser, regen,
+    atk: (BASE_ATK + st.atk + rune.atk) * (1 + st.atkPct),
+    hp: Math.round((BASE_HP + st.hp + rune.hp) * (1 + st.hpPct)),
+    bounce, pierce, laser, regen, rune,
   };
 }
 

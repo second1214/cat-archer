@@ -43,8 +43,8 @@ describe("撃ち方", () => {
   });
   it("レーザーポインター（スキル）は 1度とったら もう出ない。武器がレーザーなら はじめから出ない", () => {
     for (let i = 0; i < 200; i++) {
-      expect(rollSkills({ laser: 1 }, mulberry32(i), 3, false, true)).not.toContain("laser");
-      expect(rollSkills({}, mulberry32(i), 3, false, true)).not.toContain("laser");
+      expect(rollSkills({ laser: 1 }, mulberry32(i), 3, { laser: true })).not.toContain("laser");
+      expect(rollSkills({}, mulberry32(i), 3, { laser: true })).not.toContain("laser");
     }
   });
   it("レーザーは 物で止まる", () => {
@@ -97,10 +97,10 @@ describe("撃ち方", () => {
   });
   it("攻撃が レーザーのときは つらぬく・とびうつる・レーザーは 出ない（ゆうどう・はねるは 出る）", () => {
     for (let i = 0; i < 200; i++) {
-      const r = rollSkills({}, mulberry32(i), 3, false, true);
+      const r = rollSkills({}, mulberry32(i), 3, { laser: true });
       expect(r.some((x) => LASER_USELESS.includes(x))).toBe(false);
     }
-    const seen = new Set(Array.from({ length: 300 }, (_, i) => rollSkills({}, mulberry32(i), 3, false, true)).flat());
+    const seen = new Set(Array.from({ length: 300 }, (_, i) => rollSkills({}, mulberry32(i), 3, { laser: true })).flat());
     expect(seen.has("homing")).toBe(true);
     expect(seen.has("bounce")).toBe(true);
   });
