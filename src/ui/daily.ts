@@ -1,6 +1,7 @@
 // 毎日の挑戦の 画面（ホームから）。レベルを選んで 挑戦・掃討。
 import { DAILIES, DAILY_STAGES, DAILY_TRIES, dailyOpen, dailyReward, finishDaily, levelChapter, maxLevel, sweepDaily, todayStr, triesLeft, type DailyId, type DailyReward } from "../core/daily";
 import { GRADE_NAMES } from "../core/runes";
+import { track } from "../core/missions";
 import { writeSave, type SaveData } from "../core/save";
 import { startBattle } from "./battle";
 import { fmt, h, overlay, toast } from "./dom";
@@ -50,6 +51,7 @@ export function openDaily(save: SaveData, rerender: () => void, shell: HTMLEleme
     startBattle(save, levelChapter(lv), (r) => {
       const cleared = r.won ? DAILY_STAGES : Math.max(0, r.stage - 1);
       const got = finishDaily(save, id, lv, cleared, todayStr());
+      track(save, "stages", cleared); track(save, "kills", r.kills);
       writeSave(save);
       shell.style.display = "";
       rerender();

@@ -40,7 +40,12 @@ export function runBot(lo: Loadout, chapter: number, seed = 1, maxT = 900, pref:
   const w = new World(lo, chapter, mulberry32(seed));
   const dt = 1 / 30;
   while (w.time < maxT && w.state !== "dead" && w.state !== "won") {
-    if (w.choices) { w.chooseSkill(pref.find((p) => w.choices!.includes(p)) ?? w.choices[0]); continue; }
+    if (w.choices) {
+      // 上位5つが 1つも無ければ 引きなおす（人も そうする）
+      if (!pref.slice(0, 5).some((p) => w.choices!.includes(p) && (w.skills[p] ?? 0) < 1) && w.reroll()) continue;
+      w.chooseSkill(pref.find((p) => w.choices!.includes(p)) ?? w.choices[0]);
+      continue;
+    }
     if (w.event) { w.chooseEvent(w.event.kind === "angel" ? "heal" : "refuse"); continue; }
     w.step(dt, botInput(w));
   }

@@ -3,6 +3,7 @@ import { CAT_IDS } from "./cats";
 import { enchantOpts, ENCHANT_Q_NAMES, G, minGrade, MAX_GRADE, RUNE_MAP, RUNE_SLOTS, RUNE_TYPES, runeEffects, type Rune, type RuneEffects, type RuneType } from "./runes";
 import { activeTraits, addStats, emptyStats, ITEM_MAP, itemStats, MAX_LEVEL, MAX_RARITY, setBonuses, SLOTS, type Item, type Rarity, type Slot, type Stats } from "./equip";
 import type { SkillId } from "./skills";
+import { emptyMissions, MISSIONS, type MissionId, type MissionState } from "./missions";
 import { DAILIES, DAILY_LEVELS, emptyDaily, type DailyId, type DailyState } from "./daily";
 import { emptyTalents, TALENT_MAX, TALENTS, talentValue, type TalentId } from "./talents";
 
@@ -48,6 +49,12 @@ export interface SaveData {
   runePity: number;
   /** 毎日の挑戦 */
   daily: DailyState;
+  /** キャットタワーで クリアした いちばん上の階 */
+  towerBest: number;
+  /** パトロールを 最後に 受け取った時刻（ミリ秒。0 は まだ） */
+  patrolAt: number;
+  /** 毎日のミッション */
+  missions: MissionState;
   /** ねこ修行（タレント）の レベル */
   talents: Record<TalentId, number>;
   seed: number;
@@ -77,6 +84,9 @@ export function newSave(): SaveData {
     stones: 0,
     runePity: 0,
     daily: emptyDaily(),
+    towerBest: 0,
+    patrolAt: 0,
+    missions: emptyMissions(),
     talents: emptyTalents(),
     seed: Math.floor(Math.random() * 2 ** 31),
   };
@@ -151,6 +161,14 @@ export function normalize(raw: unknown): SaveData {
       day: typeof r.daily?.day === "string" ? r.daily.day : "",
       used: Object.fromEntries(DAILIES.map((d) => [d.id, Math.max(0, Math.floor(num(r.daily?.used?.[d.id], 0)))])) as Record<DailyId, number>,
       best: Object.fromEntries(DAILIES.map((d) => [d.id, Math.max(0, Math.min(DAILY_LEVELS, Math.floor(num(r.daily?.best?.[d.id], 0))))])) as Record<DailyId, number>,
+    },
+    towerBest: Math.max(0, Math.floor(num(r.towerBest, 0))),
+    patrolAt: Math.max(0, num(r.patrolAt, 0)),
+    missions: {
+      day: typeof r.missions?.day === "string" ? r.missions.day : "",
+      prog: Object.fromEntries(MISSIONS.map((m) => [m.id, Math.max(0, Math.floor(num(r.missions?.prog?.[m.id], 0)))])) as Record<MissionId, number>,
+      claimed: Array.isArray(r.missions?.claimed) ? r.missions.claimed.filter((x): x is MissionId => MISSIONS.some((m) => m.id === x)) : [],
+      bonus: !!r.missions?.bonus,
     },
     talents: Object.fromEntries(TALENTS.map((t) => [t.id, Math.max(0, Math.min(TALENT_MAX, Math.floor(num(r.talents?.[t.id], 0))))])) as Record<TalentId, number>,
     seed: Math.floor(num(r.seed, base.seed)),
