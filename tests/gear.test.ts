@@ -13,7 +13,14 @@ describe("装備: 6段・合成素材", () => {
     const s = newSave();
     s.items = [it_(1, "keedama", 4), it_(2, "keedama", 4), it_(3, "keedama", 4)];
     s.equipped = { weapon: 1 };
-    expect(mergeItem(s, 1)?.r).toBe(MAX_RARITY);
+    expect(mergeItem(s, 1)?.r).toBe(5); // ミシック
+    expect(mergeItem(s, 1)).toBeNull();
+    // ミシックから上は 同じ装備の レジェンド 2つ（または レジェンドの素材）で 1段
+    s.items.push(it_(4, "keedama", 4), it_(5, "keedama", 4));
+    expect(mergeItem(s, 1)?.r).toBe(6);
+    s.materials[4] = 8;
+    for (let i = 0; i < 4; i++) mergeItem(s, 1);
+    expect(s.items[0].r).toBe(MAX_RARITY); // カオス
     expect(mergeItem(s, 1)).toBeNull();
   });
   it("分解すると 同じ品質の素材 1つ。素材は ほかの装備の 合成に使える", () => {
@@ -28,6 +35,11 @@ describe("装備: 6段・合成素材", () => {
     // 品質がちがう素材は 使えない
     s.materials[0] = 5;
     expect(mergeItem(s, 4)).toBeNull();
+  });
+  it("ミシック+の 分解は 使った レジェンドの数だけ レジェンドの素材", () => {
+    const s = newSave(); s.items = [it_(9, "vest", 7)]; s.equipped = {};
+    expect(dismantleItem(s, 9)).toBe(true);
+    expect(s.materials[4]).toBe(3 + 2 * 2);
   });
   it("付けている装備は 分解できない", () => {
     const s = newSave();
@@ -143,11 +155,12 @@ describe("チュール（ふやした もらい方）・20章", () => {
     expect(pullGacha(s, mulberry32(1), 1)).toHaveLength(1);
     expect(s.churu).toBe(0);
   });
-  it("20章まで。11章からは ゆっくり 強くなる", async () => {
+  it("50章まで。11章からは ゆっくり 強くなる", async () => {
     const { CHAPTERS } = await import("../src/core/save");
     const { chapterHp, CHAPTER_NAMES } = await import("../src/core/stages");
-    expect(CHAPTERS).toBe(20);
-    expect(CHAPTER_NAMES).toHaveLength(20);
+    expect(CHAPTERS).toBe(50);
+    expect(CHAPTER_NAMES).toHaveLength(50);
+    expect(new Set(CHAPTER_NAMES).size).toBe(50);
     expect(chapterHp(11) / chapterHp(10)).toBeLessThan(chapterHp(10) / chapterHp(9));
     expect(chapterHp(20)).toBeGreaterThan(chapterHp(10) * 3);
   });

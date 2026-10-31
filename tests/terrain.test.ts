@@ -60,3 +60,20 @@ describe("章ごとの虫", () => {
     expect(w.enemies.length).toBe(before + 1);
   });
 });
+
+describe("章の作り込み", () => {
+  it("章ごとに 顔ぶれが ちがい、新しい虫は その章から 出る。全部の虫が どこかで出る", async () => {
+    const { chapterRoster, stageInfo, ENEMIES, CHAPTER_COUNT } = await import("../src/core/stages");
+    const sig = (ch: number) => Array.from({ length: 10 }, (_, i) => stageInfo(ch, i + 1).enemies.join()).join("|");
+    const sigs = new Set(Array.from({ length: CHAPTER_COUNT }, (_, i) => sig(i + 1)));
+    expect(sigs.size).toBe(CHAPTER_COUNT);
+    const seen = new Set<string>();
+    for (let ch = 1; ch <= CHAPTER_COUNT; ch++) for (let s = 1; s <= 10; s++) for (const k of stageInfo(ch, s).enemies) {
+      expect(ENEMIES[k].from ?? 1).toBeLessThanOrEqual(ch);
+      seen.add(k);
+    }
+    for (const k of Object.keys(ENEMIES)) if (k !== "kemushiko") expect(seen.has(k)).toBe(true);
+    expect(chapterRoster(15)).toContain("kabuto");
+    expect(stageInfo(30, 5).enemies.length).toBeGreaterThan(1); // ボスに 子分
+  });
+});

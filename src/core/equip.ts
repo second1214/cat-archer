@@ -10,14 +10,17 @@ export const SLOT_NAMES: Record<Slot, string> = { weapon: "武器", clothes: "�
 /** ガチャ・画面での 分類 */
 export const SLOT_GROUP: Record<Slot, "武器" | "防具" | "アクセサリー"> = { weapon: "武器", clothes: "防具", hat: "防具", collar: "アクセサリー", charm: "アクセサリー" };
 
-/** 0 コモン・1 グレート・2 レア・3 エピック・4 レジェンド・5 ミシック */
-export type Rarity = 0 | 1 | 2 | 3 | 4 | 5;
-export const MAX_RARITY: Rarity = 5;
-export const RARITY_NAMES = ["コモン", "グレート", "レア", "エピック", "レジェンド", "ミシック"] as const;
+/** 0 コモン … 5 ミシック・6〜9 ミシック+1〜+4・10 カオス（本家の Chaotic） */
+export type Rarity = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
+export const MAX_RARITY: Rarity = 10;
+export const MYTHIC: Rarity = 5;
+export const RARITY_NAMES = ["コモン", "グレート", "レア", "エピック", "レジェンド", "ミシック", "ミシック+1", "ミシック+2", "ミシック+3", "ミシック+4", "カオス"] as const;
+/** ミシックから上は 本家と同じく レジェンドを 材料にする（同じ品質3つでは 届かないため） */
+export const fodderRarity = (r: Rarity): Rarity => (r >= MYTHIC ? 4 : r);
 /** 力の倍率（品質ごと） */
-export const RARITY_MUL = [1, 1.4, 1.9, 2.6, 3.6, 5] as const;
+export const RARITY_MUL = [1, 1.4, 1.9, 2.6, 3.6, 5, 5.5, 6.1, 6.7, 7.4, 9] as const;
 /** 強化できる最大レベル（品質ごと） */
-export const MAX_LEVEL = [10, 15, 20, 30, 40, 60] as const;
+export const MAX_LEVEL = [10, 15, 20, 30, 40, 60, 65, 70, 75, 80, 100] as const;
 /** 合成に使う数（自分を入れて） */
 export const MERGE_COUNT = 3;
 
@@ -194,15 +197,24 @@ export function itemStats(it: Item): Stats {
   for (const [k, v] of Object.entries(d.base) as [keyof Stats, number][]) {
     s[k] += k === "atk" || k === "hp" ? v * rm * lm : v < 0 ? v : v * (1 + 0.25 * it.r);
   }
-  for (const t of d.traits) {
+  for (const t of allTraits(it.id)) {
     if (it.r < t.at || !t.stats) continue;
     for (const [k, v] of Object.entries(t.stats) as [keyof Stats, number][]) s[k] += v;
   }
   return s;
 }
 
+/** ミシックより上で どの装備にも 付く 特性（本家の Mythic +2 / +4 / Chaotic にならう） */
+export const UPPER_TRAITS: readonly Trait[] = [
+  T(7, "ミシック+2: 攻撃力 +3%・最大体力 +3%", { stats: { atkPct: 0.03, hpPct: 0.03 } }),
+  T(9, "ミシック+4: 攻撃力 +5%・最大体力 +5%", { stats: { atkPct: 0.05, hpPct: 0.05 } }),
+  T(10, "カオス: 攻撃力 +10%・最大体力 +10%・攻撃の速さ +3%", { stats: { atkPct: 0.1, hpPct: 0.1, aspd: 0.03 } }),
+];
+/** その装備の 特性ぜんぶ（品質で 使えるかは 別） */
+export const allTraits = (id: string): Trait[] => [...(ITEM_MAP[id]?.traits ?? []), ...UPPER_TRAITS];
+
 /** 使えるようになった特性 */
-export const activeTraits = (it: Item): Trait[] => (ITEM_MAP[it.id]?.traits ?? []).filter((t) => it.r >= t.at);
+export const activeTraits = (it: Item): Trait[] => allTraits(it.id).filter((t) => it.r >= t.at);
 
 /** 付けている装備の シリーズごとの数と、効いている セット効果 */
 export function setBonuses(items: readonly Item[]): { series: SeriesDef; count: number; traits: Trait[] }[] {
@@ -227,21 +239,24 @@ export function upgradeCost(it: Item): number | null {
   return Math.round(40 * it.lv * (1 + it.r * 0.5));
 }
 
-/** 合成の材料: 同じ装備・同じ品質の 付けていないもの（レベルの低い順）＋ 足りない分の 合成素材。足りなければ null */
+/** 合成の材料: 同じ装備・同じ品質の 付けていないもの（レベルの低い順）＋ 足りない分の 合成素材。足りなければ null。
+ *  ミシックから上は 同じ装備の レジェンド（または レジェンドの 合成素材）が 材料 */
 export function mergePartners(items: readonly Item[], base: Item, equipped: ReadonlySet<number>, materials: readonly number[] = []): { mates: Item[]; mats: number } | null {
   if (base.r >= MAX_RARITY) return null;
   const mates = items
-    .filter((x) => x.uid !== base.uid && x.id === base.id && x.r === base.r && !equipped.has(x.uid) && !x.locked)
+    .filter((x) => x.uid !== base.uid && x.id === base.id && x.r === fodderRarity(base.r) && !equipped.has(x.uid) && !x.locked)
     .sort((a, b) => a.lv - b.lv)
     .slice(0, MERGE_COUNT - 1);
   const mats = MERGE_COUNT - 1 - mates.length;
-  return (materials[base.r] ?? 0) >= mats ? { mates, mats } : null;
+  return (materials[fodderRarity(base.r)] ?? 0) >= mats ? { mates, mats } : null;
 }
 
 /** 落ちる装備の品質（ボスは良いものが出やすい・章が進むと少し良くなる）。 */
 export function rollRarity(rng: Rng, chapter: number, boss: boolean): Rarity {
   const up = Math.min(0.15, (chapter - 1) * 0.02) + (boss ? 0.12 : 0);
-  return weighted<Rarity>(rng, [[0, 0.62 - up * 2], [1, 0.28 + up * 0.5], [2, 0.08 + up], [3, 0.02 + up * 0.5]]);
+  // 15章からは ときどき レジェンド（ミシックから先の 材料）
+  const legend = chapter >= 15 ? Math.min(0.06, 0.003 * (chapter - 14)) + (boss ? 0.03 : 0) : 0;
+  return weighted<Rarity>(rng, [[0, 0.62 - up * 2], [1, 0.28 + up * 0.5], [2, 0.08 + up], [3, 0.02 + up * 0.5], [4, legend]]);
 }
 
 /** シリーズ以外から 1つ */

@@ -619,17 +619,122 @@ function drawBug(g: CanvasRenderingContext2D, kind: string, R: number, t: number
       g.beginPath(); g.arc(R * 0.65, -R * 0.18, R * 0.09, 0, Math.PI * 2); g.arc(R * 0.65, R * 0.18, R * 0.09, 0, Math.PI * 2); g.fill();
       break;
     }
+    case "mukade": case "oomukade": {
+      const n = kind === "oomukade" ? 9 : 7;
+      for (let i = n - 1; i >= 0; i--) {
+        const x = (0.8 - i * (1.8 / n)) * R, yy = Math.sin(t * 10 - i * 0.8) * R * 0.14;
+        g.strokeStyle = "#e0a040"; g.lineWidth = Math.max(1.2, R * 0.06);
+        const sw = Math.sin(t * 18 + i) * R * 0.08;
+        g.beginPath(); g.moveTo(x, yy); g.lineTo(x + sw, yy - R * 0.42); g.moveTo(x, yy); g.lineTo(x - sw, yy + R * 0.42); g.stroke();
+        g.fillStyle = i === 0 ? "#3a1a12" : i % 2 ? "#8a2e1c" : "#a63a22";
+        g.beginPath(); g.ellipse(x, yy, R * 0.17, R * 0.24, 0, 0, Math.PI * 2); g.fill();
+      }
+      g.strokeStyle = "#e0a040"; g.lineWidth = Math.max(1.5, R * 0.07);
+      g.beginPath(); g.moveTo(R * 0.9, -R * 0.1); g.lineTo(R * 1.15, -R * 0.3); g.moveTo(R * 0.9, R * 0.1); g.lineTo(R * 1.15, R * 0.3); g.stroke();
+      if (kind === "oomukade") { g.fillStyle = "#ffd84a"; g.beginPath(); g.moveTo(R * 0.7, -R * 0.2); g.lineTo(R * 0.75, -R * 0.45); g.lineTo(R * 0.85, -R * 0.28); g.lineTo(R * 0.95, -R * 0.45); g.lineTo(R * 0.98, -R * 0.18); g.fill(); }
+      break;
+    }
+    case "batta": {
+      g.strokeStyle = "#4f8a2a"; g.lineWidth = Math.max(1.5, R * 0.1); g.lineCap = "round";
+      const k = Math.abs(Math.sin(t * 5)) * 0.25;
+      for (const sg of [-1, 1]) {
+        g.beginPath(); g.moveTo(-R * 0.1, sg * R * 0.2); g.lineTo(-R * 0.3, sg * R * (0.75 - k)); g.lineTo(-R * 1.05, sg * R * 0.35); g.stroke();
+        g.beginPath(); g.moveTo(R * 0.35, sg * R * 0.15); g.lineTo(R * 0.55, sg * R * 0.55); g.stroke();
+      }
+      g.fillStyle = "#86c24a";
+      g.beginPath(); g.ellipse(-R * 0.2, 0, R * 0.8, R * 0.3, 0, 0, Math.PI * 2); g.fill();
+      g.fillStyle = "#6aa83a";
+      g.beginPath(); g.ellipse(-R * 0.35, 0, R * 0.6, R * 0.16, 0, 0, Math.PI * 2); g.fill();
+      g.fillStyle = "#86c24a";
+      g.beginPath(); g.ellipse(R * 0.6, 0, R * 0.3, R * 0.26, 0, 0, Math.PI * 2); g.fill();
+      eyes(R * 0.7, 0, R * 0.11);
+      break;
+    }
+    case "ga": {
+      const fl = Math.sin(t * 16) * 0.35;
+      for (const sg of [-1, 1]) {
+        g.fillStyle = "#b9a27a";
+        g.beginPath(); g.ellipse(-R * 0.05, sg * R * 0.55, R * 0.7, R * 0.45, sg * (0.5 - fl), 0, Math.PI * 2); g.fill();
+        g.fillStyle = "#6e5a3e";
+        g.beginPath(); g.arc(-R * 0.1, sg * R * 0.6, R * 0.16, 0, Math.PI * 2); g.fill();
+        g.fillStyle = "#f2e2b8";
+        g.beginPath(); g.arc(-R * 0.1, sg * R * 0.6, R * 0.07, 0, Math.PI * 2); g.fill();
+      }
+      g.fillStyle = "#8a7552";
+      g.beginPath(); g.ellipse(0, 0, R * 0.55, R * 0.22, 0, 0, Math.PI * 2); g.fill();
+      g.strokeStyle = "#6e5a3e"; g.lineWidth = Math.max(1, R * 0.05);
+      for (const sg of [-1, 1]) { g.beginPath(); g.moveTo(R * 0.5, sg * R * 0.05); g.quadraticCurveTo(R * 0.85, sg * R * 0.1, R * 0.95, sg * R * 0.35); g.stroke(); }
+      eyes(R * 0.48, 0, R * 0.08);
+      break;
+    }
+    case "katatsumuri": {
+      g.fillStyle = "#c9b8a0";
+      g.beginPath(); g.ellipse(R * 0.1, R * 0.15, R * 0.95, R * 0.3, 0, 0, Math.PI * 2); g.fill();
+      g.strokeStyle = "#c9b8a0"; g.lineWidth = Math.max(1.5, R * 0.07);
+      for (const sg of [-1, 1]) { g.beginPath(); g.moveTo(R * 0.8, R * 0.05); g.lineTo(R * 1.05, sg * R * 0.35 - R * 0.1); g.stroke(); g.fillStyle = "#3a2c25"; g.beginPath(); g.arc(R * 1.05, sg * R * 0.35 - R * 0.1, R * 0.07, 0, Math.PI * 2); g.fill(); }
+      g.fillStyle = "#b5702e";
+      g.beginPath(); g.arc(-R * 0.15, -R * 0.1, R * 0.62, 0, Math.PI * 2); g.fill();
+      g.strokeStyle = "#7a4518"; g.lineWidth = Math.max(1.5, R * 0.08);
+      g.beginPath();
+      for (let i = 0; i <= 30; i++) { const a = i * 0.42, rr = R * 0.55 * (1 - i / 32); const px = -R * 0.15 + Math.cos(a) * rr, py = -R * 0.1 + Math.sin(a) * rr; i ? g.lineTo(px, py) : g.moveTo(px, py); }
+      g.stroke();
+      break;
+    }
+    case "tentou": {
+      g.fillStyle = "#1f1a18";
+      g.beginPath(); g.arc(R * 0.55, 0, R * 0.32, 0, Math.PI * 2); g.fill();
+      const fl = Math.sin(t * 30) * 0.12;
+      g.fillStyle = "#e0342a";
+      for (const sg of [-1, 1]) { g.beginPath(); g.ellipse(-R * 0.1, sg * R * (0.3 + fl), R * 0.7, R * 0.45, 0, 0, Math.PI * 2); g.fill(); }
+      g.fillStyle = "#1f1a18";
+      for (const [x, y] of [[-0.3, -0.45], [-0.3, 0.45], [0.15, -0.3], [0.15, 0.3], [-0.65, 0]]) { g.beginPath(); g.arc(x * R, y * R, R * 0.12, 0, Math.PI * 2); g.fill(); }
+      g.fillRect(-R * 0.8, -R * 0.03, R * 1.1, R * 0.06);
+      eyes(R * 0.7, 0, R * 0.09);
+      break;
+    }
+    case "semi": {
+      g.fillStyle = "rgba(220,240,230,.7)";
+      for (const sg of [-1, 1]) { g.beginPath(); g.ellipse(-R * 0.45, sg * R * 0.35, R * 0.75, R * 0.24, sg * 0.25, 0, Math.PI * 2); g.fill(); }
+      g.fillStyle = "#4a3a2a";
+      g.beginPath(); g.ellipse(-R * 0.1, 0, R * 0.65, R * 0.38, 0, 0, Math.PI * 2); g.fill();
+      g.fillStyle = "#6a8a4a";
+      g.beginPath(); g.ellipse(R * 0.45, 0, R * 0.3, R * 0.42, 0, 0, Math.PI * 2); g.fill();
+      eyes(R * 0.6, 0, R * 0.12);
+      // 鳴いている 波
+      const w = (t * 2) % 1;
+      g.strokeStyle = `rgba(255,255,255,${0.6 * (1 - w)})`; g.lineWidth = 1.5;
+      g.beginPath(); g.arc(0, 0, R * (0.8 + w * 0.8), 0, Math.PI * 2); g.stroke();
+      break;
+    }
+    case "kabuto": case "kabutoou": {
+      leg(3, R * 0.85, "#2a1810");
+      g.fillStyle = kind === "kabutoou" ? "#4a2a6a" : "#5a3018";
+      g.beginPath(); g.ellipse(-R * 0.2, 0, R * 0.8, R * 0.62, 0, 0, Math.PI * 2); g.fill();
+      g.strokeStyle = "rgba(0,0,0,.35)"; g.lineWidth = 1.5;
+      g.beginPath(); g.moveTo(-R * 1.0, 0); g.lineTo(R * 0.4, 0); g.stroke();
+      g.fillStyle = "rgba(255,255,255,.22)";
+      g.beginPath(); g.ellipse(-R * 0.35, -R * 0.3, R * 0.35, R * 0.12, -0.3, 0, Math.PI * 2); g.fill();
+      g.fillStyle = kind === "kabutoou" ? "#3a1e55" : "#3e200f";
+      g.beginPath(); g.ellipse(R * 0.55, 0, R * 0.3, R * 0.36, 0, 0, Math.PI * 2); g.fill();
+      g.strokeStyle = kind === "kabutoou" ? "#3a1e55" : "#3e200f"; g.lineWidth = Math.max(2, R * 0.14);
+      g.beginPath(); g.moveTo(R * 0.7, 0); g.quadraticCurveTo(R * 1.15, 0, R * 1.25, -R * 0.35); g.stroke();
+      g.beginPath(); g.moveTo(R * 1.18, -R * 0.15); g.lineTo(R * 1.3, -R * 0.05); g.stroke();
+      eyes(R * 0.68, 0, R * 0.09);
+      if (kind === "kabutoou") { g.fillStyle = "#ffd84a"; g.beginPath(); g.moveTo(R * 0.4, -R * 0.35); g.lineTo(R * 0.45, -R * 0.65); g.lineTo(R * 0.55, -R * 0.45); g.lineTo(R * 0.65, -R * 0.65); g.lineTo(R * 0.7, -R * 0.32); g.fill(); }
+      break;
+    }
+    case "suzume":
     case "hachi": case "jooubachi": {
       const fl = Math.sin(t * 45) * 0.5;
       g.fillStyle = "rgba(230,245,255,.75)";
       g.beginPath(); g.ellipse(-R * 0.05, -R * 0.6, R * 0.55, R * 0.25, -0.6 + fl, 0, Math.PI * 2); g.fill();
       g.beginPath(); g.ellipse(-R * 0.05, R * 0.6, R * 0.55, R * 0.25, 0.6 - fl, 0, Math.PI * 2); g.fill();
-      g.fillStyle = "#f2b630";
+      g.fillStyle = kind === "suzume" ? "#e8762a" : "#f2b630";
       g.beginPath(); g.ellipse(-R * 0.35, 0, R * 0.62, R * 0.45, 0, 0, Math.PI * 2); g.fill();
       g.fillStyle = "#2a2118";
       for (let i = 0; i < 3; i++) g.fillRect(-R * 0.75 + i * R * 0.32, -R * 0.42, R * 0.12, R * 0.84);
       g.beginPath(); g.moveTo(-R * 0.95, -R * 0.08); g.lineTo(-R * 1.25, 0); g.lineTo(-R * 0.95, R * 0.08); g.fill();
-      g.fillStyle = "#f2b630";
+      g.fillStyle = kind === "suzume" ? "#e8762a" : "#f2b630";
       g.beginPath(); g.arc(R * 0.45, 0, R * 0.36, 0, Math.PI * 2); g.fill();
       eyes(R * 0.6, 0, R * 0.12);
       if (kind === "jooubachi") {

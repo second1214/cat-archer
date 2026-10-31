@@ -59,9 +59,10 @@ describe("助っ人ねこ（ストライク）", () => {
   });
   it("ふたごの助っ人: スキルで来る数が 2倍。ねこ集会: ステージのはじめに 5匹", () => {
     const w = world({ skills: { s_blitz: 1, s_twin: 1 } });
-    place(w, 3);
     w.startStage(1);
     for (const e of w.enemies) { e.def = { ...e.def, ai: "turret", speed: 0 }; e.t = 99; e.hp = e.maxHp = 1e6; }
+    place(w, 3);
+    w.strikes.onStageStart();
     expect(w.strikes.list.length).toBe(10);
   });
   it("物は 通れない", () => {
