@@ -1,5 +1,6 @@
 // 入り口: ホーム・装備の画面と、戦闘への切りかえ。
 import "./style.css";
+import { CATS, catName } from "./core/cats";
 import { ITEM_MAP, RARITY_NAMES } from "./core/equip";
 import { mulberry32 } from "./core/rng";
 import { CHEST_COST, finishRun, openChest } from "./core/run";
@@ -17,7 +18,7 @@ const app = document.getElementById("app")!;
 const shell = h("div", { class: "shell" });
 app.append(shell);
 document.addEventListener("pointerdown", unlockAudio, { once: true });
-void loadCatImages();
+void loadCatImages(save.cat);
 
 function render(): void {
   const body = tab === "home" ? renderHome() : renderEquip(save, render);
@@ -38,8 +39,10 @@ function renderHome(): HTMLElement {
   const setCh = (v: number) => { save.chapter = Math.max(1, Math.min(save.unlocked, v)); writeSave(save); render(); };
   return h("div", { class: "screen home" },
     h("div", { class: "hero-card" },
-      h("img", { class: "hero-cat", src: "cat/sit.png", alt: "猫" }),
-      h("div", { class: "hero-pow" }, "戦力 ", h("b", null, fmt(powerOf(lo))))),
+      h("img", { class: "hero-cat", src: `cat/${save.cat}/sit.png`, alt: catName(save.cat) }),
+      h("div", { class: "hero-row" },
+        h("div", { class: "hero-pow" }, "戦力 ", h("b", null, fmt(powerOf(lo)))),
+        h("button", { class: "btn btn-small hero-pick", onclick: pickCat }, "🐾 ", catName(save.cat)))),
     h("div", { class: "ch-card" },
       h("button", { class: "ch-arrow", disabled: ch <= 1, onclick: () => setCh(ch - 1) }, "◀"),
       h("div", { class: "ch-mid" },
@@ -51,6 +54,18 @@ function renderHome(): HTMLElement {
     h("button", { class: `btn ${save.coins >= CHEST_COST ? "btn-pink" : "btn-gray"} chest`, disabled: save.coins < CHEST_COST, onclick: chest },
       "🎁 宝箱をあける ", h("small", null, `🐟${CHEST_COST}`)),
     h("p", { class: "muted small how" }, "指をすべらせて移動。止まると いちばん近い虫へ 自動で毛玉を撃ちます。"));
+}
+
+function pickCat(): void {
+  sfx("tap");
+  const m = overlay(h("div", { class: "pick" },
+    h("h2", null, "ねこをえらぶ"),
+    h("p", { class: "muted small" }, "見た目だけ変わります（強さは みんな同じ）"),
+    h("div", { class: "pick-grid" }, CATS.map((c) => h("button", {
+      class: `pick-cat ${c.id === save.cat ? "on" : ""}`,
+      onclick: () => { save.cat = c.id; writeSave(save); void loadCatImages(c.id); sfx("tap"); m.close(); render(); },
+    }, h("img", { src: `cat/${c.id}/sit.png`, alt: "", loading: "lazy" }), h("span", null, c.name)))),
+    h("button", { class: "btn btn-gray btn-wide", onclick: () => m.close() }, "とじる")), "", () => m.close());
 }
 
 function chest(): void {

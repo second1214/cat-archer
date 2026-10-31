@@ -4,7 +4,7 @@ import { mulberry32 } from "../core/rng";
 import { loadoutOf, type SaveData } from "../core/save";
 import { SKILL_MAP } from "../core/skills";
 import { CHAPTER_NAMES, STAGES_PER_CHAPTER } from "../core/stages";
-import { Renderer, type Stick } from "../game/render";
+import { loadCatImages, Renderer, type Stick } from "../game/render";
 import { World } from "../game/world";
 import { fmt, h, overlay } from "./dom";
 import { sfx } from "./sfx";
@@ -12,6 +12,7 @@ import { sfx } from "./sfx";
 export interface BattleEnd { stage: number; won: boolean; coins: number; drops: Item[] }
 
 export function startBattle(save: SaveData, chapter: number, onEnd: (r: BattleEnd) => void): void {
+  void loadCatImages(save.cat);
   const world = new World(loadoutOf(save), chapter, mulberry32((save.seed = (save.seed * 16807 + 11) % 2147483647)));
   const cv = h("canvas", { class: "bt-cv" });
   const stageEl = h("div", { class: "bt-stage" });
@@ -106,7 +107,7 @@ export function startBattle(save: SaveData, chapter: number, onEnd: (r: BattleEn
     sfx(won ? "clear" : "lose");
     const drops = world.drops;
     modal = overlay(h("div", { class: "result" },
-      h("img", { class: "result-cat", src: won ? "cat/jump.png" : "cat/sleep.png", alt: "" }),
+      h("img", { class: "result-cat", src: `cat/${save.cat}/${won ? "jump" : "sleep"}.png`, alt: "" }),
       h("h2", null, won ? `第${chapter}章 クリア！` : "やられちゃった…"),
       h("div", { class: "result-st" }, won ? `${STAGES_PER_CHAPTER} / ${STAGES_PER_CHAPTER}` : `ステージ ${world.stage} / ${STAGES_PER_CHAPTER} まで`),
       h("div", { class: "result-rw" }, h("span", null, "🐟 にぼし"), h("b", null, `+${fmt(world.coins)}`)),

@@ -1,4 +1,5 @@
 // セーブ（ブラウザの localStorage）。読みこむときに 形をととのえる（古い・こわれたデータでも動くように）。
+import { CAT_IDS } from "./cats";
 import { activeTraits, addStats, emptyStats, ITEM_MAP, itemStats, MAX_LEVEL, SLOTS, type Item, type Rarity, type Slot, type Stats } from "./equip";
 
 const KEY = "cat-archer/save";
@@ -17,6 +18,8 @@ export interface SaveData {
   unlocked: number;
   /** 前に選んだ章 */
   chapter: number;
+  /** 主人公の猫（見た目） */
+  cat: string;
   seed: number;
 }
 
@@ -30,6 +33,7 @@ export function newSave(): SaveData {
     best: {},
     unlocked: 1,
     chapter: 1,
+    cat: "chatora",
     seed: Math.floor(Math.random() * 2 ** 31),
   };
 }
@@ -65,6 +69,7 @@ export function normalize(raw: unknown): SaveData {
     best,
     unlocked,
     chapter: Math.max(1, Math.min(unlocked, Math.floor(num(r.chapter, 1)))),
+    cat: typeof r.cat === "string" && CAT_IDS.has(r.cat) ? r.cat : base.cat,
     seed: Math.floor(num(r.seed, base.seed)),
   };
 }

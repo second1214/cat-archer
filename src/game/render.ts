@@ -7,12 +7,17 @@ type CatFrame = (typeof CAT_FRAMES)[number];
 const CAT_PX = 122;
 
 const imgs = new Map<CatFrame, HTMLImageElement>();
-export function loadCatImages(base = "cat/"): Promise<void> {
+let loadedCat = "";
+/** 主人公の猫の絵を読む（ちがう猫にしたら 入れかえる）。 */
+export function loadCatImages(cat: string): Promise<void> {
+  if (cat === loadedCat) return Promise.resolve();
+  loadedCat = cat;
+  imgs.clear();
   return Promise.all(CAT_FRAMES.map((f) => new Promise<void>((ok) => {
     const im = new Image();
-    im.onload = () => { imgs.set(f, im); ok(); };
+    im.onload = () => { if (loadedCat === cat) imgs.set(f, im); ok(); };
     im.onerror = () => ok();
-    im.src = `${base}${f}.png`;
+    im.src = `cat/${cat}/${f}.png`;
   }))).then(() => undefined);
 }
 
