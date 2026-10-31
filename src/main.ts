@@ -10,6 +10,8 @@ import { loadCatImages } from "./game/render";
 import { startBattle } from "./ui/battle";
 import { fmt, h, overlay, toast } from "./ui/dom";
 import { renderEquip } from "./ui/equip";
+import { runeCard } from "./ui/runes";
+import { GRADE_NAMES, RUNE_MAP } from "./core/runes";
 import { isMuted, setMuted, sfx, unlockAudio } from "./ui/sfx";
 
 const save = loadSave();
@@ -74,11 +76,11 @@ function chest(): void {
   if (!it) return;
   writeSave(save);
   sfx("levelup");
-  const d = ITEM_MAP[it.id];
+  const isRune = "g" in it;
   const m = overlay(h("div", { class: "result" },
     h("h2", null, "宝箱"),
-    h("div", { class: `icard big r${it.r}` }, h("div", { class: "icard-ico" }, d.icon)),
-    h("div", { class: "result-st" }, `${d.name}（${RARITY_NAMES[it.r]}）`),
+    isRune ? runeCard(it) : h("div", { class: `icard big r${it.r}` }, h("div", { class: "icard-ico" }, ITEM_MAP[it.id].icon)),
+    h("div", { class: "result-st" }, isRune ? `ルーン「${RUNE_MAP[it.id].name}」（${GRADE_NAMES[it.g]}）` : `${ITEM_MAP[it.id].name}（${RARITY_NAMES[it.r]}）`),
     h("button", { class: "btn btn-gold", onclick: () => { m.close(); render(); } }, "OK")), "", () => { m.close(); render(); });
 }
 
@@ -86,7 +88,7 @@ function play(chapter: number): void {
   sfx("tap");
   shell.style.display = "none";
   startBattle(save, chapter, (r) => {
-    const rw = finishRun(save, { chapter, stage: r.stage, won: r.won, coins: r.coins, drops: r.drops });
+    const rw = finishRun(save, { chapter, stage: r.stage, won: r.won, coins: r.coins, drops: r.drops, runeDrops: r.runeDrops });
     writeSave(save);
     shell.style.display = "";
     render();

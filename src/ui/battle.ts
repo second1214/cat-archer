@@ -1,5 +1,6 @@
 // 戦闘の画面: canvas・スティック・HUD・レベルアップの3択・一時停止・結果。
 import { ITEM_MAP, RARITY_NAMES, type Item } from "../core/equip";
+import type { Rune } from "../core/runes";
 import { mulberry32 } from "../core/rng";
 import { loadoutOf, type SaveData } from "../core/save";
 import { SKILL_MAP } from "../core/skills";
@@ -7,13 +8,14 @@ import { CHAPTER_NAMES, STAGES_PER_CHAPTER } from "../core/stages";
 import { loadCatImages, Renderer, type Stick } from "../game/render";
 import { World } from "../game/world";
 import { fmt, h, overlay } from "./dom";
+import { runeCard } from "./runes";
 import { sfx } from "./sfx";
 
-export interface BattleEnd { stage: number; won: boolean; coins: number; drops: Item[] }
+export interface BattleEnd { stage: number; won: boolean; coins: number; drops: Item[]; runeDrops: Rune[] }
 
 export function startBattle(save: SaveData, chapter: number, onEnd: (r: BattleEnd) => void): void {
   void loadCatImages(save.cat);
-  const world = new World(loadoutOf(save), chapter, mulberry32((save.seed = (save.seed * 16807 + 11) % 2147483647)));
+  const world = new World(loadoutOf(save), chapter, mulberry32((save.seed = (save.seed * 16807 + 11) % 2147483647)), save.cat);
   const cv = h("canvas", { class: "bt-cv" });
   const stageEl = h("div", { class: "bt-stage" });
   const hpFill = h("div", { class: "bar-fill hp" });
@@ -113,13 +115,14 @@ export function startBattle(save: SaveData, chapter: number, onEnd: (r: BattleEn
       h("div", { class: "result-rw" }, h("span", null, "🐟 にぼし"), h("b", null, `+${fmt(world.coins)}`)),
       drops.length ? h("div", { class: "result-items" }, drops.map((d) => h("div", { class: `icard r${d.r}` },
         h("div", { class: "icard-ico" }, ITEM_MAP[d.id].icon), h("div", { class: "icard-r" }, RARITY_NAMES[d.r])))) : null,
+      world.runeDrops.length ? h("div", { class: "result-items" }, world.runeDrops.map((r) => runeCard(r))) : null,
       h("button", { class: "btn btn-gold", onclick: () => finish() }, "OK")));
   };
 
   const finish = () => {
     modal?.close();
     cleanup();
-    onEnd({ stage: world.stage, won: world.state === "won", coins: world.coins, drops: world.drops });
+    onEnd({ stage: world.stage, won: world.state === "won", coins: world.coins, drops: world.drops, runeDrops: world.runeDrops });
   };
 
   // ---- ループ ----

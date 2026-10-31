@@ -4,7 +4,15 @@ import type { Rng } from "./rng";
 export type SkillId =
   | "atk" | "aspd" | "crit" | "multi" | "front" | "diag" | "side" | "back"
   | "pierce" | "bounce" | "ricochet" | "fire" | "ice" | "poison" | "bolt"
-  | "hpup" | "heal" | "vamp" | "orbit" | "dodge" | "laser" | "homing";
+  | "hpup" | "heal" | "vamp" | "orbit" | "dodge" | "laser" | "homing"
+  | StrikeSkill;
+
+/** ストライク（近所の猫が 助けに飛びこむ）の系列 */
+export type StrikeSkill = "s_instant" | "s_assault" | "s_pursuit" | "s_riposte" | "s_blitz" | "s_twin" | "s_boost" | "s_enchant" | "s_beam";
+/** 助っ人ねこを 呼ぶスキル */
+export const STRIKE_SOURCES: readonly SkillId[] = ["s_instant", "s_assault", "s_pursuit", "s_riposte", "s_blitz", "s_beam"];
+/** 助っ人ねこを 強くするスキル（呼ぶ手段が あるときだけ 出る） */
+export const STRIKE_SUPPORT: readonly SkillId[] = ["s_twin", "s_boost", "s_enchant"];
 
 export interface SkillDef {
   id: SkillId;
@@ -13,6 +21,8 @@ export interface SkillDef {
   desc: string;
   /** 何回まで取れるか */
   max: number;
+  /** ストライクの系列 */
+  strike?: boolean;
 }
 
 export const SKILLS: readonly SkillDef[] = [
@@ -38,6 +48,15 @@ export const SKILLS: readonly SkillDef[] = [
   { id: "vamp", name: "たべちゃう", icon: "🩸", desc: "敵を倒すと 体力の上限の2% 回復", max: 3 },
   { id: "orbit", name: "まわる毛糸", icon: "🧶", desc: "まわりを回る毛糸玉 +2", max: 2 },
   { id: "dodge", name: "ひらり", icon: "💨", desc: "よける確率 +8%", max: 3 },
+  { id: "s_instant", name: "助っ人ねこ", icon: "🐈", desc: "毎秒 近所の猫が 1匹 敵へ飛びかかる（攻撃力×0.75）", max: 1, strike: true },
+  { id: "s_assault", name: "いっしょにアタック", icon: "🐈", desc: "攻撃するたびに 25%で 助っ人ねこが 1匹 飛びかかる", max: 1, strike: true },
+  { id: "s_pursuit", name: "おいうち", icon: "🐈", desc: "敵を倒すと 助っ人ねこが 1匹 飛びかかる", max: 1, strike: true },
+  { id: "s_riposte", name: "しかえし", icon: "🐈", desc: "ダメージを受けると 助っ人ねこが 5匹 反撃する", max: 1, strike: true },
+  { id: "s_blitz", name: "ねこ集会", icon: "🐈", desc: "ステージのはじめに 助っ人ねこが 5匹 飛びかかる", max: 1, strike: true },
+  { id: "s_twin", name: "ふたごの助っ人", icon: "🐈", desc: "スキルで来る 助っ人ねこが 2倍", max: 1, strike: true },
+  { id: "s_boost", name: "助っ人の爪とぎ", icon: "🐈", desc: "助っ人ねこの ダメージ +50%", max: 1, strike: true },
+  { id: "s_enchant", name: "おそろいの技", icon: "🐈", desc: "助っ人ねこにも ほのお・こおり・どく・かみなりが のる", max: 1, strike: true },
+  { id: "s_beam", name: "レーザー好きのねこ", icon: "🐈", desc: "2.5秒ごとに レーザーを撃つ猫が来る（攻撃力×0.5 を4回）。ほかの助っ人ねこも レーザーを撃つ", max: 1, strike: true },
 ];
 
 export const SKILL_MAP = Object.fromEntries(SKILLS.map((s) => [s.id, s])) as Record<SkillId, SkillDef>;
@@ -47,13 +66,29 @@ export type SkillCounts = Partial<Record<SkillId, number>>;
 /** 攻撃が レーザーのとき 意味のないスキル（レーザー自身も もう出さない） */
 export const LASER_USELESS: readonly SkillId[] = ["pierce", "ricochet", "laser"];
 
-/** まだ取れるスキルから、ちがうものを n 個えらぶ（おやつは体力が減っているときだけ。laser なら 毛玉だけのスキルは出さない）。 */
-export function rollSkills(owned: SkillCounts, rng: Rng, n = 3, hurt = false, laser = false): SkillId[] {
-  const pool = SKILLS.filter((s) => (owned[s.id] ?? 0) < s.max && (s.id !== "heal" || hurt) && !(laser && LASER_USELESS.includes(s.id))).map((s) => s.id);
+export interface RollOpts {
+  /** 体力が減っている（おやつを出す） */
+  hurt?: boolean;
+  /** 攻撃が レーザー（毛玉だけのスキルは出さない） */
+  laser?: boolean;
+  /** ルーンなどで 助っ人ねこを呼ぶ手段がある */
+  strikeSource?: boolean;
+  /** 助っ人ねこのスキルの 出やすさ（重みの倍率） */
+  strikeWeight?: number;
+}
+
+/** まだ取れるスキルから、ちがうものを n 個えらぶ。 */
+export function rollSkills(owned: SkillCounts, rng: Rng, n = 3, o: RollOpts = {}): SkillId[] {
+  const has = (id: SkillId) => (owned[id] ?? 0) > 0;
+  const source = !!o.strikeSource || STRIKE_SOURCES.some(has);
+  const pool = SKILLS.filter((s) => (owned[s.id] ?? 0) < s.max && (s.id !== "heal" || o.hurt) && !(o.laser && LASER_USELESS.includes(s.id))
+    && !(STRIKE_SUPPORT.includes(s.id) && !source));
   const out: SkillId[] = [];
   while (out.length < n && pool.length > 0) {
-    const i = Math.floor(rng() * pool.length);
-    out.push(pool.splice(i, 1)[0]);
+    const w = pool.map((s) => (s.strike ? o.strikeWeight ?? 1 : 1));
+    let r = rng() * w.reduce((a, b) => a + b, 0), i = 0;
+    while (i < pool.length - 1 && (r -= w[i]) >= 0) i++;
+    out.push(pool.splice(i, 1)[0].id);
   }
   return out;
 }

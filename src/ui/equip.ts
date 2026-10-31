@@ -3,6 +3,7 @@ import { activeTraits, ITEM_MAP, itemStats, MAX_LEVEL, mergePartners, RARITY_NAM
 import { mergeAll, mergeItem, equipItem, unequipItem, upgradeItem } from "../core/run";
 import { equippedSet, loadoutOf, powerOf, writeSave, type SaveData } from "../core/save";
 import { fmt, h, overlay, toast } from "./dom";
+import { renderRunes } from "./runes";
 import { sfx } from "./sfx";
 
 const STAT_LABEL: [keyof Stats, string, boolean][] = [
@@ -24,7 +25,13 @@ export function itemCard(it: Item, opts: { equipped?: boolean; merge?: boolean; 
     opts.merge ? h("div", { class: "icard-mg" }, "合成") : null);
 }
 
+let equipTab: "gear" | "runes" = "gear";
+
 export function renderEquip(save: SaveData, rerender: () => void): HTMLElement {
+  const tabs = h("div", { class: "eq-tabs" },
+    h("button", { class: equipTab === "gear" ? "on" : "", onclick: () => { equipTab = "gear"; sfx("tap"); rerender(); } }, "装備"),
+    h("button", { class: equipTab === "runes" ? "on" : "", onclick: () => { equipTab = "runes"; sfx("tap"); rerender(); } }, "ルーン", save.unlocked < 5 ? " 🔒" : ""));
+  if (equipTab === "runes") return h("div", { class: "screen equip" }, tabs, renderRunes(save, rerender));
   const eq = equippedSet(save);
   const lo = loadoutOf(save);
   const slots = SLOTS.map((s) => {
@@ -37,6 +44,7 @@ export function renderEquip(save: SaveData, rerender: () => void): HTMLElement {
     SLOTS.indexOf(ITEM_MAP[a.id].slot) - SLOTS.indexOf(ITEM_MAP[b.id].slot) || b.r - a.r || a.id.localeCompare(b.id) || b.lv - a.lv);
   const canMergeAny = save.items.some((x) => mergePartners(save.items, x, eq));
   return h("div", { class: "screen equip" },
+    tabs,
     h("div", { class: "eq-slots" }, slots),
     h("div", { class: "eq-sum" },
       h("span", null, "⚔️ 攻撃 ", h("b", null, fmt(lo.atk))),

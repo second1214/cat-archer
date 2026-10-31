@@ -6,6 +6,8 @@ import type { Loadout } from "../core/save";
 import { rollSkills, type SkillCounts, type SkillId } from "../core/skills";
 import { ENEMIES, stageInfo, STAGES_PER_CHAPTER, type EnemyDef, type EnemyKind } from "../core/stages";
 import { COLS, pickTerrain, ROWS, Terrain } from "../core/terrain";
+import { rollRune, RUNE_UNLOCK_CHAPTER, type Rune, type RuneEffects } from "../core/runes";
+import { Strikes, type StrikeEnemy, type StrikeHost } from "./strikes";
 
 /** 部屋の広さ（単位: マス） */
 export const W = COLS;
@@ -76,7 +78,7 @@ export type SoundKind = "shoot" | "hit" | "kill" | "hurt" | "levelup" | "clear" 
 
 export type WorldState = "fight" | "clear" | "dead" | "won";
 
-export class World {
+export class World implements StrikeHost {
   readonly hero: Hero;
   enemies: Enemy[] = [];
   shots: Shot[] = [];
@@ -93,6 +95,9 @@ export class World {
   choices: SkillId[] | null = null;
   coins = 0;
   drops: Item[] = [];
+  runeDrops: Rune[] = [];
+  /** 助っ人ねこ（ストライク） */
+  readonly strikes: Strikes;
   kills = 0;
   terrain: Terrain = Terrain.empty();
   /** 猫までの 歩ける距離（地面を歩く虫の 道さがし） */
@@ -104,16 +109,25 @@ export class World {
   private volleys: { t: number }[] = [];
   private orbCd = new Map<number, number>();
 
-  constructor(readonly lo: Loadout, readonly chapter: number, readonly rng: Rng) {
+  constructor(readonly lo: Loadout, readonly chapter: number, readonly rng: Rng, readonly heroCat = "chatora") {
     this.hero = {
       x: W / 2, y: H - 1.5, r: 0.36, hp: lo.hp, maxHp: lo.hp, inv: 0, facing: 1, moving: false, dist: 0,
       atkCd: 0.3, shootAnim: 0, hurtAnim: 0, level: 1, xp: 0,
     };
+    this.strikes = new Strikes(this);
     this.startStage(1);
   }
 
+  // ---------- 助っ人ねこ（StrikeHost） ----------
+  get rune(): RuneEffects { return this.lo.rune; }
+  /** 攻撃力（武器専用の増加 = まえに2本・れんしゃ・つらぬく の減り などは ふくまない） */
+  get atkPower(): number { return this.atk; }
+  get speedMul(): number { return BASE_INTERVAL / this.interval; }
+  get homing(): boolean { return this.n("homing") > 0; }
+  addBeam(pts: [number, number][], crit: boolean): void { this.beams.push({ pts, t: 0, crit }); }
+
   // ---------- 力（装備＋スキル） ----------
-  private n(id: SkillId): number { return this.skills[id] ?? 0; }
+  n(id: SkillId): number { return this.skills[id] ?? 0; }
   get atk(): number { return this.lo.atk * (1 + 0.25 * this.n("atk")); }
   get interval(): number { return Math.max(0.16, BASE_INTERVAL / ((1 + this.lo.stats.aspd) * (1 + 0.2 * this.n("aspd")))); }
   get critRate(): number { return Math.min(0.8, 0.05 + this.lo.stats.crit + 0.1 * this.n("crit")); }
@@ -142,6 +156,7 @@ export class World {
     const reach = this.terrain.flow(h.x, h.y);
     for (const k of info.enemies) this.enemies.push(this.spawn(k, reach));
     if (info.boss) this.sounds.push("boss");
+    this.strikes?.onStageStart();
   }
 
   /** 虫を置く（地面の虫は 猫まで歩いて行ける床に。at があれば その近く） */
@@ -184,7 +199,10 @@ export class World {
 
   private offerLevel(): void {
     if (this.pendingLevels > 0 && !this.choices) {
-      this.choices = rollSkills(this.skills, this.rng, 3, this.hero.hp < this.hero.maxHp * 0.8, this.laser);
+      this.choices = rollSkills(this.skills, this.rng, 3, {
+        hurt: this.hero.hp < this.hero.maxHp * 0.8, laser: this.laser,
+        strikeSource: !!this.rune.timeSword || this.rune.potion.start, strikeWeight: this.rune.strikeSkillWeight,
+      });
       if (this.choices.length === 0) { this.pendingLevels = 0; this.choices = null; }
     }
   }
@@ -205,6 +223,7 @@ export class World {
     this.moveEnemies(dt);
     this.moveEShots(dt);
     this.orbit(dt);
+    this.strikes.update(dt, this.state === "fight");
     if (this.state === "fight" && this.enemies.every((e) => e.dead)) this.clearStage();
     this.enemies = this.enemies.filter((e) => !e.dead);
   }
@@ -242,6 +261,9 @@ export class World {
     this.coins += 5 * this.stage * this.coinMul;
     if (info.boss || this.rng() < 0.15) this.drops.push(rollItem(this.rng, 0, rollRarity(this.rng, this.chapter, info.boss)));
     if (this.lo.regen > 0) this.heal(this.hero.maxHp * this.lo.regen);
+    // 5章から ボスを倒すと ルーン
+    if (info.boss && this.chapter >= RUNE_UNLOCK_CHAPTER) this.runeDrops.push(rollRune(this.rng, 0, this.stage === STAGES_PER_CHAPTER));
+    this.strikes.onStageClear();
     this.eshots = [];
     this.sounds.push("clear");
     this.state = this.stage >= STAGES_PER_CHAPTER ? "won" : "clear";
@@ -257,7 +279,7 @@ export class World {
     this.fx.push({ kind: "heal", x: h.x, y: h.y - 1, v: Math.round(add), t: 0 });
   }
 
-  private nearest(x: number, y: number, skip?: Set<number>, maxD = Infinity): Enemy | null {
+  nearest(x: number, y: number, skip?: Set<number>, maxD = Infinity): Enemy | null {
     let best: Enemy | null = null, bd = maxD;
     for (const e of this.enemies) {
       if (e.dead || skip?.has(e.id)) continue;
@@ -277,6 +299,7 @@ export class World {
     if (!this.nearest(h.x, h.y)) return;
     h.atkCd = this.interval;
     this.fire();
+    this.strikes.onFire();
     for (let i = 1; i <= this.n("multi"); i++) this.volleys.push({ t: 0.12 * i });
   }
 
@@ -427,7 +450,11 @@ export class World {
     this.shots = this.shots.filter((s) => s.life > 0);
   }
 
-  private hitEnemy(e: Enemy, dmg: number, crit: boolean, direct: boolean): void {
+  hitEnemy(e: StrikeEnemy, dmg: number, crit: boolean, direct: boolean): void {
+    this.hitEnemyImpl(e as Enemy, dmg, crit, direct);
+  }
+
+  private hitEnemyImpl(e: Enemy, dmg: number, crit: boolean, direct: boolean): void {
     this.damage(e, dmg, crit ? "crit" : "dmg");
     if (!direct || e.dead) return;
     const atk = this.atk;
@@ -460,6 +487,7 @@ export class World {
     this.fx.push({ kind: "die", x: e.x, y: e.y, v: e.def.r, t: 0 });
     this.sounds.push("kill");
     this.coins += e.def.coins * this.coinMul;
+    this.strikes.onKill();
     if (e.def.split) {
       const reach = this.terrain.flow(this.hero.x, this.hero.y);
       for (let i = 0; i < 2; i++) this.enemies.push(this.spawn(e.def.split, reach, [e.x, e.y]));
@@ -486,6 +514,7 @@ export class World {
     }
     const v = Math.max(1, Math.round(dmg * (1 - this.guard)));
     h.hp -= v;
+    if (h.hp > 0) this.strikes.onHurt();
     h.inv = 0.6;
     h.hurtAnim = 0.3;
     this.fx.push({ kind: "hurt", x: h.x, y: h.y - 1.2, v, t: 0 });

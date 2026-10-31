@@ -88,7 +88,7 @@ describe("セーブ", () => {
 describe("スキル・ステージ", () => {
   it("3つの選択肢は ちがうもので、上限のものは出ない", () => {
     const owned = Object.fromEntries(SKILLS.filter((x) => x.id !== "atk" && x.id !== "aspd").map((x) => [x.id, x.max]));
-    const r = rollSkills(owned, mulberry32(1), 3, true);
+    const r = rollSkills(owned, mulberry32(1), 3, { hurt: true });
     expect(new Set(r).size).toBe(r.length);
     expect(r.sort()).toEqual(["aspd", "atk", "heal"].filter((x) => x !== "heal" || (owned.heal ?? 0) < 99).sort());
   });
