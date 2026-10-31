@@ -24,7 +24,7 @@ export const SKILLS: readonly SkillDef[] = [
   { id: "diag", name: "ななめうち", icon: "↗️", desc: "ななめ前にも1本ずつ撃つ", max: 2 },
   { id: "side", name: "よこうち", icon: "↔️", desc: "左右にも1本ずつ撃つ", max: 2 },
   { id: "back", name: "うしろうち", icon: "↩️", desc: "うしろにも1本撃つ", max: 2 },
-  { id: "laser", name: "レーザーポインター", icon: "🔴", desc: "ねらった敵へ レーザーも撃つ（敵をつらぬく・攻撃力の60%）", max: 2 },
+  { id: "laser", name: "レーザーポインター", icon: "🔴", desc: "攻撃が レーザーになる（敵をつらぬく・1発のダメージ -20%）", max: 1 },
   { id: "homing", name: "ゆうどう", icon: "🧲", desc: "毛玉が 近くの敵へ 曲がっていく", max: 1 },
   { id: "pierce", name: "つらぬく", icon: "🗡️", desc: "毛玉が敵をつらぬく（ダメージ -25%）", max: 1 },
   { id: "bounce", name: "かべではねる", icon: "🧱", desc: "毛玉が壁で2回はねかえる", max: 1 },
@@ -44,8 +44,8 @@ export const SKILL_MAP = Object.fromEntries(SKILLS.map((s) => [s.id, s])) as Rec
 
 export type SkillCounts = Partial<Record<SkillId, number>>;
 
-/** 毛玉の代わりに レーザーを撃つとき 意味のないスキル */
-export const LASER_USELESS: readonly SkillId[] = ["pierce", "bounce", "ricochet", "homing"];
+/** 攻撃が レーザーのとき 意味のないスキル（レーザー自身も もう出さない） */
+export const LASER_USELESS: readonly SkillId[] = ["pierce", "bounce", "ricochet", "homing", "laser"];
 
 /** まだ取れるスキルから、ちがうものを n 個えらぶ（おやつは体力が減っているときだけ。laser なら 毛玉だけのスキルは出さない）。 */
 export function rollSkills(owned: SkillCounts, rng: Rng, n = 3, hurt = false, laser = false): SkillId[] {
