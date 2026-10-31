@@ -1,7 +1,8 @@
 // 戦闘の絵（canvas）。猫は PNG、虫は コードで描く。
 import { DOOR_W, H, W, type Enemy, type World } from "./world";
 
-const CAT_FRAMES = ["walk1", "walk2", "walk3", "walk4", "shoot", "hurt", "jump", "sit"] as const;
+// 移動は 走りの4コマ（歩きの4コマは 足の動きが小さく、すべって見えるため）
+const CAT_FRAMES = ["walk1", "run1", "run2", "run3", "run4", "shoot", "hurt", "jump", "sit"] as const;
 type CatFrame = (typeof CAT_FRAMES)[number];
 /** 猫の絵の 1マスあたりのピクセル（歩きの絵の高さ 177px ≒ 1.45マス） */
 const CAT_PX = 122;
@@ -153,14 +154,18 @@ export class Renderer {
     this.shadow(h.x, h.y, 0.55);
     const frame: CatFrame = w.state === "won" ? "jump"
       : h.hurtAnim > 0 ? "hurt"
-      : h.moving ? (`walk${(Math.floor(h.dist * 2.6) % 4) + 1}` as CatFrame)
+      : h.moving ? (`run${(Math.floor(h.dist * 3) % 4) + 1}` as CatFrame)
       : h.shootAnim > 0 ? "shoot" : "walk1";
     const im = imgs.get(frame) ?? imgs.get("walk1");
     if (h.inv > 0 && h.hurtAnim <= 0 && Math.floor(w.time * 16) % 2 === 0 && w.state === "fight") g.globalAlpha = 0.55;
     if (im) {
       const dw = (im.width / CAT_PX) * s, dh = (im.height / CAT_PX) * s;
       g.save();
-      g.translate(this.X(h.x), this.Y(h.y) + s * 0.08);
+      // 走りは 歩きより 体が低く横長の絵なので 少し大きくし、コマに合わせて 上下にはずませる
+      const run = frame.startsWith("run");
+      const bob = run ? -Math.abs(Math.sin(h.dist * 3 * Math.PI / 2)) * s * 0.08 : 0;
+      g.translate(this.X(h.x), this.Y(h.y) + s * 0.08 + bob);
+      if (run) g.scale(1.12, 1.12);
       g.scale(h.facing, 1);
       g.drawImage(im, -dw / 2, -dh, dw, dh);
       g.restore();
