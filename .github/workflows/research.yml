@@ -1,0 +1,61 @@
+# 調べもの: 攻略サイトのページを取ってきて 本文だけ research ブランチに保存する（ゲームには関係しない）
+name: research
+on:
+  push:
+    branches: [research-fetch]
+permissions:
+  contents: write
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: fetch pages
+        run: |
+          mkdir -p out && cd out
+          cat > urls.txt <<'URLS'
+          gv_runes https://archero-2.game-vault.net/wiki/Runes
+          gv_skills https://archero-2.game-vault.net/wiki/Skills
+          hub_rune https://archero2hub.com/en/rune
+          hub_options https://archero2hub.com/en/rune/options
+          hub_twinborn https://archero2hub.com/en/guide/twinborn-runes
+          mobi_runes https://mobi.gg/en/tips/archero-2-runes/
+          mobi_skills https://mobi.gg/en/tips/archero-2-skill-tier-list/
+          theria_runes https://theriagames.com/guide/archero-2-runes-guide/
+          theria_strike https://theriagames.com/guide/archero-2-etched-sword-strike-build/
+          mturbo_etched https://mturbogamer.com/2026/10/archero-2-etched-runes-guide/
+          pgg_runes https://progameguides.com/archero-2/archero-2-runes-tier-list/
+          pgg_skills https://progameguides.com/archero-2/archero-2-skills-tier-list/
+          roonby https://roonby.com/2024/12/13/archero-2-guide-runes-how-to-get-stat-information/
+          URLS
+          sed -i 's/^ *//' urls.txt
+          while read -r name url; do
+            [ -z "$name" ] && continue
+            curl -sSL -A "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/124 Safari/537.36" --max-time 40 "$url" -o "$name.html" || echo "FAIL $name" >> fail.txt
+            echo "$name $url $(wc -c < "$name.html" 2>/dev/null)" >> sizes.txt
+          done < urls.txt
+          python3 - <<'PY'
+          import glob, html, re
+          from html.parser import HTMLParser
+          class P(HTMLParser):
+              def __init__(s): super().__init__(); s.out=[]; s.skip=0
+              def handle_starttag(s,t,a):
+                  if t in ("script","style","noscript","svg"): s.skip+=1
+                  if t in ("p","br","li","tr","h1","h2","h3","h4","div","td","th"): s.out.append("\n")
+                  if t in ("td","th"): s.out.append(" | ")
+              def handle_endtag(s,t):
+                  if t in ("script","style","noscript","svg") and s.skip: s.skip-=1
+              def handle_data(s,d):
+                  if not s.skip: s.out.append(d)
+          for f in glob.glob("*.html"):
+              p=P(); p.feed(open(f,encoding="utf-8",errors="ignore").read())
+              t=re.sub(r"[ \t]+"," ","".join(p.out)); t=re.sub(r"\n\s*\n+","\n",t)
+              open(f[:-5]+".txt","w").write(t.strip()+"\n")
+          PY
+          rm -f *.html
+      - name: push to research branch
+        run: |
+          cd out
+          git init -q -b research
+          git config user.name "github-actions"; git config user.email "actions@github.com"
+          git add -A && git commit -qm "research pages"
+          git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}" research
