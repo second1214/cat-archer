@@ -10,7 +10,7 @@ export const MISSIONS: readonly MissionDef[] = [
   { id: "grow", name: "装備・ルーンを 3回 強化・合成", goal: 3, churu: 10 },
   { id: "daily", name: "毎日の挑戦を 2回（掃討も）", goal: 2, churu: 10 },
 ];
-export const MISSION_BONUS = { churu: 20, stones: 5 };
+export const MISSION_BONUS = { churu: 20, stones: 5, bells: 2 };
 
 export interface MissionState { day: string; prog: Record<MissionId, number>; claimed: MissionId[]; bonus: boolean }
 export const emptyMissions = (): MissionState => ({ day: "", prog: { stages: 0, kills: 0, grow: 0, daily: 0 }, claimed: [], bonus: false });
@@ -46,6 +46,6 @@ export function claimBonus(save: SaveData, today = todayStr()): boolean {
   const m = roll(save, today);
   if (m.bonus || m.claimed.length < MISSIONS.length) return false;
   m.bonus = true;
-  save.churu += MISSION_BONUS.churu; save.stones += MISSION_BONUS.stones;
+  save.churu += MISSION_BONUS.churu; save.stones += MISSION_BONUS.stones; save.wishBells += MISSION_BONUS.bells;
   return true;
 }

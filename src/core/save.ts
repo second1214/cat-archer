@@ -5,6 +5,7 @@ import { activeTraits, addStats, emptyStats, ITEM_MAP, itemStats, MAX_LEVEL, MAX
 import type { SkillId } from "./skills";
 import { emptyMissions, MISSIONS, type MissionId, type MissionState } from "./missions";
 import { ENEMIES, type EnemyKind } from "./stages";
+import { ART_MAP, ART_MAX_STAR, artifactEffects, type OwnedArt } from "./artifacts";
 import { DAILIES, DAILY_LEVELS, emptyDaily, type DailyId, type DailyState } from "./daily";
 import { emptyTalents, TALENT_MAX, TALENTS, talentValue, type TalentId } from "./talents";
 
@@ -52,9 +53,6 @@ export interface SaveData {
   daily: DailyState;
   /** キャットタワーで クリアした いちばん上の階 */
   towerBest: number;
-  /** キャットタワーの チケットを 使った日・数 */
-  towerDay: string;
-  towerUsed: number;
   /** パトロールを 最後に 受け取った時刻（ミリ秒。0 は まだ） */
   patrolAt: number;
   /** 毎日のミッション */
@@ -66,6 +64,10 @@ export interface SaveData {
   bestiaryClaimed: Partial<Record<EnemyKind, number>>;
   /** 受け取った 実績 */
   achievements: string[];
+  /** 宝物（アーティファクト）: 星と かけら。ねがいの鈴・天井 */
+  artifacts: Record<string, OwnedArt>;
+  wishBells: number;
+  wishPity: number;
   /** ねこ修行（タレント）の レベル */
   talents: Record<TalentId, number>;
   seed: number;
@@ -96,14 +98,15 @@ export function newSave(): SaveData {
     runePity: 0,
     daily: emptyDaily(),
     towerBest: 0,
-    towerDay: "",
-    towerUsed: 0,
     patrolAt: 0,
     missions: emptyMissions(),
     hardBest: {},
     bestiary: {},
     bestiaryClaimed: {},
     achievements: [],
+    artifacts: {},
+    wishBells: 10,
+    wishPity: 0,
     talents: emptyTalents(),
     seed: Math.floor(Math.random() * 2 ** 31),
   };
@@ -191,12 +194,15 @@ export function normalize(raw: unknown): SaveData {
       best: Object.fromEntries(DAILIES.map((d) => [d.id, Math.max(0, Math.min(DAILY_LEVELS, Math.floor(num(r.daily?.best?.[d.id], 0))))])) as Record<DailyId, number>,
     },
     towerBest: Math.max(0, Math.floor(num(r.towerBest, 0))),
-    towerDay: typeof r.towerDay === "string" ? r.towerDay : "",
-    towerUsed: Math.max(0, Math.floor(num(r.towerUsed, 0))),
     patrolAt: Math.max(0, num(r.patrolAt, 0)),
     hardBest: stageMap(r.hardBest),
     bestiary: kindMap(r.bestiary),
     bestiaryClaimed: kindMap(r.bestiaryClaimed),
+    artifacts: Object.fromEntries(Object.entries(r.artifacts && typeof r.artifacts === "object" ? r.artifacts : {})
+      .filter(([id, o]) => ART_MAP[id] && o && typeof o === "object")
+      .map(([id, o]) => [id, { star: Math.max(0, Math.min(ART_MAX_STAR, Math.floor(num((o as OwnedArt).star, 0)))), shards: Math.max(0, Math.floor(num((o as OwnedArt).shards, 0))) }])),
+    wishBells: Math.max(0, Math.floor(num(r.wishBells, 10))),
+    wishPity: Math.max(0, Math.floor(num(r.wishPity, 0))),
     achievements: Array.isArray(r.achievements) ? r.achievements.filter((x): x is string => typeof x === "string") : [],
     missions: {
       day: typeof r.missions?.day === "string" ? r.missions.day : "",
@@ -284,6 +290,11 @@ export function loadoutOf(save: SaveData): Loadout {
   const tl = save.talents;
   st.crit += talentValue("crit", tl.crit);
   st.hpPct += rune.hpPct;
+  // 宝物
+  const ar = artifactEffects(save);
+  st.atk += ar.atk; st.hp += ar.hp; st.atkPct += ar.atkPct; st.hpPct += ar.setHpPct + ar.hpPct;
+  st.dodge += ar.dodge; st.aspd += ar.aspd; st.guard += ar.guard; st.crit += ar.critRate; st.orbitPct += ar.orbitPct;
+  rune.critDmg += ar.critDmg; rune.firePct += ar.firePct; rune.poisonPct += ar.poisonPct; rune.bossPct += ar.bossPct; rune.minionPct += ar.minionPct;
   regen += talentValue("regen", tl.regen);
   return {
     stats: st,

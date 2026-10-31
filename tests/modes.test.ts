@@ -6,7 +6,7 @@ import { finishRun } from "../src/core/run";
 import { G } from "../src/core/runes";
 import { loadoutOf, newSave } from "../src/core/save";
 import { rollSkills, SKILLS } from "../src/core/skills";
-import { finishTower, TOWER_FLOORS, TOWER_TICKETS, towerChapter, towerRange, towerTickets } from "../src/core/tower";
+import { finishTower, TOWER_FLOORS, towerChapter, towerRange } from "../src/core/tower";
 import { World } from "../src/game/world";
 
 const H = 3600000;
@@ -40,7 +40,7 @@ describe("3択: レア度・引きなおし。復活", () => {
 
 describe("キャットタワー（本家の スカイタワー）", () => {
   const tw = (start: number) => new World(loadoutOf(newSave()), towerChapter(start), mulberry32(4), "chatora", start + TOWER_FLOORS - 1, start);
-  it("1回 5階。階に はいるたびに スキルを選ぶ。経験値の レベルアップは ない。ボスは 出ない", () => {
+  it("1回 5階。階に はいるたびに スキルを選ぶ。経験値の レベルアップは ない。ボスは 区切りの階だけ", () => {
     const w = tw(11);
     expect(w.stage).toBe(11);
     expect(w.choices).not.toBeNull();
@@ -52,6 +52,8 @@ describe("キャットタワー（本家の スカイタワー）", () => {
     expect(w.hero.level).toBe(lv);
     expect(w.choices).toBeNull();
     expect(w.chapterAt(40)).toBeGreaterThan(w.chapterAt(11));
+    w.startStage(15);
+    expect(w.enemies.some((e) => e.def.boss)).toBe(true);
   });
   it("階を クリアすると タワーの番猫（レア以上の スキル）。5階めで おしまい", () => {
     const w = tw(1);
@@ -66,22 +68,19 @@ describe("キャットタワー（本家の スカイタワー）", () => {
     for (let i = 0; i < 30 && w.state === "fight"; i++) w.step(1 / 60, { mx: 0, my: 0 });
     expect(w.state).toBe("won");
   });
-  it("1日 3枚。5階 ぜんぶ クリアしたときだけ 進む。25階で 大きな ごほうび", () => {
+  it("5階 ぜんぶ クリアしたときだけ 進む。回数の しばりは ない。25階で 大きな ごほうび", () => {
     const s = newSave();
     s.unlocked = 8; s.towerBest = 20;
     const rng = mulberry32(5);
-    expect(finishTower(s, false, rng, "d")!.churu).toBe(0);
+    expect(finishTower(s, false, rng)!.churu).toBe(0);
     expect(s.towerBest).toBe(20);
-    const r = finishTower(s, true, rng, "d")!;
+    const r = finishTower(s, true, rng)!;
     expect(s.towerBest).toBe(25);
     expect(r.churu).toBe(2 * 4 + 50);
     expect(r.runes).toHaveLength(1);
     expect(s.runeMats[G.epic]).toBe(2);
-    expect(finishTower(s, true, rng, "d")).not.toBeNull();
-    expect(towerTickets(s, "d")).toBe(0);
-    expect(finishTower(s, true, rng, "d")).toBeNull();
-    expect(towerTickets(s, "e")).toBe(TOWER_TICKETS);
-    expect(towerRange(s)).toEqual([31, 35]);
+    for (let i = 0; i < 4; i++) expect(finishTower(s, true, rng)).not.toBeNull();
+    expect(towerRange(s)).toEqual([46, 50]);
   });
 });
 

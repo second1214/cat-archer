@@ -127,7 +127,7 @@ function openMissions(): void {
       })),
       h("button", { class: `btn ${!m.bonus && m.claimed.length === MISSIONS.length ? "btn-pink" : "btn-gray"} btn-wide`, disabled: m.bonus || m.claimed.length < MISSIONS.length, onclick: () => {
         if (claimBonus(save)) { writeSave(save); sfx("levelup"); draw(); }
-      } }, m.bonus ? "ぜんぶ達成 済み" : `ぜんぶ達成で 🍥${MISSION_BONUS.churu}・🪨${MISSION_BONUS.stones}`),
+      } }, m.bonus ? "ぜんぶ達成 済み" : `ぜんぶ達成で 🍥${MISSION_BONUS.churu}・🪨${MISSION_BONUS.stones}・🔔${MISSION_BONUS.bells}`),
       h("button", { class: "btn btn-gray btn-wide", onclick: () => { mm.close(); render(); } }, "とじる"));
   };
   draw();
