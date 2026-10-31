@@ -3,6 +3,8 @@ import { describe, expect, it } from "vitest";
 import { loadoutOf, newSave } from "../src/core/save";
 import { MAX_LEVEL, type Rarity } from "../src/core/equip";
 import { runBot, STRONG } from "./bot";
+import { equipRune } from "../src/core/run";
+import type { RuneId } from "../src/core/runes";
 
 const seeds = [1, 2, 3, 4, 5, 6, 7, 8];
 
@@ -22,19 +24,24 @@ describe("バランスの目安", () => {
 });
 
 describe("強い組み合わせ（レーザー・ゆうどう・壁ではねる）が 前提の 難しさ", () => {
-  const strong = (r: Rarity, tl: number) => {
+  const RUNE_SET: RuneId[] = ["tsume", "akaiten", "dragon", "ricochet", "yoru", "netsu", "timeSword", "potion", "guardian", "revive"];
+  const strong = (r: Rarity, tl: number, rg = -1, eq = -1) => {
     const s = newSave();
     const ids = ["hw_lantern", "hw_mantle", "hw_hat", "hw_collar", "hw_charm"];
     s.items = ids.map((id, i) => ({ uid: i + 1, id, r, lv: MAX_LEVEL[r] }));
     s.equipped = { weapon: 1, clothes: 2, hat: 3, collar: 4, charm: 5 };
     for (const k of Object.keys(s.talents)) (s.talents as Record<string, number>)[k] = tl;
+    if (rg >= 0) RUNE_SET.forEach((id, i) => {
+      s.runes.push({ uid: 100 + i, id, g: Math.max(rg, 2), ...(eq >= 0 ? { en: [{ opt: ["guardian", "revive", "yoru"].includes(id) ? "critDmg" : "famDmg", q: eq }, { opt: "boss", q: eq }] } : {}) });
+      equipRune(s, 100 + i);
+    });
     return loadoutOf(s);
   };
-  it("ミシック一式でも 25章は クリアできない。カオス一式なら 25章は クリア", () => {
-    expect([1, 2].some((sd) => runBot(strong(5, 20), 25, sd, 900, STRONG).state === "won")).toBe(false);
-    expect([1, 2].every((sd) => runBot(strong(10, 30), 25, sd, 900, STRONG).state === "won")).toBe(true);
+  const won = (lo: ReturnType<typeof strong>, ch: number) => [1, 2].filter((sd) => runBot(lo, ch, sd, 900, STRONG).state === "won").length;
+  it("カオス一式（修行最大）でも ルーンなしでは 25章を こえられない", () => {
+    expect(won(strong(10, 30), 25)).toBe(0);
   });
-  it("カオス一式・修行最大でも ボットは 45章を クリアできない（ルーン・腕前が いる）", () => {
-    expect([1, 2].some((sd) => runBot(strong(10, 30), 45, sd, 900, STRONG).state === "won")).toBe(false);
+  it("カオス＋ミシックのルーン・付与なら 40章を クリア。ルーンの育成が 先へ進む カギ", () => {
+    expect(won(strong(10, 30, 10, 5), 40)).toBe(2);
   });
 });

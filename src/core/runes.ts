@@ -35,18 +35,24 @@ export interface RuneStep {
 }
 
 export type RuneId = "dragon" | "ricochet" | "timeSword" | "potion" | "split" | "aerie"
-  | "revive" | "guardian" | "lucky" | "smart" | "pact" | "sturdy";
+  | "revive" | "guardian" | "lucky" | "smart" | "pact" | "sturdy"
+  | "tsume" | "akaiten" | "keito" | "netsu" | "yoru";
+
+/** ルーンの 系統（付与の「系統ダメージ」「系統の会心率」が どれに効くか） */
+export type Family = "main" | "strike" | "orbit" | "element" | "none";
+export const FAMILY_NAMES: Record<Family, string> = { main: "毛玉・レーザー", strike: "助っ人ねこ", orbit: "まわる玉", element: "炎・毒・雷", none: "" };
 
 export interface RuneDef {
   id: RuneId;
   type: RuneType;
   name: string;
   icon: string;
+  family: Family;
   steps: RuneStep[];
 }
 
 export const RUNES: readonly RuneDef[] = [
-  { id: "dragon", type: "enhancement", name: "ボス猫の気配", icon: "👑", steps: [
+  { id: "dragon", type: "enhancement", name: "ボス猫の気配", icon: "👑", family: "strike", steps: [
     { at: G.common, desc: "助っ人ねこのダメージ +0.5", strikeDmg: 0.5 },
     { at: G.great, desc: "助っ人ねこのダメージ +1", strikeDmg: 1 },
     { at: G.rare, desc: "攻撃力 +5", atk: 5 },
@@ -54,7 +60,7 @@ export const RUNES: readonly RuneDef[] = [
     { at: G.legend, desc: "ボス猫になる確率 70%" },
     { at: G.mythic, desc: "ボス猫になる確率 100%" },
   ] },
-  { id: "ricochet", type: "enhancement", name: "ねこリレー", icon: "🔁", steps: [
+  { id: "ricochet", type: "enhancement", name: "ねこリレー", icon: "🔁", family: "strike", steps: [
     { at: G.common, desc: "助っ人ねこのダメージ +0.5", strikeDmg: 0.5 },
     { at: G.great, desc: "助っ人ねこのダメージ +1", strikeDmg: 1 },
     { at: G.rare, desc: "攻撃力 +5", atk: 5 },
@@ -62,7 +68,7 @@ export const RUNES: readonly RuneDef[] = [
     { at: G.legend, desc: "跳ね返る確率 70%" },
     { at: G.mythic, desc: "かならず跳ね返る" },
   ] },
-  { id: "timeSword", type: "ability", name: "時計ねこ", icon: "⏰", steps: [
+  { id: "timeSword", type: "ability", name: "時計ねこ", icon: "⏰", family: "strike", steps: [
     { at: G.common, desc: "助っ人ねこのダメージ +0.5", strikeDmg: 0.5 },
     { at: G.great, desc: "助っ人ねこのダメージ +1", strikeDmg: 1 },
     { at: G.rare, desc: "最大体力 +20", hp: 20 },
@@ -70,7 +76,7 @@ export const RUNES: readonly RuneDef[] = [
     { at: G.legend, desc: "1.5秒ごとに来る" },
     { at: G.mythic, desc: "50%で 2匹来る" },
   ] },
-  { id: "potion", type: "ability", name: "またたびの小袋", icon: "🌿", steps: [
+  { id: "potion", type: "ability", name: "またたびの小袋", icon: "🌿", family: "strike", steps: [
     { at: G.common, desc: "助っ人ねこのダメージ +0.5", strikeDmg: 0.5 },
     { at: G.great, desc: "助っ人ねこのダメージ +1", strikeDmg: 1 },
     { at: G.rare, desc: "最大体力 +20", hp: 20 },
@@ -78,50 +84,91 @@ export const RUNES: readonly RuneDef[] = [
     { at: G.legend, desc: "またたびを拾うと 助っ人ねこが さらに3匹" },
     { at: G.mythic, desc: "またたびの 助っ人ねこが 50%で 2倍" },
   ] },
-  { id: "split", type: "etched", name: "子ねこ連れ", icon: "🐾", steps: [
+  { id: "split", type: "etched", name: "子ねこ連れ", icon: "🐾", family: "strike", steps: [
     { at: G.rare, desc: "助っ人ねこのスキルが 出やすい" },
     { at: G.epic, desc: "助っ人ねこが 帰るとき、50%で 子ねこ3匹に分かれる（ダメージ33%ずつ）" },
     { at: G.legend, desc: "子ねこ5匹に分かれ、子ねこは 敵を追いかける" },
     { at: G.legend3, desc: "助っ人ねこのスキルが とても出やすい" },
     { at: G.mythic, desc: "体力50%未満の敵へ 助っ人ねこのダメージ +20%" },
   ] },
-  { id: "aerie", type: "etched", name: "ねこの集会所", icon: "🏠", steps: [
+  { id: "aerie", type: "etched", name: "ねこの集会所", icon: "🏠", family: "strike", steps: [
     { at: G.rare, desc: "助っ人ねこのスキルが 出やすい" },
     { at: G.epic, desc: "助っ人ねこが当たると 25%で 子ねこが1匹 加わる（ダメージ半分）" },
     { at: G.legend, desc: "子ねこが加わる確率 50%" },
     { at: G.legend3, desc: "助っ人ねこのスキルが とても出やすい" },
   ] },
+  // ---- 主武器・まわる玉・属性（本家の Sharp Arrow / Circle / Element 系）----
+  { id: "tsume", type: "enhancement", name: "とがったツメ", icon: "🗡️", family: "main", steps: [
+    { at: G.common, desc: "毛玉・レーザーのダメージ +1" },
+    { at: G.great, desc: "毛玉・レーザーのダメージ +2" },
+    { at: G.rare, desc: "攻撃力 +5", atk: 5 },
+    { at: G.epic, desc: "毛玉・レーザーのダメージ +10%" },
+    { at: G.legend, desc: "毛玉・レーザーのダメージ +20%" },
+    { at: G.mythic, desc: "毛玉・レーザーのダメージ +30%" },
+  ] },
+  { id: "akaiten", type: "enhancement", name: "赤い点の極意", icon: "🔴", family: "main", steps: [
+    { at: G.common, desc: "レーザーのダメージ +1" },
+    { at: G.great, desc: "レーザーのダメージ +2" },
+    { at: G.rare, desc: "攻撃力 +5", atk: 5 },
+    { at: G.epic, desc: "レーザーのダメージ +15%" },
+    { at: G.legend, desc: "レーザーが 壁や物で さらに1回 はねる" },
+    { at: G.mythic, desc: "レーザーのダメージ +35% に" },
+  ] },
+  { id: "keito", type: "enhancement", name: "毛糸の輪", icon: "🧶", family: "orbit", steps: [
+    { at: G.common, desc: "まわる玉のダメージ +1" },
+    { at: G.great, desc: "まわる玉のダメージ +2" },
+    { at: G.rare, desc: "攻撃力 +5", atk: 5 },
+    { at: G.epic, desc: "まわる玉が 50% 速くまわる" },
+    { at: G.legend, desc: "まわる玉が 100% 速くまわる" },
+    { at: G.mythic, desc: "まわる玉を 持っていれば +2個" },
+  ] },
+  { id: "netsu", type: "ability", name: "ひなたの熱", icon: "🔥", family: "element", steps: [
+    { at: G.common, desc: "炎のダメージ +1" },
+    { at: G.great, desc: "毒のダメージ +1" },
+    { at: G.rare, desc: "最大体力 +20", hp: 20 },
+    { at: G.epic, desc: "炎のダメージ +50%" },
+    { at: G.legend, desc: "毒のダメージ +50%" },
+    { at: G.mythic, desc: "炎と毒の 両方が ついた敵は 1秒ごとに 爆発（攻撃力×0.6・まわりにも）" },
+  ] },
+  { id: "yoru", type: "ability", name: "夜の目", icon: "🌙", family: "none", steps: [
+    { at: G.common, desc: "最大体力 +8", hp: 8 },
+    { at: G.great, desc: "最大体力 +16", hp: 16 },
+    { at: G.rare, desc: "最大体力 +20", hp: 20 },
+    { at: G.epic, desc: "会心率 +5%" },
+    { at: G.legend, desc: "会心ダメージ +30%" },
+    { at: G.mythic, desc: "会心率 +10% に" },
+  ] },
   // ---- 祝福（レアから。エピックで 特別な効果）: 本家の Revive / Guardian / Lucky Shadow / Intelligence / Devil Pact / Resilience ----
-  { id: "revive", type: "blessing", name: "九つの命", icon: "💖", steps: [
+  { id: "revive", type: "blessing", name: "九つの命", icon: "💖", family: "none", steps: [
     { at: G.rare, desc: "最大体力 +24", hp: 24 },
     { at: G.epic, desc: "やられたとき 50%で 体力半分で 起き上がる（1プレイ 1回）" },
     { at: G.legend, desc: "起き上がったあと 攻撃力 +20%" },
     { at: G.mythic, desc: "かならず 起き上がる" },
   ] },
-  { id: "guardian", type: "blessing", name: "飼い主のひざ", icon: "🛋️", steps: [
+  { id: "guardian", type: "blessing", name: "飼い主のひざ", icon: "🛋️", family: "none", steps: [
     { at: G.rare, desc: "攻撃力 +6", atk: 6 },
     { at: G.epic, desc: "受けるダメージ -5%" },
     { at: G.legend, desc: "受けるダメージ -10%" },
     { at: G.mythic, desc: "受けるダメージ -15%" },
   ] },
-  { id: "lucky", type: "blessing", name: "ひなたぼっこ", icon: "☀️", steps: [
+  { id: "lucky", type: "blessing", name: "ひなたぼっこ", icon: "☀️", family: "none", steps: [
     { at: G.rare, desc: "最大体力 +24", hp: 24 },
     { at: G.epic, desc: "よける確率 +2%" },
     { at: G.legend, desc: "よける確率 +5%" },
     { at: G.mythic, desc: "よける確率 +10%" },
   ] },
-  { id: "smart", type: "blessing", name: "かしこい子", icon: "📚", steps: [
+  { id: "smart", type: "blessing", name: "かしこい子", icon: "📚", family: "none", steps: [
     { at: G.rare, desc: "最大体力 +24", hp: 24 },
     { at: G.epic, desc: "経験値 +10%" },
     { at: G.legend, desc: "経験値 +20%" },
   ] },
-  { id: "pact", type: "blessing", name: "のら猫のなかま", icon: "🤝", steps: [
+  { id: "pact", type: "blessing", name: "のら猫のなかま", icon: "🤝", family: "none", steps: [
     { at: G.rare, desc: "攻撃力 +6", atk: 6 },
     { at: G.epic, desc: "のら猫ボスの 取り引きで へる 体力の上限 -25%" },
     { at: G.legend, desc: "のら猫ボスが 8面のあとにも 来る" },
     { at: G.mythic, desc: "取り引きで へる 体力の上限 -50%" },
   ] },
-  { id: "sturdy", type: "blessing", name: "どっしり", icon: "🗿", steps: [
+  { id: "sturdy", type: "blessing", name: "どっしり", icon: "🗿", family: "none", steps: [
     { at: G.rare, desc: "最大体力 +24", hp: 24 },
     { at: G.epic, desc: "攻撃力 -15% のかわりに 最大体力 +20%" },
     { at: G.legend, desc: "最大体力 +25% に" },
@@ -131,7 +178,39 @@ export const RUNES: readonly RuneDef[] = [
 
 export const RUNE_MAP = Object.fromEntries(RUNES.map((r) => [r.id, r])) as Record<RuneId, RuneDef>;
 
-export interface Rune { uid: number; id: RuneId; g: number }
+/** 付与（エンチャント）: 本家と同じく エピック+2 で1つめ、ミシックで2つめの枠。爪とぎ石で 付ける・付けなおす */
+export type EnchantOpt = "boss" | "minion" | "critDmg" | "famDmg" | "famCrit" | "hp";
+export interface Enchant { opt: EnchantOpt; q: number }
+/** 付与の 品質（0 コモン 〜 5 ミシック）と 効き目の倍率 */
+export const ENCHANT_Q_NAMES = ["コモン", "グレート", "レア", "エピック", "レジェンド", "ミシック"] as const;
+const ENCHANT_Q_MUL = [0.2, 0.35, 0.5, 0.65, 0.8, 1];
+const ENCHANT_Q_RATES: readonly (readonly [number, number])[] = [[0, 40], [1, 30], [2, 17], [3, 9], [4, 3.5], [5, 0.5]];
+/** ミシック品質のときの 値 */
+const ENCHANT_MAX: Record<EnchantOpt, number> = { boss: 0.15, minion: 0.15, critDmg: 0.3, famDmg: 0.3, famCrit: 0.15, hp: 0.1 };
+export const ENCHANT_COST = 5;
+export const enchantSlots = (g: number) => (g >= G.mythic ? 2 : g >= G.epic2 ? 1 : 0);
+export const enchantValue = (en: Enchant) => ENCHANT_MAX[en.opt] * ENCHANT_Q_MUL[en.q];
+export function enchantOpts(id: RuneId): EnchantOpt[] {
+  return RUNE_MAP[id].family === "none" ? ["boss", "minion", "critDmg", "hp"] : ["boss", "minion", "critDmg", "famDmg", "famCrit"];
+}
+export function enchantDesc(id: RuneId, en: Enchant): string {
+  const v = Math.round(enchantValue(en) * 1000) / 10;
+  const fam = FAMILY_NAMES[RUNE_MAP[id].family];
+  switch (en.opt) {
+    case "boss": return `ボスへのダメージ +${v}%`;
+    case "minion": return `ボス以外へのダメージ +${v}%`;
+    case "critDmg": return `会心ダメージ +${v}%`;
+    case "famDmg": return `${fam}のダメージ +${v}%`;
+    case "famCrit": return `${fam}の会心率 +${v}%`;
+    case "hp": return `最大体力 +${v}%`;
+  }
+}
+export function rollEnchant(rng: Rng, id: RuneId): Enchant {
+  const opts = enchantOpts(id);
+  return { opt: opts[Math.floor(rng() * opts.length)], q: weighted(rng, ENCHANT_Q_RATES) };
+}
+
+export interface Rune { uid: number; id: RuneId; g: number; en?: (Enchant | null)[] }
 
 export const minGrade = (t: RuneType) => (t === "blessing" || t === "etched" ? G.rare : G.common);
 
@@ -166,6 +245,15 @@ export interface RuneEffects {
   pactExtra: boolean;
   /** 攻撃力 -% と 体力 +%（どっしり） */
   sturdy: { atkPct: number; hpPct: number };
+  // ---- 主武器・まわる玉・属性・会心 ----
+  mainFlat: number; mainPct: number; laserFlat: number; laserPct: number; laserBounce: number;
+  orbitFlat: number; orbitPct: number; orbitSpeed: number; orbitExtra: number;
+  fireFlat: number; poisonFlat: number; firePct: number; poisonPct: number; elemPct: number; explode: boolean;
+  critRate: number; critDmg: number;
+  // ---- 付与 ----
+  bossPct: number; minionPct: number; strikePct: number; hpPct: number;
+  /** 系統ごとの 会心率 + */
+  famCrit: Record<Family, number>;
 }
 
 export function runeEffects(runes: readonly Rune[]): RuneEffects {
@@ -173,6 +261,9 @@ export function runeEffects(runes: readonly Rune[]): RuneEffects {
     atk: 0, hp: 0, strikeDmg: 0, dragonChance: 0, ricochetChance: 0, timeSword: null,
     potion: { start: false, extraOnPickup: 0, doubleChance: 0 }, split: null, aerieChance: 0, strikeSkillWeight: 1, lowHpBonus: 0,
     revive: { chance: 0, atkAfter: 0 }, guard: 0, dodge: 0, expPct: 0, pactCostMul: 1, pactExtra: false, sturdy: { atkPct: 0, hpPct: 0 },
+    mainFlat: 0, mainPct: 0, laserFlat: 0, laserPct: 0, laserBounce: 0, orbitFlat: 0, orbitPct: 0, orbitSpeed: 0, orbitExtra: 0,
+    fireFlat: 0, poisonFlat: 0, firePct: 0, poisonPct: 0, elemPct: 0, explode: false, critRate: 0, critDmg: 0,
+    bossPct: 0, minionPct: 0, strikePct: 0, hpPct: 0, famCrit: { main: 0, strike: 0, orbit: 0, element: 0, none: 0 },
   };
   for (const r of runes) {
     const b = runeBase(r);
@@ -211,6 +302,49 @@ export function runeEffects(runes: readonly Rune[]): RuneEffects {
       case "sturdy":
         if (g >= G.epic) e.sturdy = { atkPct: -0.15, hpPct: g >= G.mythic ? 0.3 : g >= G.legend ? 0.25 : 0.2 };
         break;
+      case "tsume":
+        e.mainFlat += g >= G.great ? 2 : 1;
+        e.mainPct += g >= G.mythic ? 0.3 : g >= G.legend ? 0.2 : g >= G.epic ? 0.1 : 0;
+        break;
+      case "akaiten":
+        e.laserFlat += g >= G.great ? 2 : 1;
+        e.laserPct += g >= G.mythic ? 0.35 : g >= G.epic ? 0.15 : 0;
+        if (g >= G.legend) e.laserBounce = Math.max(e.laserBounce, 1);
+        break;
+      case "keito":
+        e.orbitFlat += g >= G.great ? 2 : 1;
+        e.orbitSpeed = Math.max(e.orbitSpeed, g >= G.legend ? 1 : g >= G.epic ? 0.5 : 0);
+        if (g >= G.mythic) e.orbitExtra = 2;
+        break;
+      case "netsu":
+        e.fireFlat += 1;
+        if (g >= G.great) e.poisonFlat += 1;
+        if (g >= G.epic) e.firePct += 0.5;
+        if (g >= G.legend) e.poisonPct += 0.5;
+        if (g >= G.mythic) e.explode = true;
+        break;
+      case "yoru":
+        e.critRate += g >= G.mythic ? 0.1 : g >= G.epic ? 0.05 : 0;
+        if (g >= G.legend) e.critDmg += 0.3;
+        break;
+    }
+    const fam = RUNE_MAP[r.id].family;
+    for (const en of (r.en ?? []).slice(0, enchantSlots(g))) {
+      if (!en) continue;
+      const v = enchantValue(en);
+      switch (en.opt) {
+        case "boss": e.bossPct += v; break;
+        case "minion": e.minionPct += v; break;
+        case "critDmg": e.critDmg += v; break;
+        case "hp": e.hpPct += v; break;
+        case "famCrit": e.famCrit[fam] += v; break;
+        case "famDmg":
+          if (fam === "main") e.mainPct += v;
+          else if (fam === "strike") e.strikePct += v;
+          else if (fam === "orbit") e.orbitPct += v;
+          else if (fam === "element") e.elemPct += v;
+          break;
+      }
     }
     if (RUNE_MAP[r.id].type === "etched") e.strikeSkillWeight = Math.max(e.strikeSkillWeight, g >= G.legend3 ? 2 : g >= G.rare ? 1.5 : 1);
   }

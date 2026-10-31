@@ -14,7 +14,7 @@ describe("ルーン: 合成", () => {
     s.runes = [ru(1, "dragon", 0), ru(2, "dragon", 0), ru(3, "dragon", 1)];
     expect(mergeRune(s, 1)?.g).toBe(1);
     expect(s.runes.map((r) => r.uid)).toEqual([1, 3]);
-    expect(runePartners(s, s.runes[0])?.map((r) => r.uid)).toEqual([3]);
+    expect(runePartners(s, s.runes[0])?.mates.map((r) => r.uid)).toEqual([3]);
   });
   it("ちがうルーン・ちがう品質・付けているものは 材料にならない。ミシックは 上がらない", () => {
     const s = newSave();
@@ -174,5 +174,56 @@ describe("ねこ修行（タレント）", () => {
     expect(talentCost(TALENT_MAX)).toBeNull();
     const poor = newSave(); poor.coins = 0;
     expect(trainTalent(poor, "atk")).toBe(false);
+  });
+});
+
+describe("ルーンの育成: 新しいルーン・付与・分解・おみくじ", async () => {
+  const run = await import("../src/core/run");
+  const R = await import("../src/core/runes");
+  it("とがったツメ・赤い点の極意・夜の目が 効く", () => {
+    const e = R.runeEffects([ru(1, "tsume", G.mythic), ru(2, "akaiten", G.legend), ru(3, "yoru", G.legend)]);
+    expect(e.mainPct).toBeCloseTo(0.3);
+    expect(e.laserPct).toBeCloseTo(0.15);
+    expect(e.laserBounce).toBe(1);
+    expect(e.critRate).toBeCloseTo(0.05);
+    expect(e.critDmg).toBeCloseTo(0.3);
+  });
+  it("付与の枠は エピック+2で1つ・ミシックで2つ。系統ダメージは 系統に効く。付けなおしは 石を使う", () => {
+    expect([G.epic1, G.epic2, G.legend3, G.mythic].map(R.enchantSlots)).toEqual([0, 1, 1, 2]);
+    const s = newSave();
+    s.runes = [ru(1, "tsume", G.epic1), ru(2, "tsume", G.epic2)];
+    s.stones = R.ENCHANT_COST * 2;
+    const rng = mulberry32(5);
+    expect(run.rollRuneEnchant(s, 1, 0, rng)).toBeNull();
+    const en = run.rollRuneEnchant(s, 2, 0, rng)!;
+    expect(en).not.toBeNull();
+    expect(s.stones).toBe(R.ENCHANT_COST);
+    run.setRuneEnchant(s, 2, 0, { opt: "famDmg", q: 5 });
+    expect(R.runeEffects([s.runes[1]]).mainPct).toBeCloseTo(0.1 + 0.3);
+    run.setRuneEnchant(s, 2, 0, { opt: "boss", q: 0 });
+    expect(R.runeEffects([s.runes[1]]).bossPct).toBeCloseTo(0.03);
+    // 付与した ルーンは 分解・合成の 材料に ならない
+    expect(run.dismantleRune(s, 2)).toBe(false);
+  });
+  it("分解すると ルーン素材。素材で 合成できる（まとめて合成は 素材を使わない）", () => {
+    const s = newSave();
+    s.runes = [ru(1, "dragon", G.rare), ru(2, "ricochet", G.rare)];
+    expect(run.dismantleRune(s, 2)).toBe(true);
+    expect(s.runeMats[G.rare]).toBe(1);
+    expect(run.mergeAllRunes(s)).toHaveLength(0);
+    expect(run.mergeRune(s, 1)?.g).toBe(G.epic);
+    expect(s.runeMats[G.rare]).toBe(0);
+  });
+  it("おみくじ: チュールで引ける。30回で かならず エピック以上。爪とぎ石は 5章から", () => {
+    const s = newSave();
+    s.unlocked = 5; s.churu = 10000;
+    const all = Array.from({ length: 6 }, () => run.pullOmikuji(s, mulberry32(9), 10)!).flat();
+    expect(all).toHaveLength(60);
+    let streak = 0, max = 0;
+    for (const r of all) { streak = r.g >= G.epic ? 0 : streak + 1; max = Math.max(max, streak); }
+    expect(max).toBeLessThan(run.OMIKUJI_PITY);
+    expect(run.stonesFor(4, 10, true)).toBe(0);
+    expect(run.stonesFor(10, 10, true)).toBe(1 + 2 + 2);
+    expect(run.stonesFor(10, 6, false)).toBe(1);
   });
 });

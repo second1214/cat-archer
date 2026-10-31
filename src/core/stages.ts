@@ -71,13 +71,19 @@ export const CHAPTER_NAMES = [
 ];
 export const CHAPTER_COUNT = CHAPTER_NAMES.length;
 
-/** 敵の 体力・攻撃の 倍率（10章までは 速く、そのあとは ゆっくり。装備の レベル・品質で 追いつく所） */
+/** 敵の 体力・攻撃の 倍率。10章までは 速く、11〜20章は 装備（カオスまで）で 追いつく所、21章からは ルーンの 育成が いる所 */
 export function chapterHp(ch: number): number {
-  return ch <= 10 ? Math.pow(1.55, ch - 1) : Math.pow(1.55, 9) * Math.pow(HP_GROW, ch - 10);
+  return grow(ch, 1.55, HP_MID, HP_GROW);
 }
 export function chapterDmg(ch: number): number {
-  return ch <= 10 ? Math.pow(1.25, ch - 1) : Math.pow(1.25, 9) * Math.pow(DMG_GROW, ch - 10);
+  return grow(ch, 1.25, DMG_MID, DMG_GROW);
 }
+function grow(ch: number, early: number, mid: number, late: number): number {
+  const a = Math.min(ch, 10) - 1, b = Math.max(0, Math.min(ch, 20) - 10), c = Math.max(0, ch - 20);
+  return Math.pow(early, a) * Math.pow(mid, b) * Math.pow(late, c);
+}
+const HP_MID = 1.27;
+const DMG_MID = 1.1;
 const HP_GROW = 1.12;
 const DMG_GROW = 1.055;
 
