@@ -18,6 +18,8 @@ export const DOOR_W = 1.8;
 const SHOT_SPEED = 10;
 const ESHOT_SPEED = 3.6;
 const BASE_INTERVAL = 0.7;
+/** まわる玉の 半径（猫から はなれる距離） */
+export const ORBIT_R = 1.6;
 /** ゆうどう: 曲がる速さ（ラジアン/秒）と、ねらう敵までの距離 */
 const HOMING_TURN = 4.5;
 const HOMING_RANGE = 4;
@@ -109,6 +111,8 @@ export class World implements StrikeHost {
   drops: Item[] = [];
   runeDrops: Rune[] = [];
   churu = 0;
+  /** 九つの命で 起き上がった */
+  revived = false;
   event: StageEvent | null = null;
   /** 床に落ちている チュール */
   churuPickup: { x: number; y: number; t: number } | null = null;
@@ -146,12 +150,14 @@ export class World implements StrikeHost {
 
   // ---------- 力（装備＋スキル） ----------
   n(id: SkillId): number { return this.skills[id] ?? 0; }
-  get atk(): number { return this.lo.atk * (1 + 0.25 * this.n("atk")); }
+  get atk(): number { return this.lo.atk * (1 + 0.25 * this.n("atk")) * (this.revived ? 1 + this.rune.revive.atkAfter : 1); }
   get interval(): number { return Math.max(0.16, BASE_INTERVAL / ((1 + this.lo.stats.aspd) * (1 + 0.2 * this.n("aspd")))); }
   get critRate(): number { return Math.min(0.8, 0.05 + this.lo.stats.crit + 0.1 * this.n("crit")); }
   get critMul(): number { return 2 + 0.4 * this.n("crit"); }
-  get dodge(): number { return Math.min(0.6, this.lo.stats.dodge + 0.08 * this.n("dodge")); }
-  get guard(): number { return Math.min(0.6, this.lo.stats.guard); }
+  get dodge(): number { return Math.min(0.6, this.lo.stats.dodge + this.rune.dodge + 0.08 * this.n("dodge")); }
+  get guard(): number { return Math.min(0.6, this.lo.stats.guard + this.rune.guard); }
+  /** のら猫ボスの 取り引きで へる 体力の上限（祝福「のら猫のなかま」で へる） */
+  get devilCost(): number { return DEVIL_COST * this.rune.pactCostMul; }
   get pierce(): boolean { return this.lo.pierce || this.n("pierce") > 0; }
   get bounce(): number { return this.lo.bounce + 2 * this.n("bounce"); }
   get orbs(): number { return 2 * this.n("orbit") + this.lo.orbs; }
@@ -233,7 +239,7 @@ export class World implements StrikeHost {
     const h = this.hero;
     if (choice === "heal") { if (ev.kind === "angel") this.heal(h.maxHp * 0.4); }
     else if (choice !== "refuse" && ev.skills.includes(choice)) {
-      if (ev.kind === "devil") { h.maxHp = Math.max(1, Math.round(h.maxHp * (1 - DEVIL_COST))); h.hp = Math.min(h.hp, h.maxHp); }
+      if (ev.kind === "devil") { h.maxHp = Math.max(1, Math.round(h.maxHp * (1 - this.devilCost))); h.hp = Math.min(h.hp, h.maxHp); }
       this.skills[choice] = this.n(choice) + 1;
       if (choice === "hpup") { const add = Math.round(h.maxHp * 0.2); h.maxHp += add; h.hp += add; }
     }
@@ -336,7 +342,7 @@ export class World implements StrikeHost {
     if (this.state === "clear") {
       const opts = { laser: this.laser, strikeSource: !!this.rune.timeSword || this.rune.potion.start, strikeWeight: this.rune.strikeSkillWeight };
       if (ANGEL_STAGES.includes(this.stage)) this.event = { kind: "angel", skills: rollSkills(this.skills, this.rng, 1, opts) };
-      else if (DEVIL_STAGES.includes(this.stage)) this.event = { kind: "devil", skills: rollSkills(this.skills, this.rng, 2, opts) };
+      else if (DEVIL_STAGES.includes(this.stage) || (this.rune.pactExtra && this.stage === 8)) this.event = { kind: "devil", skills: rollSkills(this.skills, this.rng, 2, opts) };
     }
   }
 
@@ -567,7 +573,7 @@ export class World implements StrikeHost {
     }
     if (this.n("vamp")) this.heal(this.hero.maxHp * 0.02 * this.n("vamp"));
     const h = this.hero;
-    h.xp += e.def.xp;
+    h.xp += e.def.xp * (1 + this.rune.expPct);
     while (h.xp >= this.xpNeed()) {
       h.xp -= this.xpNeed();
       h.level++;
@@ -592,7 +598,18 @@ export class World implements StrikeHost {
     h.hurtAnim = 0.3;
     this.fx.push({ kind: "hurt", x: h.x, y: h.y - 1.2, v, t: 0 });
     this.sounds.push("hurt");
-    if (h.hp <= 0) { h.hp = 0; this.state = "dead"; }
+    if (h.hp <= 0) {
+      // 祝福「九つの命」: 1回だけ 体力半分で 起き上がる
+      if (!this.revived && this.rune.revive.chance > 0 && this.rng() < this.rune.revive.chance) {
+        this.revived = true;
+        h.hp = Math.round(h.maxHp / 2);
+        h.inv = 2;
+        this.fx.push({ kind: "heal", x: h.x, y: h.y - 1, v: h.hp, t: 0 });
+        this.sounds.push("levelup");
+        return;
+      }
+      h.hp = 0; this.state = "dead";
+    }
   }
 
   private moveEnemies(dt: number): void {
@@ -767,7 +784,7 @@ export class World implements StrikeHost {
     const n = this.orbs, h = this.hero;
     return Array.from({ length: n }, (_, i) => {
       const a = this.time * 3.2 + (i / n) * Math.PI * 2;
-      return [h.x + Math.cos(a) * 1.05, h.y - 0.35 + Math.sin(a) * 1.05] as [number, number];
+      return [h.x + Math.cos(a) * ORBIT_R, h.y - 0.35 + Math.sin(a) * ORBIT_R] as [number, number];
     });
   }
 

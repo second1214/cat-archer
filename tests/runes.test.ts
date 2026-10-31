@@ -124,3 +124,55 @@ describe("助っ人ねこのスキルの 出かた", () => {
     }
   });
 });
+
+describe("祝福ルーン", () => {
+  it("6種あり、ボス（10面）・宝箱から レアで出る", async () => {
+    const { RUNES, rollRune } = await import("../src/core/runes");
+    expect(RUNES.filter((r) => r.type === "blessing")).toHaveLength(6);
+    const rng = mulberry32(2);
+    const got = Array.from({ length: 2000 }, (_, i) => rollRune(rng, i, true)).filter((r) => RUNES.find((d) => d.id === r.id)!.type === "blessing");
+    expect(got.length / 2000).toBeGreaterThan(0.15);
+    expect(got.every((r) => r.g === G.rare)).toBe(true);
+  });
+  it("九つの命: ミシックなら やられても 1回 起き上がる", async () => {
+    const { World } = await import("../src/game/world");
+    const s = newSave(); s.runes = [ru(1, "revive", G.mythic)]; equipRune(s, 1);
+    const w = new World(loadoutOf(s), 1, mulberry32(1));
+    const hit = (w as unknown as { hurt(d: number): void });
+    w.hero.hp = 1; w.hero.inv = 0; hit.hurt.call(w, 9999);
+    expect(w.state).toBe("fight");
+    expect(w.hero.hp).toBe(Math.round(w.hero.maxHp / 2));
+    w.hero.inv = 0; w.hero.hp = 1; hit.hurt.call(w, 9999);
+    expect(w.state).toBe("dead");
+  });
+  it("飼い主のひざ・ひなたぼっこ・どっしり・のら猫のなかま", async () => {
+    const { World } = await import("../src/game/world");
+    expect(eff("guardian", G.legend).guard).toBe(0.1);
+    expect(eff("lucky", G.mythic).dodge).toBe(0.1);
+    // 同じ品質の 祝福（基本の力は 同じ）と くらべる
+    const with_ = (id: RuneId) => { const s = newSave(); s.runes = [ru(1, id, G.epic)]; equipRune(s, 1); return loadoutOf(s); };
+    const lo = with_("sturdy"), other = with_("lucky");
+    expect(lo.atk).toBeCloseTo(other.atk * 0.85, 5);
+    expect(lo.hp).toBe(Math.round(other.hp * 1.2));
+    const p = newSave(); p.runes = [ru(1, "pact", G.mythic)]; equipRune(p, 1);
+    expect(new World(loadoutOf(p), 1, mulberry32(1)).devilCost).toBeCloseTo(0.1, 5);
+  });
+});
+
+describe("ねこ修行（タレント）", () => {
+  it("にぼしで 上がり、力に入る。最大30", async () => {
+    const { trainTalent, TALENT_MAX, talentCost } = await import("../src/core/talents");
+    const s = newSave(); s.coins = 1e9;
+    const a = loadoutOf(s);
+    expect(trainTalent(s, "atk")).toBe(true);
+    expect(trainTalent(s, "hp")).toBe(true);
+    const b = loadoutOf(s);
+    expect(b.atk).toBeGreaterThan(a.atk);
+    expect(b.hp).toBe(a.hp + 15);
+    for (let i = 0; i < 40; i++) trainTalent(s, "crit");
+    expect(s.talents.crit).toBe(TALENT_MAX);
+    expect(talentCost(TALENT_MAX)).toBeNull();
+    const poor = newSave(); poor.coins = 0;
+    expect(trainTalent(poor, "atk")).toBe(false);
+  });
+});

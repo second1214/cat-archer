@@ -3,6 +3,7 @@ import { CAT_IDS } from "./cats";
 import { G, minGrade, MAX_GRADE, RUNE_MAP, RUNE_SLOTS, RUNE_TYPES, runeEffects, type Rune, type RuneEffects, type RuneType } from "./runes";
 import { activeTraits, addStats, emptyStats, ITEM_MAP, itemStats, MAX_LEVEL, MAX_RARITY, setBonuses, SLOTS, type Item, type Rarity, type Slot, type Stats } from "./equip";
 import type { SkillId } from "./skills";
+import { emptyTalents, TALENT_MAX, TALENTS, talentValue, type TalentId } from "./talents";
 
 const KEY = "cat-archer/save";
 /** 2: 装備の品質を 4段 → 6段（コモン〜ミシック）、枠を 5つに。合成素材・チュール */
@@ -38,6 +39,8 @@ export interface SaveData {
   gachaPity: number;
   /** 1日1回の チュールを もらった日（YYYY-MM-DD） */
   lastDaily: string;
+  /** ねこ修行（タレント）の レベル */
+  talents: Record<TalentId, number>;
   seed: number;
 }
 
@@ -61,6 +64,7 @@ export function newSave(): SaveData {
     churu: START_CHURU,
     gachaPity: 0,
     lastDaily: "",
+    talents: emptyTalents(),
     seed: Math.floor(Math.random() * 2 ** 31),
   };
 }
@@ -122,6 +126,7 @@ export function normalize(raw: unknown): SaveData {
     churu: Math.max(0, Math.floor(num(r.churu, START_CHURU))),
     gachaPity: Math.max(0, Math.floor(num(r.gachaPity, 0))),
     lastDaily: typeof r.lastDaily === "string" ? r.lastDaily : "",
+    talents: Object.fromEntries(TALENTS.map((t) => [t.id, Math.max(0, Math.min(TALENT_MAX, Math.floor(num(r.talents?.[t.id], 0))))])) as Record<TalentId, number>,
     seed: Math.floor(num(r.seed, base.seed)),
   };
 }
@@ -197,10 +202,14 @@ export function loadoutOf(save: SaveData): Loadout {
     for (const sk of t.startSkills ?? []) if (!startSkills.includes(sk)) startSkills.push(sk);
   }
   rune.dragonChance = Math.min(1, rune.dragonChance + dragon);
+  // ねこ修行
+  const tl = save.talents;
+  st.crit += talentValue("crit", tl.crit);
+  regen += talentValue("regen", tl.regen);
   return {
     stats: st,
-    atk: (BASE_ATK + st.atk + rune.atk) * (1 + st.atkPct),
-    hp: Math.round((BASE_HP + st.hp + rune.hp) * (1 + st.hpPct)),
+    atk: (BASE_ATK + st.atk + rune.atk + talentValue("atk", tl.atk)) * (1 + st.atkPct + rune.sturdy.atkPct),
+    hp: Math.round((BASE_HP + st.hp + rune.hp + talentValue("hp", tl.hp)) * (1 + st.hpPct + rune.sturdy.hpPct)),
     bounce, pierce, laser, regen, rune, startSkills, orbs,
   };
 }

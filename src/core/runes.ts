@@ -34,7 +34,8 @@ export interface RuneStep {
   strikeDmg?: number;
 }
 
-export type RuneId = "dragon" | "ricochet" | "timeSword" | "potion" | "split" | "aerie";
+export type RuneId = "dragon" | "ricochet" | "timeSword" | "potion" | "split" | "aerie"
+  | "revive" | "guardian" | "lucky" | "smart" | "pact" | "sturdy";
 
 export interface RuneDef {
   id: RuneId;
@@ -90,6 +91,42 @@ export const RUNES: readonly RuneDef[] = [
     { at: G.legend, desc: "子ねこが加わる確率 50%" },
     { at: G.legend3, desc: "助っ人ねこのスキルが とても出やすい" },
   ] },
+  // ---- 祝福（レアから。エピックで 特別な効果）: 本家の Revive / Guardian / Lucky Shadow / Intelligence / Devil Pact / Resilience ----
+  { id: "revive", type: "blessing", name: "九つの命", icon: "💖", steps: [
+    { at: G.rare, desc: "最大体力 +24", hp: 24 },
+    { at: G.epic, desc: "やられたとき 50%で 体力半分で 起き上がる（1プレイ 1回）" },
+    { at: G.legend, desc: "起き上がったあと 攻撃力 +20%" },
+    { at: G.mythic, desc: "かならず 起き上がる" },
+  ] },
+  { id: "guardian", type: "blessing", name: "飼い主のひざ", icon: "🛋️", steps: [
+    { at: G.rare, desc: "攻撃力 +6", atk: 6 },
+    { at: G.epic, desc: "受けるダメージ -5%" },
+    { at: G.legend, desc: "受けるダメージ -10%" },
+    { at: G.mythic, desc: "受けるダメージ -15%" },
+  ] },
+  { id: "lucky", type: "blessing", name: "ひなたぼっこ", icon: "☀️", steps: [
+    { at: G.rare, desc: "最大体力 +24", hp: 24 },
+    { at: G.epic, desc: "よける確率 +2%" },
+    { at: G.legend, desc: "よける確率 +5%" },
+    { at: G.mythic, desc: "よける確率 +10%" },
+  ] },
+  { id: "smart", type: "blessing", name: "かしこい子", icon: "📚", steps: [
+    { at: G.rare, desc: "最大体力 +24", hp: 24 },
+    { at: G.epic, desc: "経験値 +10%" },
+    { at: G.legend, desc: "経験値 +20%" },
+  ] },
+  { id: "pact", type: "blessing", name: "のら猫のなかま", icon: "🤝", steps: [
+    { at: G.rare, desc: "攻撃力 +6", atk: 6 },
+    { at: G.epic, desc: "のら猫ボスの 取り引きで へる 体力の上限 -25%" },
+    { at: G.legend, desc: "のら猫ボスが 8面のあとにも 来る" },
+    { at: G.mythic, desc: "取り引きで へる 体力の上限 -50%" },
+  ] },
+  { id: "sturdy", type: "blessing", name: "どっしり", icon: "🗿", steps: [
+    { at: G.rare, desc: "最大体力 +24", hp: 24 },
+    { at: G.epic, desc: "攻撃力 -15% のかわりに 最大体力 +20%" },
+    { at: G.legend, desc: "最大体力 +25% に" },
+    { at: G.mythic, desc: "最大体力 +30% に" },
+  ] },
 ];
 
 export const RUNE_MAP = Object.fromEntries(RUNES.map((r) => [r.id, r])) as Record<RuneId, RuneDef>;
@@ -119,12 +156,23 @@ export interface RuneEffects {
   strikeSkillWeight: number;
   /** 体力50%未満の敵への 助っ人ねこのダメージ +% */
   lowHpBonus: number;
+  // ---- 祝福 ----
+  revive: { chance: number; atkAfter: number };
+  guard: number;
+  dodge: number;
+  expPct: number;
+  /** のら猫ボスの 取り引きで へる量の 倍率・8面のあとにも 来るか */
+  pactCostMul: number;
+  pactExtra: boolean;
+  /** 攻撃力 -% と 体力 +%（どっしり） */
+  sturdy: { atkPct: number; hpPct: number };
 }
 
 export function runeEffects(runes: readonly Rune[]): RuneEffects {
   const e: RuneEffects = {
     atk: 0, hp: 0, strikeDmg: 0, dragonChance: 0, ricochetChance: 0, timeSword: null,
     potion: { start: false, extraOnPickup: 0, doubleChance: 0 }, split: null, aerieChance: 0, strikeSkillWeight: 1, lowHpBonus: 0,
+    revive: { chance: 0, atkAfter: 0 }, guard: 0, dodge: 0, expPct: 0, pactCostMul: 1, pactExtra: false, sturdy: { atkPct: 0, hpPct: 0 },
   };
   for (const r of runes) {
     const b = runeBase(r);
@@ -149,18 +197,35 @@ export function runeEffects(runes: readonly Rune[]): RuneEffects {
       case "aerie":
         e.aerieChance = Math.max(e.aerieChance, g >= G.legend ? 0.5 : g >= G.epic ? 0.25 : 0);
         break;
+      case "revive":
+        e.revive.chance = Math.max(e.revive.chance, g >= G.mythic ? 1 : g >= G.epic ? 0.5 : 0);
+        if (g >= G.legend) e.revive.atkAfter = 0.2;
+        break;
+      case "guardian": e.guard += g >= G.mythic ? 0.15 : g >= G.legend ? 0.1 : g >= G.epic ? 0.05 : 0; break;
+      case "lucky": e.dodge += g >= G.mythic ? 0.1 : g >= G.legend ? 0.05 : g >= G.epic ? 0.02 : 0; break;
+      case "smart": e.expPct += g >= G.legend ? 0.2 : g >= G.epic ? 0.1 : 0; break;
+      case "pact":
+        e.pactCostMul = Math.min(e.pactCostMul, g >= G.mythic ? 0.5 : g >= G.epic ? 0.75 : 1);
+        if (g >= G.legend) e.pactExtra = true;
+        break;
+      case "sturdy":
+        if (g >= G.epic) e.sturdy = { atkPct: -0.15, hpPct: g >= G.mythic ? 0.3 : g >= G.legend ? 0.25 : 0.2 };
+        break;
     }
     if (RUNE_MAP[r.id].type === "etched") e.strikeSkillWeight = Math.max(e.strikeSkillWeight, g >= G.legend3 ? 2 : g >= G.rare ? 1.5 : 1);
   }
   return e;
 }
 
-/** ルーンが落ちる（強化・能力は コモンかグレート。銘刻は ボス10面で 10%、レア） */
+/** ルーンが落ちる（強化・能力は コモンかグレート。10面のボスからは 銘刻 10%・祝福 20%、宝箱からは 祝福 10%。どちらも レア） */
 export function rollRune(rng: Rng, uid: number, bigBoss: boolean): Rune {
-  if (bigBoss && rng() < 0.1) {
-    const etched = RUNES.filter((r) => r.type === "etched");
-    return { uid, id: etched[Math.floor(rng() * etched.length)].id, g: G.rare };
-  }
+  const rare = (t: RuneType) => {
+    const pool = RUNES.filter((r) => r.type === t);
+    return { uid, id: pool[Math.floor(rng() * pool.length)].id, g: G.rare };
+  };
+  const roll = rng();
+  if (bigBoss && roll < 0.1) return rare("etched");
+  if (roll < (bigBoss ? 0.3 : 0.1)) return rare("blessing");
   const pool = RUNES.filter((r) => r.type === "ability" || r.type === "enhancement");
   return { uid, id: pool[Math.floor(rng() * pool.length)].id, g: weighted(rng, [[G.common, 0.75], [G.great, 0.25]]) };
 }
