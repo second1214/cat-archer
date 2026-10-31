@@ -61,6 +61,7 @@ button:disabled { cursor: default; }
 .ch-mid { flex: 1; text-align: center; }
 .ch-no { font-size: 13px; color: var(--ink2); font-weight: 800; }
 .ch-name { font-size: 22px; font-weight: 900; }
+.ch-new { margin-top: 2px; font-size: 12px; font-weight: 800; color: #c0392b; }
 .ch-best { font-size: 13px; color: var(--ink2); }
 .btn-play { min-height: 64px; font-size: 24px; letter-spacing: .1em; background: linear-gradient(180deg, #ffe08c, var(--gold) 60%, #ee9a36); }
 .chest { min-height: 50px; }
