@@ -66,12 +66,14 @@ export const ACHIEVEMENTS: readonly AchDef[] = [
   { id: "daily10", name: "毎日の挑戦 レベル10を クリア", churu: 0, stones: 20, done: (s) => Math.max(s.daily.best.nibo, s.daily.best.tsume) >= 10 },
 ];
 
+/** 実績ごとに ねがいの鈴 */
+export const ACH_BELLS = 2;
 export const achReady = (s: SaveData, a: AchDef) => !s.achievements.includes(a.id) && a.done(s);
 export function claimAchievement(save: SaveData, id: string): boolean {
   const a = ACHIEVEMENTS.find((x) => x.id === id);
   if (!a || !achReady(save, a)) return false;
   save.achievements.push(id);
-  save.churu += a.churu; save.stones += a.stones;
+  save.churu += a.churu; save.stones += a.stones; save.wishBells += ACH_BELLS;
   return true;
 }
 /** 受け取れる物が あるか（ホームの しるし） */

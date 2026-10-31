@@ -1,3 +1,4 @@
+import { renderArtifacts } from "./artifacts";
 // 装備の画面: 5つの枠・合成素材・持ち物・装備の窓（装備・強化・合成・分解）。ルーンは べつのタブ。
 import { activeTraits, allTraits, fodderRarity, ITEM_MAP, MYTHIC, itemStats, MAX_LEVEL, MAX_RARITY, MERGE_COUNT, mergePartners, RARITY_NAMES, SERIES_MAP, setBonuses, SLOT_NAMES, SLOTS, upgradeCost, type Item, type Stats } from "../core/equip";
 import { dismantleItem, dismantleMany, equipItem, mergeAll, mergeItem, toggleLock, unequipItem, upgradeItem } from "../core/run";
@@ -29,15 +30,17 @@ export function itemCard(it: Item, opts: { equipped?: boolean; merge?: boolean; 
     opts.merge ? h("div", { class: "icard-mg" }, "合成") : null);
 }
 
-let equipTab: "gear" | "runes" = "gear";
+let equipTab: "gear" | "runes" | "art" = "gear";
 /** まとめて分解: えらんでいる 装備（null なら ふつうの表示） */
 let picking: Set<number> | null = null;
 
 export function renderEquip(save: SaveData, rerender: () => void): HTMLElement {
   const tabs = h("div", { class: "eq-tabs" },
     h("button", { class: equipTab === "gear" ? "on" : "", onclick: () => { equipTab = "gear"; sfx("tap"); rerender(); } }, "装備"),
-    h("button", { class: equipTab === "runes" ? "on" : "", onclick: () => { equipTab = "runes"; sfx("tap"); rerender(); } }, "ルーン", save.unlocked < RUNE_UNLOCK_CHAPTER ? " 🔒" : ""));
+    h("button", { class: equipTab === "runes" ? "on" : "", onclick: () => { equipTab = "runes"; sfx("tap"); rerender(); } }, "ルーン", save.unlocked < RUNE_UNLOCK_CHAPTER ? " 🔒" : ""),
+    h("button", { class: equipTab === "art" ? "on" : "", onclick: () => { equipTab = "art"; sfx("tap"); rerender(); } }, "宝物"));
   if (equipTab !== "gear") picking = null;
+  if (equipTab === "art") return h("div", { class: "screen equip" }, tabs, renderArtifacts(save, rerender));
   if (equipTab === "runes") return h("div", { class: "screen equip" }, tabs, renderRunes(save, rerender));
   const eq = equippedSet(save);
   const lo = loadoutOf(save);

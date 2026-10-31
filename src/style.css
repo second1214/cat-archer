@@ -160,7 +160,7 @@ button:disabled { cursor: default; }
 .toast { position: fixed; left: 50%; bottom: 90px; transform: translateX(-50%); z-index: 30; padding: 8px 16px; border-radius: 999px; background: rgba(40,25,15,.92); color: #fff; font-weight: 800; font-size: 14px; white-space: nowrap; animation: fade .2s; }
 
 /* ---- 装備: タブ・ルーン ---- */
-.eq-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; padding: 4px; border-radius: 14px; background: var(--bg2); }
+.eq-tabs { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 6px; padding: 4px; border-radius: 14px; background: var(--bg2); }
 .eq-tabs button { padding: 7px 0; border-radius: 10px; font-weight: 900; font-size: 14px; color: var(--ink2); }
 .eq-tabs button.on { background: var(--card); color: var(--ink); box-shadow: 0 0 0 2px var(--line); }
 .rn { display: flex; flex-direction: column; gap: 10px; }
@@ -343,3 +343,19 @@ button:disabled { cursor: default; }
 .dx-cell small { font-size: 10px; line-height: 1.3; }
 .dx-cv { width: 56px; height: 56px; }
 .dx-cv.unseen { opacity: .35; }
+
+/* 宝物 */
+.art-hero { background: linear-gradient(135deg, #6a4fc8, #c08af0); }
+.art-hero .gc-title, .art-hero .gc-sub { color: #fff; }
+.art-h { margin: 14px 0 6px; text-align: left; font-size: 15px; }
+.art-sets { display: flex; flex-direction: column; gap: 6px; }
+.art-set { text-align: left; padding: 6px 10px; border-radius: 10px; background: #f3efe8; opacity: .75; }
+.art-set.on { background: #fff3d6; opacity: 1; border: 2px solid #f0c060; }
+.art-card { position: relative; aspect-ratio: 1; border-radius: 14px; border: 3px solid #ccc; background: #fff; font: inherit; }
+.art-card.off { opacity: .45; }
+.art-ico { font-size: 30px; }
+.art-star { position: absolute; bottom: 2px; left: 0; right: 0; font-size: 11px; font-weight: bold; color: #c08a10; }
+.ar0 { border-color: #5aa0f0 !important; } .ar1 { border-color: #a65af0 !important; } .ar2 { border-color: #f0a030 !important; } .ar3 { border-color: #e0344a !important; }
+.art-head.ar3 { background: linear-gradient(135deg, #ffe0e4, #fff); } .art-head.ar2 { background: linear-gradient(135deg, #fff0d0, #fff); }
+.art-head.ar1 { background: linear-gradient(135deg, #f0e4ff, #fff); } .art-head.ar0 { background: linear-gradient(135deg, #e4f0ff, #fff); }
+.gc-cell .art-ico { width: 56px; height: 56px; margin: 0 auto; border-radius: 12px; border: 3px solid; display: flex; align-items: center; justify-content: center; background: #fff; }
