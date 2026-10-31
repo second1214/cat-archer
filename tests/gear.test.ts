@@ -116,3 +116,39 @@ describe("チュール", () => {
     expect(s.churu).toBe(c + 20 + CHURU_FIRST_CLEAR);
   });
 });
+
+describe("チュール（ふやした もらい方）・20章", () => {
+  it("1日1回: 同じ日は 1回だけ", async () => {
+    const { claimDaily, CHURU_DAILY } = await import("../src/core/run");
+    const s = newSave(); const c = s.churu;
+    expect(claimDaily(s, "2026-11-01")).toBe(CHURU_DAILY);
+    expect(claimDaily(s, "2026-11-01")).toBe(0);
+    expect(claimDaily(s, "2026-11-02")).toBe(CHURU_DAILY);
+    expect(s.churu).toBe(c + CHURU_DAILY * 2);
+  });
+  it("ステージクリア・章クリアで チュール", async () => {
+    const { CHURU_STAGE, CHURU_CHAPTER, CHURU_BOSS } = await import("../src/core/run");
+    const w = new World(loadoutOf(newSave()), 1, mulberry32(1));
+    for (let st = 1; st <= 10; st++) {
+      for (const e of w.enemies) e.dead = true;
+      w.step(1 / 60, { mx: 0, my: 0 });
+      if (st < 10) w.startStage(st + 1);
+    }
+    expect(w.state).toBe("won");
+    expect(w.churu).toBeGreaterThanOrEqual(CHURU_STAGE * 10 + CHURU_CHAPTER);
+    expect(CHURU_BOSS).toBeGreaterThan(0);
+  });
+  it("ガチャは 1回 3", () => {
+    const s = newSave(); s.churu = 3;
+    expect(pullGacha(s, mulberry32(1), 1)).toHaveLength(1);
+    expect(s.churu).toBe(0);
+  });
+  it("20章まで。11章からは ゆっくり 強くなる", async () => {
+    const { CHAPTERS } = await import("../src/core/save");
+    const { chapterHp, CHAPTER_NAMES } = await import("../src/core/stages");
+    expect(CHAPTERS).toBe(20);
+    expect(CHAPTER_NAMES).toHaveLength(20);
+    expect(chapterHp(11) / chapterHp(10)).toBeLessThan(chapterHp(10) / chapterHp(9));
+    expect(chapterHp(20)).toBeGreaterThan(chapterHp(10) * 3);
+  });
+});

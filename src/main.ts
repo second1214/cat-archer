@@ -3,7 +3,7 @@ import "./style.css";
 import { CATS, catName } from "./core/cats";
 import { ITEM_MAP, RARITY_NAMES } from "./core/equip";
 import { mulberry32 } from "./core/rng";
-import { CHEST_COST, finishRun, openChest } from "./core/run";
+import { CHEST_COST, claimDaily, finishRun, openChest } from "./core/run";
 import { loadoutOf, loadSave, powerOf, writeSave } from "./core/save";
 import { CHAPTER_NAMES, ENEMIES, newEnemiesIn, STAGES_PER_CHAPTER } from "./core/stages";
 import { loadCatImages } from "./game/render";
@@ -101,3 +101,9 @@ function play(chapter: number): void {
 }
 
 render();
+// 1日1回の チュール
+{
+  const d = new Date();
+  const got = claimDaily(save, `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`);
+  if (got) { writeSave(save); render(); toast(`きょうの チュール 🍥+${got}`); }
+}

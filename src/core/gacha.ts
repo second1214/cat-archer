@@ -4,8 +4,8 @@ import { ITEMS, NORMAL_ITEMS, type Item, type Rarity } from "./equip";
 import { weighted, type Rng } from "./rng";
 import type { SaveData } from "./save";
 
-export const GACHA_COST = 30;
-export const GACHA10_COST = 270;
+export const GACHA_COST = 3;
+export const GACHA10_COST = 27;
 export const GACHA_PITY = 50;
 /** シリーズ装備が出る確率 */
 export const SERIES_RATE = 0.03;

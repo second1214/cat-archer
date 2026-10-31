@@ -7,7 +7,7 @@ import { rollSkills, type SkillCounts, type SkillId } from "../core/skills";
 import { ENEMIES, stageInfo, STAGES_PER_CHAPTER, type EnemyDef, type EnemyKind } from "../core/stages";
 import { COLS, pickTerrain, ROWS, Terrain } from "../core/terrain";
 import { rollRune, RUNE_UNLOCK_CHAPTER, type Rune, type RuneEffects } from "../core/runes";
-import { CHURU_BOSS } from "../core/run";
+import { CHURU_BOSS, CHURU_CHAPTER, CHURU_PICKUP, CHURU_PICKUP_CHANCE, CHURU_STAGE } from "../core/run";
 import { Strikes, type StrikeEnemy, type StrikeHost } from "./strikes";
 
 /** 部屋の広さ（単位: マス） */
@@ -72,7 +72,7 @@ export interface Beam { pts: [number, number][]; t: number; crit: boolean }
 
 export interface EShot { x: number; y: number; vx: number; vy: number; r: number; dmg: number; life: number }
 
-export type FxKind = "dmg" | "crit" | "dot" | "heal" | "dodge" | "die" | "hurt";
+export type FxKind = "dmg" | "crit" | "dot" | "heal" | "dodge" | "die" | "hurt" | "churu";
 export interface Fx { kind: FxKind; x: number; y: number; v: number; t: number }
 
 export type SoundKind = "shoot" | "hit" | "kill" | "hurt" | "levelup" | "clear" | "door" | "boss";
@@ -98,6 +98,8 @@ export class World implements StrikeHost {
   drops: Item[] = [];
   runeDrops: Rune[] = [];
   churu = 0;
+  /** 床に落ちている チュール */
+  churuPickup: { x: number; y: number; t: number } | null = null;
   /** 助っ人ねこ（ストライク） */
   readonly strikes: Strikes;
   kills = 0;
@@ -162,6 +164,14 @@ export class World implements StrikeHost {
     for (const k of info.enemies) this.enemies.push(this.spawn(k, reach));
     if (info.boss) this.sounds.push("boss");
     this.strikes?.onStageStart();
+    // ときどき 床に チュールが 落ちている
+    this.churuPickup = null;
+    if (n > 1 && this.rng() < CHURU_PICKUP_CHANCE) {
+      for (let i = 0; i < 30; i++) {
+        const x = 1 + this.rng() * 7, y = 2 + this.rng() * 9;
+        if (!this.terrain.hits(x, y, 0.4)) { this.churuPickup = { x, y, t: 0 }; break; }
+      }
+    }
   }
 
   /** 虫を置く（地面の虫は 猫まで歩いて行ける床に。at があれば その近く） */
@@ -229,6 +239,16 @@ export class World implements StrikeHost {
     this.moveEShots(dt);
     this.orbit(dt);
     this.strikes.update(dt, this.state === "fight");
+    const cp = this.churuPickup;
+    if (cp) {
+      cp.t += dt;
+      if (Math.hypot(cp.x - this.hero.x, cp.y - this.hero.y) < this.hero.r + 0.4) {
+        this.churu += CHURU_PICKUP;
+        this.fx.push({ kind: "churu", x: cp.x, y: cp.y - 1, v: CHURU_PICKUP, t: 0 });
+        this.sounds.push("levelup");
+        this.churuPickup = null;
+      }
+    }
     if (this.state === "fight" && this.enemies.every((e) => e.dead)) this.clearStage();
     this.enemies = this.enemies.filter((e) => !e.dead);
   }
@@ -266,6 +286,7 @@ export class World implements StrikeHost {
     this.coins += 5 * this.stage * this.coinMul;
     if (info.boss || this.rng() < 0.15) this.drops.push(rollItem(this.rng, 0, rollRarity(this.rng, this.chapter, info.boss)));
     if (this.lo.regen > 0) this.heal(this.hero.maxHp * this.lo.regen);
+    this.churu += CHURU_STAGE + (this.stage >= STAGES_PER_CHAPTER ? CHURU_CHAPTER : 0);
     // 5章から ボスを倒すと ルーン
     if (info.boss && this.chapter >= RUNE_UNLOCK_CHAPTER) this.runeDrops.push(rollRune(this.rng, 0, this.stage === STAGES_PER_CHAPTER));
     this.strikes.onStageClear();

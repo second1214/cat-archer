@@ -55,7 +55,18 @@ const PLAN: readonly (readonly [Role, number][])[] = [
   [["boss10", 1]],
 ];
 
-export const CHAPTER_NAMES = ["リビング", "台所", "おふろ場", "子ども部屋", "ものおき", "にわ", "やねうら", "地下室", "となりの家", "公園"];
+export const CHAPTER_NAMES = [
+  "リビング", "台所", "おふろ場", "子ども部屋", "ものおき", "にわ", "やねうら", "地下室", "となりの家", "公園",
+  "雨の日の にわ", "夜の 台所", "大そうじの日", "となり町", "河原", "神社", "商店街", "ペットショップ", "動物病院", "虫の王国",
+];
+
+/** 11章から先は ゆっくり 強くなる（装備の レベル・ミシックで 追いつく所） */
+export function chapterHp(ch: number): number {
+  return ch <= 10 ? Math.pow(1.55, ch - 1) : Math.pow(1.55, 9) * Math.pow(1.14, ch - 10);
+}
+export function chapterDmg(ch: number): number {
+  return ch <= 10 ? Math.pow(1.25, ch - 1) : Math.pow(1.25, 9) * Math.pow(1.07, ch - 10);
+}
 
 /** 章ごとの 役 → 虫。ステージの番号で 2種を かわりばんこに使う役もある。 */
 function kindFor(role: Role, chapter: number, stage: number): EnemyKind | null {
@@ -100,7 +111,7 @@ export function stageInfo(chapter: number, stage: number): StageInfo {
   return {
     enemies,
     boss,
-    hpMul: Math.pow(1.55, chapter - 1) * (1 + 0.06 * (s - 1)),
-    dmgMul: Math.pow(1.25, chapter - 1),
+    hpMul: chapterHp(chapter) * (1 + 0.06 * (s - 1)),
+    dmgMul: chapterDmg(chapter),
   };
 }

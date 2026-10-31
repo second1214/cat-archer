@@ -11,7 +11,7 @@ export const SAVE_VERSION = 2;
 const V1_RARITY = [0, 2, 3, 4] as const;
 /** はじめの チュール（開発中なので 多め） */
 export const START_CHURU = 300;
-export const CHAPTERS = 10;
+export const CHAPTERS = 20;
 
 export interface SaveData {
   version: number;
@@ -36,6 +36,8 @@ export interface SaveData {
   churu: number;
   /** シリーズ装備が出ていない回数（天井） */
   gachaPity: number;
+  /** 1日1回の チュールを もらった日（YYYY-MM-DD） */
+  lastDaily: string;
   seed: number;
 }
 
@@ -58,6 +60,7 @@ export function newSave(): SaveData {
     materials: [0, 0, 0, 0, 0, 0],
     churu: START_CHURU,
     gachaPity: 0,
+    lastDaily: "",
     seed: Math.floor(Math.random() * 2 ** 31),
   };
 }
@@ -118,6 +121,7 @@ export function normalize(raw: unknown): SaveData {
     materials: Array.from({ length: MAX_RARITY + 1 }, (_, i) => Math.max(0, Math.floor(num(r.materials?.[i], 0)))),
     churu: Math.max(0, Math.floor(num(r.churu, START_CHURU))),
     gachaPity: Math.max(0, Math.floor(num(r.gachaPity, 0))),
+    lastDaily: typeof r.lastDaily === "string" ? r.lastDaily : "",
     seed: Math.floor(num(r.seed, base.seed)),
   };
 }
