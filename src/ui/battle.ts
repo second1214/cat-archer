@@ -5,6 +5,7 @@ import { mulberry32 } from "../core/rng";
 import { loadoutOf, type SaveData } from "../core/save";
 import { SKILL_MAP, TIER_NAMES } from "../core/skills";
 import { REVIVE_COST } from "../core/run";
+import { DESCENT_NAMES } from "../core/godforge";
 import { writeSave } from "../core/save";
 import { CHAPTER_NAMES, STAGES_PER_CHAPTER } from "../core/stages";
 import { loadCatImages, Renderer, type Stick } from "../game/render";
@@ -29,12 +30,14 @@ export function startBattle(save: SaveData, chapter: number, onEnd: (r: BattleEn
   const xpFill = h("div", { class: "bar-fill xp" });
   const lvEl = h("span", { class: "bt-lv" });
   const bossBar = h("div", { class: "bt-boss" }, h("div", { class: "bt-boss-n" }), h("div", { class: "bar" }, h("div", { class: "bar-fill boss" })));
+  const descEl = h("div", { class: "bt-desc" });
   const pauseBtn = h("button", { class: "bt-pause", "aria-label": "一時停止" }, h("i"), h("i"));
   const root = h("div", { class: "battle" }, cv,
     h("div", { class: "bt-hud" },
       h("div", { class: "bt-top" }, stageEl, pauseBtn),
       h("div", { class: "bar bt-hp" }, hpFill, hpText),
       h("div", { class: "bt-xprow" }, lvEl, h("div", { class: "bar bt-xp" }, xpFill)),
+      descEl,
       bossBar));
   document.getElementById("app")!.append(root);
 
@@ -198,6 +201,12 @@ export function startBattle(save: SaveData, chapter: number, onEnd: (r: BattleEn
     lvEl.textContent = `Lv${hero.level}`;
     const boss = world.enemies.find((e) => e.def.boss);
     bossBar.style.display = boss ? "" : "none";
+    const dsc = world.lo.descent;
+    descEl.style.display = dsc ? "" : "none";
+    if (dsc) {
+      descEl.textContent = world.descending ? `🔆 降臨「${DESCENT_NAMES[dsc.series]}」 ${Math.ceil(world.descentT)}秒` : `🔆 降臨 ${world.descentStacks} / 10`;
+      descEl.classList.toggle("on", world.descending);
+    }
     if (!ended) bgm(boss ? "boss" : music);
     if (boss) {
       (bossBar.firstChild as HTMLElement).textContent = boss.def.name;

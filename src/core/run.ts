@@ -3,6 +3,7 @@ import { fodderRarity, ITEM_MAP, MAX_RARITY, mergePartners, MYTHIC, rollItem, up
 import { weighted, type Rng } from "./rng";
 import { ENCHANT_COST, enchantSlots, G, MAX_GRADE, minGrade, rollEnchant, RUNE_MAP, RUNE_MERGE_COUNT, RUNE_UNLOCK_CHAPTER, RUNE_TYPES, RUNES, rollRune, type Enchant, type Rune } from "./runes";
 import { track } from "./missions";
+import { dismantleGf } from "./godforge";
 import { CHAPTERS, equippedSet, etchedSlotsOpen, type SaveData } from "./save";
 import { STAGES_PER_CHAPTER, type EnemyKind } from "./stages";
 
@@ -138,6 +139,7 @@ export function dismantleItem(save: SaveData, uid: number): boolean {
   // ミシックから上は 作るのに使った レジェンドの数だけ レジェンドの素材に もどす（ミシック = 3つ、+1ごとに +2）
   if (it.r >= MYTHIC) save.materials[4] += 3 + 2 * (it.r - MYTHIC);
   else save.materials[it.r]++;
+  dismantleGf(save, it);
   return true;
 }
 

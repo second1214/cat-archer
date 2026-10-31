@@ -359,3 +359,9 @@ button:disabled { cursor: default; }
 .art-head.ar3 { background: linear-gradient(135deg, #ffe0e4, #fff); } .art-head.ar2 { background: linear-gradient(135deg, #fff0d0, #fff); }
 .art-head.ar1 { background: linear-gradient(135deg, #f0e4ff, #fff); } .art-head.ar0 { background: linear-gradient(135deg, #e4f0ff, #fff); }
 .gc-cell .art-ico { width: 56px; height: 56px; margin: 0 auto; border-radius: 12px; border: 3px solid; display: flex; align-items: center; justify-content: center; background: #fff; }
+
+/* 神鍛 */
+.gf-box { margin: 8px 0; padding: 8px; border-radius: 10px; background: linear-gradient(135deg, #fff6d8, #ffeef8); text-align: left; display: flex; flex-direction: column; gap: 4px; }
+.gf-box.off { background: #f3efe8; }
+.bt-desc { display: inline-block; margin-top: 4px; padding: 2px 8px; border-radius: 10px; font-size: 12px; font-weight: bold; background: rgba(0,0,0,.35); color: #fff; }
+.bt-desc.on { background: linear-gradient(90deg, #f0a030, #e0344a); box-shadow: 0 0 8px #ffd060; }

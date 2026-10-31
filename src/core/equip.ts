@@ -185,6 +185,8 @@ export interface Item {
   lv: number;
   /** 鍵（合成の材料・分解に 使わない） */
   locked?: boolean;
+  /** 神鍛の ★（0〜5） */
+  gf?: number;
 }
 
 /** レベルで伸びるのは 攻撃力・体力だけ（% の力は 品質だけで伸びる）。 */

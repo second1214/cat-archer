@@ -168,7 +168,7 @@ export class World implements StrikeHost {
   get atk(): number { return this.lo.atk * (1 + 0.25 * this.n("atk")) * (this.revived ? 1 + this.rune.revive.atkAfter : 1); }
   get interval(): number { return Math.max(0.16, BASE_INTERVAL / ((1 + this.lo.stats.aspd) * (1 + 0.2 * this.n("aspd")))); }
   get critRate(): number { return Math.min(0.8, 0.05 + this.lo.stats.crit + this.rune.critRate + 0.1 * this.n("crit")); }
-  get critMul(): number { return 2 + 0.4 * this.n("crit") + this.rune.critDmg; }
+  get critMul(): number { return 2 + 0.4 * this.n("crit") + this.rune.critDmg + (this.descentT > 0 ? this.lo.descent?.critDmg ?? 0 : 0); }
   /** 系統の 会心率（付与） */
   private critOf(f: "main" | "orbit"): number { return Math.min(0.9, this.critRate + this.rune.famCrit[f]); }
   get dodge(): number { return Math.min(0.6, this.lo.stats.dodge + this.rune.dodge + 0.08 * this.n("dodge")); }
@@ -277,6 +277,47 @@ export class World implements StrikeHost {
     this.offerLevel();
   }
 
+  // ---------- 神鍛の 降臨 ----------
+  /** 降臨の たまり（10で 降臨）・のこり時間 */
+  descentStacks = 0;
+  descentT = 0;
+  private descentIdle = 0;
+  private descentHealT = 0;
+  get descending(): boolean { return this.descentT > 0; }
+  /** 降臨中の その系統の ダメージ 倍率 */
+  famMul(f: "main" | "strike" | "orbit"): number {
+    const d = this.lo.descent;
+    return d && this.descentT > 0 && d.family === f ? 1 + d.famDmg : 1;
+  }
+  /** その系統の 攻撃が 当たった（ときどき たまる） */
+  descentHit(f: "main" | "strike" | "orbit"): void {
+    const d = this.lo.descent;
+    if (!d || d.family !== f || this.descentT > 0) return;
+    if (this.rng() < 0.25) this.addDescentStack();
+  }
+  private addDescentStack(): void {
+    const d = this.lo.descent!;
+    this.descentIdle = 0;
+    if (++this.descentStacks < 10) return;
+    this.descentStacks = 0;
+    this.descentT = d.duration;
+    this.descentHealT = 0;
+    if (d.shield) this.hero.inv = Math.max(this.hero.inv, d.shield);
+    this.sounds.push("levelup");
+    this.fx.push({ kind: "heal", x: this.hero.x, y: this.hero.y - 1.2, v: 0, t: 0 });
+  }
+  private tickDescent(dt: number): void {
+    const d = this.lo.descent;
+    if (!d) return;
+    if (this.descentT > 0) {
+      this.descentT -= dt;
+      if (d.heal && (this.descentHealT += dt) >= 2) { this.descentHealT -= 2; this.heal(this.hero.maxHp * d.heal); }
+      return;
+    }
+    // 1.2秒 たまらなければ 1つ たまる（本家と同じ）
+    if ((this.descentIdle += dt) >= 1.2) this.addDescentStack();
+  }
+
   /** 3択の 引きなおし（のこり回数） */
   rerolls = REROLLS;
   /** 3択を 引きなおす（今の3つは 出ない。足りなければ 出る） */
@@ -328,6 +369,7 @@ export class World implements StrikeHost {
     this.moveEnemies(dt);
     this.moveEShots(dt);
     this.orbit(dt);
+    if (this.state === "fight") this.tickDescent(dt);
     this.strikes.update(dt, this.state === "fight");
     const cp = this.churuPickup;
     if (cp) {
@@ -437,7 +479,7 @@ export class World implements StrikeHost {
     h.shootAnim = 0.2;
     const laser = this.laser;
     // スキルで レーザーにしたときは 1発 -20%（武器のレーザーは 攻撃力で 調整ずみ）
-    const dmg = (this.atk + this.rune.mainFlat + (laser ? this.rune.laserFlat : 0)) * (1 + this.rune.mainPct) * (laser ? 1 + this.rune.laserPct : 1) * (1 - 0.1 * this.n("multi")) * (1 - 0.15 * this.n("front")) * (this.pierce && !laser ? 0.75 : 1) * (laser && !this.lo.laser ? 0.8 : 1) * (laser ? 1 + this.lo.stats.laserPct : 1);
+    const dmg = this.famMul("main") * (this.atk + this.rune.mainFlat + (laser ? this.rune.laserFlat : 0)) * (1 + this.rune.mainPct) * (laser ? 1 + this.rune.laserPct : 1) * (1 - 0.1 * this.n("multi")) * (1 - 0.15 * this.n("front")) * (this.pierce && !laser ? 0.75 : 1) * (laser && !this.lo.laser ? 0.8 : 1) * (laser ? 1 + this.lo.stats.laserPct : 1);
     const angles: number[] = [a];
     const d = this.n("diag"), s = this.n("side"), b = this.n("back");
     if (d >= 1) angles.push(a + Math.PI / 4, a - Math.PI / 4);
@@ -504,6 +546,7 @@ export class World implements StrikeHost {
     }
     pts.push([px, py]);
     for (const e of hits) this.hitEnemy(e, v, crit, true);
+    if (hits.length) this.descentHit("main");
     this.beams.push({ pts: simplify(pts), t: 0, crit });
   }
 
@@ -560,6 +603,7 @@ export class World implements StrikeHost {
         if (Math.hypot(e.x - s.x, e.y - 0.3 - s.y) > e.def.r + 0.16) continue;
         s.hit.add(e.id);
         this.hitEnemy(e, s.dmg, s.crit, true);
+        this.descentHit("main");
         if (s.ric > 0) {
           const nx = this.nearest(e.x, e.y, s.hit, 4.5);
           if (nx) {
@@ -876,7 +920,8 @@ export class World implements StrikeHost {
         if (Math.hypot(e.x - ox, e.y - 0.3 - oy) < e.def.r + 0.25) {
           this.orbCd.set(e.id, 0.45);
           const crit = this.rng() < this.critOf("orbit");
-          const v = (this.atk * 0.5 + this.rune.orbitFlat) * (1 + this.lo.stats.orbitPct + this.rune.orbitPct);
+          const v = (this.atk * 0.5 + this.rune.orbitFlat) * (1 + this.lo.stats.orbitPct + this.rune.orbitPct) * this.famMul("orbit");
+          this.descentHit("orbit");
           this.damage(e, crit ? v * this.critMul : v, crit ? "crit" : "dmg");
         }
       }

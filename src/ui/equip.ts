@@ -1,6 +1,7 @@
+import { canGodforge, CRYSTALS_PER_CHAOS, DESCENT_NAMES, DESCENT_SLOT_DESC, essenceOf, gfAffordable, gfCost, GF_MAX, GF_MIN_RARITY, GF_STEP_DESC, godforge } from "../core/godforge";
 import { renderArtifacts } from "./artifacts";
 // 装備の画面: 5つの枠・合成素材・持ち物・装備の窓（装備・強化・合成・分解）。ルーンは べつのタブ。
-import { activeTraits, allTraits, fodderRarity, ITEM_MAP, MYTHIC, itemStats, MAX_LEVEL, MAX_RARITY, MERGE_COUNT, mergePartners, RARITY_NAMES, SERIES_MAP, setBonuses, SLOT_NAMES, SLOTS, upgradeCost, type Item, type Stats } from "../core/equip";
+import { activeTraits, allTraits, fodderRarity, ITEM_MAP, MYTHIC, itemStats, MAX_LEVEL, MAX_RARITY, MERGE_COUNT, mergePartners, RARITY_NAMES, SERIES, SERIES_MAP, setBonuses, SLOT_NAMES, SLOTS, upgradeCost, type Item, type Stats } from "../core/equip";
 import { dismantleItem, dismantleMany, equipItem, mergeAll, mergeItem, toggleLock, unequipItem, upgradeItem } from "../core/run";
 import { RUNE_UNLOCK_CHAPTER } from "../core/runes";
 import { equippedItems, equippedSet, loadoutOf, powerOf, writeSave, type SaveData } from "../core/save";
@@ -67,6 +68,10 @@ export function renderEquip(save: SaveData, rerender: () => void): HTMLElement {
       h("span", null, "戦力 ", h("b", null, fmt(powerOf(lo))))),
     h("div", { class: "eq-mats" }, h("span", { class: "eq-mats-t" }, "合成素材"),
       RARITY_NAMES.slice(0, MYTHIC).map((n, r) => h("span", { class: `eq-mat r${r}` }, n.slice(0, 2), h("b", null, String(save.materials[r]))))),
+    save.essence || save.cores || Object.values(save.crystals).some(Boolean) ? h("div", { class: "eq-mats" }, h("span", { class: "eq-mats-t" }, "神鍛"),
+      h("span", { class: "eq-mat" }, "✨", h("b", null, fmt(save.essence))),
+      SERIES.map((sr) => h("span", { class: "eq-mat" }, sr.icon, h("b", null, String(save.crystals[sr.id] ?? 0)))),
+      h("span", { class: "eq-mat" }, "🔆", h("b", null, String(save.cores)))) : null,
     picking ? pickBar(save, sorted, rerender) : h("div", { class: "eq-head" },
       h("span", null, `持ち物 ${save.items.length}`),
       h("div", { class: "eq-head-btns" },
@@ -143,6 +148,7 @@ function openItem(save: SaveData, uid: number, rerender: () => void): void {
     h("div", { class: "item-st" }, statLines(itemStats(it))),
     h("div", { class: "item-tr" }, allTraits(it.id).filter((t) => t.at <= Math.max(MYTHIC, it.r + 2)).map((t) => h("div", { class: `tr ${traits.includes(t) ? "on" : ""}` },
       h("span", { class: "tr-at" }, RARITY_NAMES[t.at]), t.desc))),
+    sr ? gfBox(save, it, () => { close(); openItem(save, uid, rerender); }) : null,
     h("div", { class: "item-btns" },
       h("button", { class: "btn", onclick: () => {
         if (isEq) unequipItem(save, uid); else equipItem(save, uid);
@@ -157,6 +163,19 @@ function openItem(save: SaveData, uid: number, rerender: () => void): void {
     h("div", { class: "item-btns two" },
       h("button", { class: `btn ${isEq || it.locked ? "btn-gray" : ""}`, disabled: isEq || !!it.locked, onclick: () => {
         if (dismantleItem(save, uid)) { writeSave(save); sfx("tap"); toast(`${RARITY_NAMES[it.r]}の 合成素材を 手に入れた`); close(); }
-      } }, h("span", null, "分解 ", h("small", null, it.r >= MYTHIC ? `→ レジェンド素材 ${3 + 2 * (it.r - MYTHIC)}` : `→ ${RARITY_NAMES[it.r]}素材`))),
+      } }, h("span", null, "分解 ", h("small", null, (it.r >= MYTHIC ? `→ レジェンド素材 ${3 + 2 * (it.r - MYTHIC)}` : `→ ${RARITY_NAMES[it.r]}素材`) + (sr && it.r >= MAX_RARITY ? `・${sr.icon}結晶 ${CRYSTALS_PER_CHAOS}` : `・✨${essenceOf(it.r)}`)))),
       h("button", { class: "btn btn-gray", onclick: () => m.close() }, "とじる"))), "", () => m.close());
+}
+
+/** 神鍛（ミシック+3 以上の シリーズ装備） */
+function gfBox(save: SaveData, it: Item, reopen: () => void): HTMLElement {
+  const d = ITEM_MAP[it.id], sr = SERIES_MAP[d.series!], g = it.gf ?? 0, c = gfCost(it);
+  if (it.r < GF_MIN_RARITY) return h("div", { class: "gf-box off" }, h("b", null, "🔆 神鍛"), h("small", { class: "muted" }, ` ${RARITY_NAMES[GF_MIN_RARITY]}から できる`));
+  return h("div", { class: "gf-box" },
+    h("div", null, h("b", null, `🔆 神鍛 ★${g} / ${GF_MAX}`)),
+    GF_STEP_DESC.map((t, i) => h("div", { class: `tr ${g > i ? "on" : ""}` }, h("span", { class: "tr-at" }, `★${i + 1}`),
+      i === GF_MAX - 1 ? `降臨「${DESCENT_NAMES[sr.id]}」: ${DESCENT_SLOT_DESC[d.slot]}${d.slot === "weapon" ? "" : "（武器も ★5・同じシリーズのとき）"}` : t)),
+    canGodforge(it) && c ? h("button", { class: `btn ${gfAffordable(save, it) ? "btn-gold" : "btn-gray"} btn-wide`, disabled: !gfAffordable(save, it), onclick: () => {
+      if (godforge(save, it.uid)) { writeSave(save); sfx("levelup"); toast(`${d.name} 神鍛 ★${it.gf}`); reopen(); }
+    } }, `★${g + 1}へ ✨${fmt(save.essence)}/${c.essence}`, c.crystals ? ` ${sr.icon}${save.crystals[sr.id] ?? 0}/${c.crystals}` : "", c.cores ? ` 🔆${save.cores}/${c.cores}` : "") : null);
 }

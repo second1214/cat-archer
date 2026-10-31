@@ -12,6 +12,7 @@ const rewardText = (r: DailyReward) => [
   r.coins ? `🐟 ${fmt(r.coins)}` : "",
   r.stones ? `🪨 ${fmt(r.stones)}` : "",
   r.mats ? `${GRADE_NAMES[r.mats.g]}の ルーン素材 ×${r.mats.n}` : "",
+  r.cores ? `🔆神鍛の核 ${r.cores}` : "",
 ].filter(Boolean).join("・");
 
 export function openDaily(save: SaveData, rerender: () => void, shell: HTMLElement): void {
