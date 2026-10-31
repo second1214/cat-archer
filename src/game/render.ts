@@ -365,6 +365,12 @@ export class Renderer {
       g.globalCompositeOperation = "source-over";
     }
     g.restore();
+    // 強い虫（中ボス）: 赤い オーラ
+    if (e.elite) {
+      const gr = g.createRadialGradient(x, y, r * s * 0.6, x, y, r * s * 1.9);
+      gr.addColorStop(0, "rgba(255,60,60,.0)"); gr.addColorStop(0.6, "rgba(255,60,60,.28)"); gr.addColorStop(1, "rgba(255,60,60,0)");
+      g.fillStyle = gr; g.beginPath(); g.arc(x, y, r * s * 1.9, 0, Math.PI * 2); g.fill();
+    }
     // 状態の色
     if (e.burn > 0 || e.poison > 0 || e.slow > 0) {
       g.fillStyle = e.burn > 0 ? "rgba(255,120,40,.35)" : e.poison > 0 ? "rgba(120,200,60,.3)" : "rgba(120,210,255,.35)";

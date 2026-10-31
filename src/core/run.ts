@@ -100,7 +100,7 @@ export function mergeItem(save: SaveData, uid: number, useMaterials = true): Ite
 /** 分解: 装備を 同じ品質の 合成素材 1つにする（付けている装備は できない） */
 export function dismantleItem(save: SaveData, uid: number): boolean {
   const it = save.items.find((x) => x.uid === uid);
-  if (!it || equippedSet(save).has(uid)) return false;
+  if (!it || it.locked || equippedSet(save).has(uid)) return false;
   save.items = save.items.filter((x) => x.uid !== uid);
   save.materials[it.r]++;
   return true;
@@ -120,6 +120,14 @@ export function mergeAll(save: SaveData): Item[] {
     if (!m) return made;
     made.push(m);
   }
+}
+
+/** 鍵を かける・はずす */
+export function toggleLock(save: SaveData, uid: number): boolean {
+  const it = save.items.find((x) => x.uid === uid);
+  if (!it) return false;
+  it.locked = !it.locked;
+  return it.locked;
 }
 
 export function equipItem(save: SaveData, uid: number): void {

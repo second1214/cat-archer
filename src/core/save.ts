@@ -77,7 +77,7 @@ export function normalize(raw: unknown): SaveData {
       .map((x) => {
         const raw = Math.max(0, Math.floor(num(x.r, 0)));
         const rar = (old ? V1_RARITY[Math.min(3, raw)] : Math.min(MAX_RARITY, raw)) as Rarity;
-        return { uid: x.uid, id: x.id, r: rar, lv: Math.max(1, Math.min(MAX_LEVEL[rar], Math.floor(num(x.lv, 1)))) };
+        return { uid: x.uid, id: x.id, r: rar, lv: Math.max(1, Math.min(MAX_LEVEL[rar], Math.floor(num(x.lv, 1)))), ...(x.locked ? { locked: true } : {}) };
       })
     : base.items;
   const equipped: Partial<Record<Slot, number>> = {};

@@ -1,6 +1,6 @@
 // 装備の画面: 5つの枠・合成素材・持ち物・装備の窓（装備・強化・合成・分解）。ルーンは べつのタブ。
 import { activeTraits, ITEM_MAP, itemStats, MAX_LEVEL, MAX_RARITY, MERGE_COUNT, mergePartners, RARITY_NAMES, SERIES_MAP, setBonuses, SLOT_NAMES, SLOTS, upgradeCost, type Item, type Stats } from "../core/equip";
-import { dismantleItem, equipItem, mergeAll, mergeItem, unequipItem, upgradeItem } from "../core/run";
+import { dismantleItem, equipItem, mergeAll, mergeItem, toggleLock, unequipItem, upgradeItem } from "../core/run";
 import { RUNE_UNLOCK_CHAPTER } from "../core/runes";
 import { equippedItems, equippedSet, loadoutOf, powerOf, writeSave, type SaveData } from "../core/save";
 import { fmt, h, overlay, toast } from "./dom";
@@ -24,6 +24,7 @@ export function itemCard(it: Item, opts: { equipped?: boolean; merge?: boolean; 
     h("div", { class: "icard-ico" }, d.icon),
     h("div", { class: "icard-lv" }, `Lv${it.lv}`),
     d.series ? h("div", { class: "icard-sr" }, SERIES_MAP[d.series].icon) : null,
+    it.locked ? h("div", { class: "icard-lock" }, "🔒") : null,
     opts.equipped ? h("div", { class: "icard-eq" }, "装備中") : null,
     opts.merge ? h("div", { class: "icard-mg" }, "合成") : null);
 }
@@ -93,6 +94,9 @@ function openItem(save: SaveData, uid: number, rerender: () => void): void {
       h("div", null,
         h("div", { class: "item-n" }, d.name),
         h("div", { class: "item-r" }, `${RARITY_NAMES[it.r]}・${SLOT_NAMES[d.slot]}・Lv ${it.lv} / ${MAX_LEVEL[it.r]}`))),
+    h("button", { class: `item-lock ${it.locked ? "on" : ""}`, "aria-label": "鍵", onclick: () => {
+      const on = toggleLock(save, uid); writeSave(save); sfx("tap"); toast(on ? "鍵を かけた（合成の材料・分解に 使わない）" : "鍵を はずした"); close(); openItem(save, uid, rerender);
+    } }, it.locked ? "🔒" : "🔓"),
     h("div", { class: "item-flavor" }, `「${d.flavor}」`),
     sr ? h("div", { class: "item-series" }, h("b", null, `${sr.icon} ${sr.name}シリーズ`), h("span", null, `${sr.focus}に 特化`),
       h("span", null, `2つ: ${sr.set2.desc}`), h("span", null, `4つ: ${sr.set4.desc}`)) : null,
@@ -111,7 +115,7 @@ function openItem(save: SaveData, uid: number, rerender: () => void): void {
         if (mergeItem(save, uid)) { writeSave(save); sfx("levelup"); toast(`${d.name}が ${RARITY_NAMES[it.r]}になった！`); close(); openItem(save, uid, rerender); }
       } }, it.r >= MAX_RARITY ? "最大" : p ? h("span", null, "合成", p.mats ? h("small", null, ` 素材${p.mats}`) : null) : h("span", null, "合成 ", h("small", null, `あと${lack}つ`)))),
     h("div", { class: "item-btns two" },
-      h("button", { class: `btn ${isEq ? "btn-gray" : ""}`, disabled: isEq, onclick: () => {
+      h("button", { class: `btn ${isEq || it.locked ? "btn-gray" : ""}`, disabled: isEq || !!it.locked, onclick: () => {
         if (dismantleItem(save, uid)) { writeSave(save); sfx("tap"); toast(`${RARITY_NAMES[it.r]}の 合成素材を 手に入れた`); close(); }
       } }, h("span", null, "分解 ", h("small", null, `→ ${RARITY_NAMES[it.r]}素材`))),
       h("button", { class: "btn btn-gray", onclick: () => m.close() }, "とじる"))), "", () => m.close());

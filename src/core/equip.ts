@@ -180,6 +180,8 @@ export interface Item {
   id: string;
   r: Rarity;
   lv: number;
+  /** 鍵（合成の材料・分解に 使わない） */
+  locked?: boolean;
 }
 
 /** レベルで伸びるのは 攻撃力・体力だけ（% の力は 品質だけで伸びる）。 */
@@ -229,7 +231,7 @@ export function upgradeCost(it: Item): number | null {
 export function mergePartners(items: readonly Item[], base: Item, equipped: ReadonlySet<number>, materials: readonly number[] = []): { mates: Item[]; mats: number } | null {
   if (base.r >= MAX_RARITY) return null;
   const mates = items
-    .filter((x) => x.uid !== base.uid && x.id === base.id && x.r === base.r && !equipped.has(x.uid))
+    .filter((x) => x.uid !== base.uid && x.id === base.id && x.r === base.r && !equipped.has(x.uid) && !x.locked)
     .sort((a, b) => a.lv - b.lv)
     .slice(0, MERGE_COUNT - 1);
   const mats = MERGE_COUNT - 1 - mates.length;

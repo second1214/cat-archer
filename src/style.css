@@ -244,3 +244,15 @@ button:disabled { cursor: default; }
 .gc-rar { font-size: 10px; font-weight: 900; color: var(--rc, var(--r0)); }
 .gc-rar.r1 { --rc: #5fb35a; } .gc-rar.r2 { --rc: var(--r1); } .gc-rar.r3 { --rc: var(--r2); } .gc-rar.r4 { --rc: var(--r4); } .gc-rar.r5 { --rc: var(--r5); }
 .gc-hit { font-weight: 900; color: #d0517e; }
+
+.icard-lock { position: absolute; bottom: 2px; left: 4px; font-size: 11px; }
+.item { position: relative; }
+.item-lock { position: absolute; top: 6px; right: 6px; width: 36px; height: 36px; border-radius: 50%; background: var(--card); box-shadow: 0 0 0 2px var(--line); font-size: 17px; }
+.item-lock.on { background: #fff3cf; box-shadow: 0 0 0 2px var(--line), 0 0 0 4px var(--gold); }
+
+/* できごと（飼い主のごほうび・のら猫ボス） */
+.lvup.ev { align-items: center; text-align: center; }
+.ev-ico { text-align: center; font-size: 44px; }
+.ev-cat { display: block; height: 90px; margin: 0 auto; }
+.ov-devil .ov-box { background: linear-gradient(180deg, #efe6ff, #d8c6f2); }
+.ov-angel .ov-box { background: linear-gradient(180deg, #fffdf2, #ffe9f1); }

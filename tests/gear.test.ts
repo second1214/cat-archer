@@ -152,3 +152,45 @@ describe("チュール（ふやした もらい方）・20章", () => {
     expect(chapterHp(20)).toBeGreaterThan(chapterHp(10) * 3);
   });
 });
+
+describe("鍵・できごと・強い虫", () => {
+  it("鍵: 合成の材料・分解に 使われない", async () => {
+    const { toggleLock } = await import("../src/core/run");
+    const s = newSave();
+    s.items = [it_(1, "keedama"), it_(2, "keedama"), it_(3, "keedama")];
+    s.equipped = {};
+    expect(toggleLock(s, 2)).toBe(true);
+    expect(dismantleItem(s, 2)).toBe(false);
+    expect(mergeItem(s, 1)).toBeNull();
+    toggleLock(s, 2);
+    expect(mergeItem(s, 1)?.r).toBe(1);
+  });
+  it("3面のあとに 飼い主のごほうび、5面（ボス）のあとに のら猫ボス", async () => {
+    const { DEVIL_COST } = await import("../src/game/world");
+    const w = new World(loadoutOf(newSave()), 1, mulberry32(4));
+    const clear = () => { for (const e of w.enemies) e.dead = true; w.step(1 / 60, { mx: 0, my: 0 }); };
+    w.startStage(3); clear();
+    expect(w.event?.kind).toBe("angel");
+    expect(w.paused).toBe(true);
+    w.hero.hp = 1; w.chooseEvent("heal");
+    expect(w.hero.hp).toBeGreaterThan(1);
+    expect(w.event).toBeNull();
+    w.startStage(5); clear();
+    expect(w.event?.kind).toBe("devil");
+    const sk = w.event!.skills[0], max = w.hero.maxHp;
+    w.chooseEvent(sk);
+    expect(w.n(sk)).toBeGreaterThan(0);
+    expect(w.hero.maxHp).toBeLessThan(max * (1 - DEVIL_COST) * 1.25 + 1);
+  });
+  it("2章から 後半のステージに 強い虫（体力3倍）", () => {
+    let elites = 0;
+    for (let sd = 1; sd <= 30; sd++) {
+      const w = new World(loadoutOf(newSave()), 4, mulberry32(sd));
+      for (const st of [6, 7, 8, 9]) { w.startStage(st); elites += w.enemies.filter((e) => e.elite).length; }
+    }
+    expect(elites).toBeGreaterThan(30);
+    const w1 = new World(loadoutOf(newSave()), 1, mulberry32(1));
+    w1.startStage(9);
+    expect(w1.enemies.some((e) => e.elite)).toBe(false);
+  });
+});
