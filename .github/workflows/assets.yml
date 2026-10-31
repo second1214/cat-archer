@@ -1,4 +1,4 @@
-# 調べもの: スカイタワーの ページを 取って 本文を research-tower ブランチに保存（ゲームには関係しない）
+# 調べもの: スカイタワーの ページを 取って 本文を research-more ブランチに保存（ゲームには関係しない）
 name: assets
 on:
   push:
@@ -14,14 +14,13 @@ jobs:
           mkdir -p out && cd out
           UA="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/124 Safari/537.36"
           get(){ curl -sSL -A "$UA" --max-time 40 "$2" -o "$1.html"; echo "$1 $2 $(wc -c < "$1.html")" >> sizes.txt; }
-          get gv_tower "https://archero-2.game-vault.net/wiki/Sky_Tower"
-          get fd_tower "https://archero-2.fandom.com/wiki/Sky_Tower"
-          get mobi_tower "https://mobi.gg/en/tips/archero-2-sky-tower/"
           get hub_home "https://archero2hub.com/en"
-          # ハブの中の タワーの ページを さがして 取る
-          grep -oE 'href="[^"]*tower[^"]*"' hub_home.html | sed 's/href="//;s/"$//' | sort -u | head -8 > hub_links.txt
-          i=0; while read -r l; do i=$((i+1)); case "$l" in /*) l="https://archero2hub.com$l";; esac; get "hub_t$i" "$l"; done < hub_links.txt
-          get rd_tower "https://www.reddit.com/r/Archero2/search.json?q=sky+tower&restrict_sr=1&sort=top&limit=25"
+          grep -oE 'href="[^"]*"' hub_home.html | sed 's/href="//;s/"$//' | grep -iE 'talent|card|godforge|mystling|pet|scroll|gear-swap|egg|plant|engrav|etch|artifact' | sort -u | head -14 > hub_links.txt
+          i=0; while read -r l; do i=$((i+1)); case "$l" in /*) l="https://archero2hub.com$l";; esac; get "hub_$i" "$l"; echo "hub_$i $l" >> hub_map.txt; done < hub_links.txt
+          get gv_mystling "https://archero-2.game-vault.net/wiki/Mystlings"
+          get gv_pets "https://archero-2.game-vault.net/wiki/Pets"
+          get gv_godforge "https://archero-2.game-vault.net/wiki/Godforge"
+          get gv_scroll "https://archero-2.game-vault.net/wiki/Gear"
           python3 - <<'PY'
           import glob, re
           from html.parser import HTMLParser
@@ -47,7 +46,7 @@ jobs:
       - name: push
         run: |
           cd out
-          git init -q -b research-tower
+          git init -q -b research-more
           git config user.name "github-actions"; git config user.email "actions@github.com"
           git add -A && git commit -qm "tower pages"
-          git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}" research-tower
+          git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}" research-more
