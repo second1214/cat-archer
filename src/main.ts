@@ -10,12 +10,13 @@ import { loadCatImages } from "./game/render";
 import { startBattle } from "./ui/battle";
 import { fmt, h, overlay, toast } from "./ui/dom";
 import { renderEquip } from "./ui/equip";
+import { renderGacha } from "./ui/gacha";
 import { runeCard } from "./ui/runes";
 import { GRADE_NAMES, RUNE_MAP } from "./core/runes";
 import { isMuted, setMuted, sfx, unlockAudio } from "./ui/sfx";
 
 const save = loadSave();
-let tab: "home" | "equip" = "home";
+let tab: "home" | "equip" | "gacha" = "home";
 const app = document.getElementById("app")!;
 const shell = h("div", { class: "shell" });
 app.append(shell);
@@ -23,15 +24,16 @@ document.addEventListener("pointerdown", unlockAudio, { once: true });
 void loadCatImages(save.cat);
 
 function render(): void {
-  const body = tab === "home" ? renderHome() : renderEquip(save, render);
+  const body = tab === "home" ? renderHome() : tab === "equip" ? renderEquip(save, render) : renderGacha(save, render);
   shell.replaceChildren(
     h("header", { class: "top" },
-      h("div", { class: "coins" }, "🐟 ", h("b", null, fmt(save.coins))),
+      h("div", { class: "money" }, h("div", { class: "coins" }, "🐟 ", h("b", null, fmt(save.coins))), h("div", { class: "coins" }, "🍥 ", h("b", null, fmt(save.churu)))),
       h("button", { class: "mute", "aria-label": "音", onclick: () => { setMuted(!isMuted()); render(); } }, isMuted() ? "🔇" : "🔊")),
     body,
     h("nav", { class: "tabs" },
       h("button", { class: tab === "home" ? "on" : "", onclick: () => { tab = "home"; sfx("tap"); render(); } }, h("span", null, "🏠"), "ホーム"),
-      h("button", { class: tab === "equip" ? "on" : "", onclick: () => { tab = "equip"; sfx("tap"); render(); } }, h("span", null, "🎒"), "装備")));
+      h("button", { class: tab === "equip" ? "on" : "", onclick: () => { tab = "equip"; sfx("tap"); render(); } }, h("span", null, "🎒"), "装備"),
+      h("button", { class: tab === "gacha" ? "on" : "", onclick: () => { tab = "gacha"; sfx("tap"); render(); } }, h("span", null, "🎁"), "おみやげ")));
 }
 
 function renderHome(): HTMLElement {
@@ -88,12 +90,13 @@ function play(chapter: number): void {
   sfx("tap");
   shell.style.display = "none";
   startBattle(save, chapter, (r) => {
-    const rw = finishRun(save, { chapter, stage: r.stage, won: r.won, coins: r.coins, drops: r.drops, runeDrops: r.runeDrops });
+    const rw = finishRun(save, { chapter, stage: r.stage, won: r.won, coins: r.coins, drops: r.drops, runeDrops: r.runeDrops, churu: r.churu });
     writeSave(save);
     shell.style.display = "";
     render();
     if (rw.unlocked) toast(`第${rw.unlocked}章「${CHAPTER_NAMES[rw.unlocked - 1]}」へ行けるようになった！`);
     else if (rw.newBest) toast("最高記録こうしん！");
+    if (rw.churu) setTimeout(() => toast(`🍥 チュール +${rw.churu}`), rw.unlocked || rw.newBest ? 1900 : 0);
   });
 }
 

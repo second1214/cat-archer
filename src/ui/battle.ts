@@ -11,7 +11,7 @@ import { fmt, h, overlay } from "./dom";
 import { runeCard } from "./runes";
 import { sfx } from "./sfx";
 
-export interface BattleEnd { stage: number; won: boolean; coins: number; drops: Item[]; runeDrops: Rune[] }
+export interface BattleEnd { stage: number; won: boolean; coins: number; drops: Item[]; runeDrops: Rune[]; churu: number }
 
 export function startBattle(save: SaveData, chapter: number, onEnd: (r: BattleEnd) => void): void {
   void loadCatImages(save.cat);
@@ -113,6 +113,7 @@ export function startBattle(save: SaveData, chapter: number, onEnd: (r: BattleEn
       h("h2", null, won ? `第${chapter}章 クリア！` : "やられちゃった…"),
       h("div", { class: "result-st" }, won ? `${STAGES_PER_CHAPTER} / ${STAGES_PER_CHAPTER}` : `ステージ ${world.stage} / ${STAGES_PER_CHAPTER} まで`),
       h("div", { class: "result-rw" }, h("span", null, "🐟 にぼし"), h("b", null, `+${fmt(world.coins)}`)),
+      world.churu ? h("div", { class: "result-rw" }, h("span", null, "🍥 チュール"), h("b", null, `+${fmt(world.churu)}`)) : null,
       drops.length ? h("div", { class: "result-items" }, drops.map((d) => h("div", { class: `icard r${d.r}` },
         h("div", { class: "icard-ico" }, ITEM_MAP[d.id].icon), h("div", { class: "icard-r" }, RARITY_NAMES[d.r])))) : null,
       world.runeDrops.length ? h("div", { class: "result-items" }, world.runeDrops.map((r) => runeCard(r))) : null,
@@ -122,7 +123,7 @@ export function startBattle(save: SaveData, chapter: number, onEnd: (r: BattleEn
   const finish = () => {
     modal?.close();
     cleanup();
-    onEnd({ stage: world.stage, won: world.state === "won", coins: world.coins, drops: world.drops, runeDrops: world.runeDrops });
+    onEnd({ stage: world.stage, won: world.state === "won", coins: world.coins, drops: world.drops, runeDrops: world.runeDrops, churu: world.churu });
   };
 
   // ---- ループ ----

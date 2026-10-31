@@ -1,10 +1,16 @@
 // セーブ（ブラウザの localStorage）。読みこむときに 形をととのえる（古い・こわれたデータでも動くように）。
 import { CAT_IDS } from "./cats";
 import { G, minGrade, MAX_GRADE, RUNE_MAP, RUNE_SLOTS, RUNE_TYPES, runeEffects, type Rune, type RuneEffects, type RuneType } from "./runes";
-import { activeTraits, addStats, emptyStats, ITEM_MAP, itemStats, MAX_LEVEL, SLOTS, type Item, type Rarity, type Slot, type Stats } from "./equip";
+import { activeTraits, addStats, emptyStats, ITEM_MAP, itemStats, MAX_LEVEL, MAX_RARITY, setBonuses, SLOTS, type Item, type Rarity, type Slot, type Stats } from "./equip";
+import type { SkillId } from "./skills";
 
 const KEY = "cat-archer/save";
-export const SAVE_VERSION = 1;
+/** 2: 装備の品質を 4段 → 6段（コモン〜ミシック）、枠を 5つに。合成素材・チュール */
+export const SAVE_VERSION = 2;
+/** 1 の品質（ふつう・レア・エピック・レジェンド）→ 2 の品質 */
+const V1_RARITY = [0, 2, 3, 4] as const;
+/** はじめの チュール（開発中なので 多め） */
+export const START_CHURU = 300;
 export const CHAPTERS = 10;
 
 export interface SaveData {
@@ -24,6 +30,12 @@ export interface SaveData {
   /** ルーン（持ち物）と、種類ごとの枠（uid か null） */
   runes: Rune[];
   runeSlots: Record<RuneType, (number | null)[]>;
+  /** 合成素材（品質ごとの数。装備を分解すると ふえる） */
+  materials: number[];
+  /** チュール（ガチャを回す） */
+  churu: number;
+  /** シリーズ装備が出ていない回数（天井） */
+  gachaPity: number;
   seed: number;
 }
 
@@ -43,6 +55,9 @@ export function newSave(): SaveData {
     cat: "chatora",
     runes: [],
     runeSlots: emptyRuneSlots(),
+    materials: [0, 0, 0, 0, 0, 0],
+    churu: START_CHURU,
+    gachaPity: 0,
     seed: Math.floor(Math.random() * 2 ** 31),
   };
 }
@@ -53,10 +68,12 @@ export function normalize(raw: unknown): SaveData {
   const base = newSave();
   if (!raw || typeof raw !== "object") return base;
   const r = raw as Partial<SaveData>;
+  const old = num(r.version, 1) < 2;
   const items = Array.isArray(r.items)
     ? r.items.filter((x): x is Item => !!x && typeof x === "object" && typeof x.id === "string" && !!ITEM_MAP[x.id] && typeof x.uid === "number")
       .map((x) => {
-        const rar = Math.max(0, Math.min(3, Math.floor(num(x.r, 0)))) as Rarity;
+        const raw = Math.max(0, Math.floor(num(x.r, 0)));
+        const rar = (old ? V1_RARITY[Math.min(3, raw)] : Math.min(MAX_RARITY, raw)) as Rarity;
         return { uid: x.uid, id: x.id, r: rar, lv: Math.max(1, Math.min(MAX_LEVEL[rar], Math.floor(num(x.lv, 1)))) };
       })
     : base.items;
@@ -98,6 +115,9 @@ export function normalize(raw: unknown): SaveData {
     cat: typeof r.cat === "string" && CAT_IDS.has(r.cat) ? r.cat : base.cat,
     runes,
     runeSlots,
+    materials: Array.from({ length: MAX_RARITY + 1 }, (_, i) => Math.max(0, Math.floor(num(r.materials?.[i], 0)))),
+    churu: Math.max(0, Math.floor(num(r.churu, START_CHURU))),
+    gachaPity: Math.max(0, Math.floor(num(r.gachaPity, 0))),
     seed: Math.floor(num(r.seed, base.seed)),
   };
 }
@@ -132,6 +152,10 @@ export interface Loadout {
   laser: boolean;
   regen: number;
   rune: RuneEffects;
+  /** プレイのはじめから 持っているスキル（シリーズのセット効果） */
+  startSkills: SkillId[];
+  /** まわる玉 + */
+  orbs: number;
 }
 
 export const equippedRunes = (save: SaveData): Rune[] =>
@@ -149,25 +173,31 @@ export function etchedSlotsOpen(save: SaveData): number {
 /** 装備をふくめた、プレイ開始時の力。 */
 export function loadoutOf(save: SaveData): Loadout {
   let st = emptyStats();
-  let bounce = 0, pierce = false, laser = false, regen = 0;
+  let bounce = 0, pierce = false, laser = false, regen = 0, orbs = 0, dragon = 0;
+  const startSkills: SkillId[] = [];
   // 銘刻は 開いている枠の分だけ 効く
   const open = etchedSlotsOpen(save);
   const runes = equippedRunes(save).filter((x) => RUNE_MAP[x.id].type !== "etched" || save.runeSlots.etched.indexOf(x.uid) < open);
   const rune = runeEffects(runes);
-  for (const it of equippedItems(save)) {
-    st = addStats(st, itemStats(it));
-    for (const t of activeTraits(it)) {
-      bounce += t.bounce ?? 0;
-      pierce ||= !!t.pierce;
-      laser ||= !!t.laser;
-      regen += t.regen ?? 0;
-    }
+  const worn = equippedItems(save);
+  const traits = worn.flatMap(activeTraits).concat(setBonuses(worn).flatMap((b) => b.traits));
+  for (const it of worn) st = addStats(st, itemStats(it));
+  for (const t of traits) {
+    if (!worn.some((it) => ITEM_MAP[it.id].traits.includes(t)) && t.stats) st = addStats(st, t.stats); // セット効果の 数値
+    bounce += t.bounce ?? 0;
+    pierce ||= !!t.pierce;
+    laser ||= !!t.laser;
+    regen += t.regen ?? 0;
+    orbs += t.orbs ?? 0;
+    dragon += t.dragon ?? 0;
+    for (const sk of t.startSkills ?? []) if (!startSkills.includes(sk)) startSkills.push(sk);
   }
+  rune.dragonChance = Math.min(1, rune.dragonChance + dragon);
   return {
     stats: st,
     atk: (BASE_ATK + st.atk + rune.atk) * (1 + st.atkPct),
     hp: Math.round((BASE_HP + st.hp + rune.hp) * (1 + st.hpPct)),
-    bounce, pierce, laser, regen, rune,
+    bounce, pierce, laser, regen, rune, startSkills, orbs,
   };
 }
 

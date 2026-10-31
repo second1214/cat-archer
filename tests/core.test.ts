@@ -42,7 +42,7 @@ describe("装備", () => {
   it("レア度で 力が上がり、特性が使えるようになる", () => {
     expect(itemStats(item(1, "keedama", 1)).atk).toBeGreaterThan(itemStats(item(1, "keedama", 0)).atk);
     const s = newSave();
-    s.items[0].r = 2;
+    s.items[0].r = 3;
     expect(loadoutOf(s).bounce).toBe(1);
   });
   it("落ちるレア度: ボスは エピックが出やすい", () => {
@@ -63,7 +63,7 @@ describe("セーブ", () => {
   it("こわれたデータでも 動く形になる", () => {
     const s = normalize({ coins: "x", items: [{ uid: 5, id: "nai" }, { uid: 6, id: "hone", r: 9, lv: 99 }], equipped: { weapon: 5, collar: 6 } });
     expect(s.coins).toBe(0);
-    expect(s.items).toEqual([{ uid: 6, id: "hone", r: 3, lv: 40 }]);
+    expect(s.items).toEqual([{ uid: 6, id: "hone", r: 4, lv: 40 }]); // 古いセーブ: レジェンド(3) → 新しいレジェンド(4)
     expect(s.equipped).toEqual({});
     expect(s.nextUid).toBe(7);
   });

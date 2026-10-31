@@ -12,9 +12,14 @@ export interface RunResult {
   coins: number;
   drops: Item[];       // uid はここで つけなおす
   runeDrops?: Rune[];  // uid はここで つけなおす
+  churu?: number;
 }
 
-export interface RunReward { coins: number; items: Item[]; runes: Rune[]; newBest: boolean; unlocked: number | null }
+/** チュール: ボス 1体（開発中なので 多め）・章の はじめてのクリア */
+export const CHURU_BOSS = 10;
+export const CHURU_FIRST_CLEAR = 100;
+
+export interface RunReward { coins: number; churu: number; items: Item[]; runes: Rune[]; newBest: boolean; unlocked: number | null }
 
 export function finishRun(save: SaveData, r: RunResult): RunReward {
   const coins = Math.round(r.coins);
@@ -23,6 +28,9 @@ export function finishRun(save: SaveData, r: RunResult): RunReward {
   save.items.push(...items);
   const runes = (r.runeDrops ?? []).map((d) => ({ ...d, uid: save.nextUid++ }));
   save.runes.push(...runes);
+  const firstClear = r.won && (save.best[r.chapter] ?? 0) < STAGES_PER_CHAPTER;
+  const churu = (r.churu ?? 0) + (firstClear ? CHURU_FIRST_CLEAR : 0);
+  save.churu += churu;
   const reached = r.won ? STAGES_PER_CHAPTER : Math.max(0, r.stage - 1);
   const newBest = reached > (save.best[r.chapter] ?? 0);
   if (newBest) save.best[r.chapter] = reached;
@@ -32,7 +40,7 @@ export function finishRun(save: SaveData, r: RunResult): RunReward {
     save.chapter = save.unlocked;
     unlocked = save.unlocked;
   }
-  return { coins, items, runes, newBest, unlocked };
+  return { coins, churu, items, runes, newBest, unlocked };
 }
 
 export const CHEST_COST = 300;
@@ -46,7 +54,7 @@ export function openChest(save: SaveData, rng: Rng): Item | Rune | null {
     save.runes.push(ru);
     return ru;
   }
-  const r = weighted<Rarity>(rng, [[0, 0.78], [1, 0.19], [2, 0.03]]);
+  const r = weighted<Rarity>(rng, [[0, 0.6], [1, 0.27], [2, 0.11], [3, 0.02]]);
   const it = rollItem(rng, save.nextUid++, r);
   save.items.push(it);
   return it;
@@ -62,17 +70,27 @@ export function upgradeItem(save: SaveData, uid: number): boolean {
   return true;
 }
 
-/** 合成: 3つを 1つ上のレア度へ。レベルは 3つの中で いちばん高いもの。 */
-export function mergeItem(save: SaveData, uid: number): Item | null {
+/** 合成: 3つを 1つ上の品質へ（足りない分は 同じ品質の 合成素材）。レベルは いちばん高いもの。 */
+export function mergeItem(save: SaveData, uid: number, useMaterials = true): Item | null {
   const base = save.items.find((x) => x.uid === uid);
   if (!base || base.r >= MAX_RARITY) return null;
-  const mates = mergePartners(save.items, base, equippedSet(save));
-  if (!mates) return null;
-  const ids = new Set(mates.map((m) => m.uid));
-  base.lv = Math.max(base.lv, ...mates.map((m) => m.lv));
+  const p = mergePartners(save.items, base, equippedSet(save), useMaterials ? save.materials : []);
+  if (!p) return null;
+  const ids = new Set(p.mates.map((m) => m.uid));
+  save.materials[base.r] -= p.mats;
+  base.lv = Math.max(base.lv, ...p.mates.map((m) => m.lv));
   base.r = (base.r + 1) as Rarity;
   save.items = save.items.filter((x) => !ids.has(x.uid));
   return base;
+}
+
+/** 分解: 装備を 同じ品質の 合成素材 1つにする（付けている装備は できない） */
+export function dismantleItem(save: SaveData, uid: number): boolean {
+  const it = save.items.find((x) => x.uid === uid);
+  if (!it || equippedSet(save).has(uid)) return false;
+  save.items = save.items.filter((x) => x.uid !== uid);
+  save.materials[it.r]++;
+  return true;
 }
 
 /** まとめて合成（合成できなくなるまで。装備中のものを 先に土台にする）。 */
@@ -84,7 +102,8 @@ export function mergeAll(save: SaveData): Item[] {
       .sort((a, b) => Number(eq.has(b.uid)) - Number(eq.has(a.uid)) || b.lv - a.lv)
       .find((x) => x.r < MAX_RARITY && mergePartners(save.items, x, eq));
     if (!base) return made;
-    const m = mergeItem(save, base.uid);
+    // まとめて合成は 装備どうしだけ（合成素材は 使わない）
+    const m = mergeItem(save, base.uid, false);
     if (!m) return made;
     made.push(m);
   }

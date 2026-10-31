@@ -392,24 +392,42 @@ export class Renderer {
       }
     }
     for (const st of w.strikes.list) {
-      const im = helperImg(st.cat);
-      const k = st.kind === "dragon" ? 0.95 : st.kind === "mini" ? 0.4 : 0.6;
       const x = this.X(st.x), y = this.Y(st.y);
-      // うしろに 光の すじ
-      const sp = Math.hypot(st.vx, st.vy) || 1;
-      g.strokeStyle = st.kind === "dragon" ? "rgba(255,200,60,.55)" : "rgba(255,255,255,.45)";
-      g.lineWidth = s * k * 0.35; g.lineCap = "round";
-      g.beginPath(); g.moveTo(x, y); g.lineTo(x - (st.vx / sp) * s * k * 1.1, y - (st.vy / sp) * s * k * 1.1); g.stroke();
-      if (st.kind === "dragon") {
-        const gr = g.createRadialGradient(x, y, 0, x, y, s * 0.8);
-        gr.addColorStop(0, "rgba(255,210,80,.55)"); gr.addColorStop(1, "rgba(255,210,80,0)");
-        g.fillStyle = gr; g.beginPath(); g.arc(x, y, s * 0.8, 0, Math.PI * 2); g.fill();
+      const sp = Math.hypot(st.vx, st.vy) || 1, ux = st.vx / sp, uy = st.vy / sp;
+      if (st.kind !== "dragon") {
+        // ふつう・子ねこ: 猫は出さず、光る 肉球の ひっかきだけが飛ぶ
+        const k = st.kind === "mini" ? 0.6 : 1;
+        g.lineCap = "round";
+        g.strokeStyle = "rgba(255,190,220,.45)"; g.lineWidth = s * 0.22 * k;
+        g.beginPath(); g.moveTo(x, y); g.lineTo(x - ux * s * 0.9 * k, y - uy * s * 0.9 * k); g.stroke();
+        g.strokeStyle = "rgba(255,255,255,.9)"; g.lineWidth = s * 0.05 * k;
+        for (const o of [-0.09, 0, 0.09]) {
+          const ox = -uy * s * o * k, oy = ux * s * o * k;
+          g.beginPath(); g.moveTo(x + ox, y + oy); g.lineTo(x + ox - ux * s * 0.55 * k, y + oy - uy * s * 0.55 * k); g.stroke();
+        }
+        g.fillStyle = "#ff8fb8";
+        g.beginPath(); g.arc(x, y, s * 0.11 * k, 0, Math.PI * 2); g.fill();
+        g.fillStyle = "#fff";
+        for (const [px, py] of [[-0.09, -0.1], [0, -0.13], [0.09, -0.1]]) { g.beginPath(); g.arc(x + px * s * k, y + py * s * k, s * 0.035 * k, 0, Math.PI * 2); g.fill(); }
+        continue;
       }
-      if (!im) { g.fillStyle = "#f2b06a"; g.beginPath(); g.arc(x, y, s * 0.25 * k, 0, Math.PI * 2); g.fill(); continue; }
+      // ボス猫: 猫のまわりに現れて（構え）、走っていく
+      const im = helperImg(st.cat);
+      const k = 0.95;
+      const gr = g.createRadialGradient(x, y, 0, x, y, s * 0.8);
+      gr.addColorStop(0, "rgba(255,210,80,.55)"); gr.addColorStop(1, "rgba(255,210,80,0)");
+      g.fillStyle = gr; g.beginPath(); g.arc(x, y, s * 0.8, 0, Math.PI * 2); g.fill();
+      if (st.delay <= 0) {
+        g.strokeStyle = "rgba(255,200,60,.55)"; g.lineWidth = s * 0.3; g.lineCap = "round";
+        g.beginPath(); g.moveTo(x, y); g.lineTo(x - ux * s, y - uy * s); g.stroke();
+      }
+      if (!im) { g.fillStyle = "#c98a4a"; g.beginPath(); g.arc(x, y, s * 0.3, 0, Math.PI * 2); g.fill(); continue; }
       const dw = (im.width / CAT_PX) * s * k, dh = (im.height / CAT_PX) * s * k;
+      // 構えているあいだは 少し ふくらんで 出てくる
+      const pop = st.delay > 0 ? 1 - (st.delay / 0.3) * 0.4 : 1;
       g.save();
       g.translate(x, y);
-      g.scale(st.vx < 0 ? -1 : 1, 1);
+      g.scale((st.vx < 0 ? -1 : 1) * pop, pop);
       g.drawImage(im, -dw / 2, -dh / 2, dw, dh);
       g.restore();
     }
