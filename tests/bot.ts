@@ -38,6 +38,7 @@ export function runBot(lo: Loadout, chapter: number, seed = 1, maxT = 900) {
   const dt = 1 / 30;
   while (w.time < maxT && w.state !== "dead" && w.state !== "won") {
     if (w.choices) { w.chooseSkill(PREF.find((p) => w.choices!.includes(p)) ?? w.choices[0]); continue; }
+    if (w.event) { w.chooseEvent(w.event.kind === "angel" ? "heal" : "refuse"); continue; }
     w.step(dt, botInput(w));
   }
   return { stage: w.stage, state: w.state, time: w.time, level: w.hero.level, coins: Math.round(w.coins), hp: w.hero.hp };

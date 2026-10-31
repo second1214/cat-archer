@@ -57,7 +57,18 @@ export interface Enemy {
   flash: number;
   facing: 1 | -1;
   dead: boolean;
+  /** 強い虫（中ボス）: 体力3倍・大きい・ごほうび多め */
+  elite?: boolean;
 }
+
+/** ステージのあいだの できごと（飼い主のごほうび・のら猫ボスの 取り引き） */
+export interface StageEvent { kind: "angel" | "devil"; skills: SkillId[] }
+/** 飼い主のごほうびが 来るステージ（クリアしたあと） */
+export const ANGEL_STAGES: readonly number[] = [3, 7];
+/** のら猫ボスが 来るステージ（ボスを倒したあと） */
+export const DEVIL_STAGES: readonly number[] = [5];
+/** のら猫ボスの 取り引きで へる 体力の上限 */
+export const DEVIL_COST = 0.2;
 
 export interface Shot {
   x: number; y: number; vx: number; vy: number;
@@ -98,6 +109,7 @@ export class World implements StrikeHost {
   drops: Item[] = [];
   runeDrops: Rune[] = [];
   churu = 0;
+  event: StageEvent | null = null;
   /** 床に落ちている チュール */
   churuPickup: { x: number; y: number; t: number } | null = null;
   /** 助っ人ねこ（ストライク） */
@@ -153,6 +165,7 @@ export class World implements StrikeHost {
     this.stage = n;
     this.state = "fight";
     this.shots = []; this.eshots = []; this.volleys = []; this.beams = [];
+    this.event = null;
     const h = this.hero;
     h.x = W / 2; h.y = H - 1.5; h.inv = 1; h.atkCd = 0.4;
     const info = stageInfo(this.chapter, n);
@@ -162,6 +175,12 @@ export class World implements StrikeHost {
     this.enemies = [];
     const reach = this.terrain.flow(h.x, h.y);
     for (const k of info.enemies) this.enemies.push(this.spawn(k, reach));
+    // 2章から ボスのいない後半のステージに ときどき 強い虫（中ボス）
+    if (!info.boss && n >= 4 && this.chapter >= 2 && this.rng() < Math.min(0.8, 0.35 + 0.03 * this.chapter)) {
+      // 大きくなっても 物・水に かからない虫から えらぶ
+      const ok = this.enemies.filter((e) => e.def.fly || !this.terrain.hits(e.x, e.y, e.def.r * 1.3));
+      if (ok.length) this.makeElite(ok[Math.floor(this.rng() * ok.length)]);
+    }
     if (info.boss) this.sounds.push("boss");
     this.strikes?.onStageStart();
     // ときどき 床に チュールが 落ちている
@@ -200,6 +219,27 @@ export class World implements StrikeHost {
     };
   }
 
+  private makeElite(e: Enemy): void {
+    e.elite = true;
+    e.def = { ...e.def, r: e.def.r * 1.3, speed: e.def.speed * 1.1, xp: e.def.xp * 3, coins: e.def.coins * 3, name: `強い${e.def.name}` };
+    e.hp = e.maxHp = Math.round(e.maxHp * 3);
+    e.dmg *= 1.3; e.shot *= 1.3;
+  }
+
+  /** できごとの 選択（UI から）: "heal" 回復 / "refuse" ことわる / スキル */
+  chooseEvent(choice: "heal" | "refuse" | SkillId): void {
+    const ev = this.event;
+    if (!ev) return;
+    const h = this.hero;
+    if (choice === "heal") { if (ev.kind === "angel") this.heal(h.maxHp * 0.4); }
+    else if (choice !== "refuse" && ev.skills.includes(choice)) {
+      if (ev.kind === "devil") { h.maxHp = Math.max(1, Math.round(h.maxHp * (1 - DEVIL_COST))); h.hp = Math.min(h.hp, h.maxHp); }
+      this.skills[choice] = this.n(choice) + 1;
+      if (choice === "hpup") { const add = Math.round(h.maxHp * 0.2); h.maxHp += add; h.hp += add; }
+    }
+    this.event = null;
+  }
+
   /** レベルアップの選択（UI から）。 */
   chooseSkill(id: SkillId): void {
     if (!this.choices?.includes(id)) return;
@@ -223,7 +263,7 @@ export class World implements StrikeHost {
   }
 
   /** 止まっている（選択中・おしまい）なら true */
-  get paused(): boolean { return !!this.choices || this.state === "dead" || this.state === "won"; }
+  get paused(): boolean { return !!this.choices || !!this.event || this.state === "dead" || this.state === "won"; }
 
   // ---------- 1コマ ----------
   step(dt: number, input: Input): void {
@@ -293,6 +333,11 @@ export class World implements StrikeHost {
     this.eshots = [];
     this.sounds.push("clear");
     this.state = this.stage >= STAGES_PER_CHAPTER ? "won" : "clear";
+    if (this.state === "clear") {
+      const opts = { laser: this.laser, strikeSource: !!this.rune.timeSword || this.rune.potion.start, strikeWeight: this.rune.strikeSkillWeight };
+      if (ANGEL_STAGES.includes(this.stage)) this.event = { kind: "angel", skills: rollSkills(this.skills, this.rng, 1, opts) };
+      else if (DEVIL_STAGES.includes(this.stage)) this.event = { kind: "devil", skills: rollSkills(this.skills, this.rng, 2, opts) };
+    }
   }
 
   private get coinMul(): number { return (1 + this.lo.stats.coinPct) * (1 + 0.3 * (this.chapter - 1)); }
@@ -514,6 +559,7 @@ export class World implements StrikeHost {
     this.sounds.push("kill");
     this.coins += e.def.coins * this.coinMul;
     if (e.def.boss) this.churu += CHURU_BOSS;
+    if (e.elite && this.rng() < 0.5) this.drops.push(rollItem(this.rng, 0, rollRarity(this.rng, this.chapter, true)));
     this.strikes.onKill();
     if (e.def.split) {
       const reach = this.terrain.flow(this.hero.x, this.hero.y);

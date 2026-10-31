@@ -6,7 +6,7 @@ import { loadoutOf, type SaveData } from "../core/save";
 import { SKILL_MAP } from "../core/skills";
 import { CHAPTER_NAMES, STAGES_PER_CHAPTER } from "../core/stages";
 import { loadCatImages, Renderer, type Stick } from "../game/render";
-import { World } from "../game/world";
+import { DEVIL_COST, World } from "../game/world";
 import { fmt, h, overlay } from "./dom";
 import { runeCard } from "./runes";
 import { sfx } from "./sfx";
@@ -103,6 +103,32 @@ export function startBattle(save: SaveData, chapter: number, onEnd: (r: BattleEn
       }))), "ov-lvup");
   };
 
+  /** 飼い主のごほうび（回復か おもちゃ）・のら猫ボスの 取り引き（体力の上限と 引きかえに スキル） */
+  const showEvent = () => {
+    const ev = world.event!;
+    sfx("levelup");
+    const pick = (c: Parameters<typeof world.chooseEvent>[0]) => () => { modal?.close(); modal = null; world.chooseEvent(c); };
+    const skillCard = (id: (typeof ev.skills)[number], sub: string) => {
+      const d = SKILL_MAP[id];
+      return h("button", { class: "lvup-card", onclick: pick(id) }, h("div", { class: "lvup-ico" }, d.icon), h("div", { class: "lvup-n" }, d.name), h("div", { class: "lvup-d" }, `${d.desc}${sub}`));
+    };
+    modal = ev.kind === "angel"
+      ? overlay(h("div", { class: "lvup ev" },
+        h("div", { class: "ev-ico" }, "🙌"),
+        h("div", { class: "lvup-t" }, "飼い主の ごほうび"),
+        h("div", { class: "lvup-sub" }, "がんばってるね〜。どっちが いい？"),
+        h("div", { class: "lvup-cards" },
+          h("button", { class: "lvup-card", onclick: pick("heal") }, h("div", { class: "lvup-ico" }, "🍗"), h("div", { class: "lvup-n" }, "おやつ"), h("div", { class: "lvup-d" }, "体力を 40% 回復")),
+          ev.skills.map((id) => skillCard(id, "（おもちゃ）")))), "ov-lvup ov-angel")
+      : overlay(h("div", { class: "lvup ev" },
+        h("img", { class: "ev-cat", src: "cat/taisho/sit.png", alt: "" }),
+        h("div", { class: "lvup-t" }, "のら猫ボスの 取り引き"),
+        h("div", { class: "lvup-sub" }, `「技を おしえてやる。そのかわり 体力の上限を ${Math.round(DEVIL_COST * 100)}% もらうぜ」`),
+        h("div", { class: "lvup-cards" },
+          ev.skills.map((id) => skillCard(id, `（体力の上限 -${Math.round(DEVIL_COST * 100)}%）`)),
+          h("button", { class: "btn btn-gray", onclick: pick("refuse") }, "ことわる"))), "ov-lvup ov-devil");
+  };
+
   const showResult = () => {
     ended = true;
     const won = world.state === "won";
@@ -153,6 +179,7 @@ export function startBattle(save: SaveData, chapter: number, onEnd: (r: BattleEn
         world.step(1 / 60, input());
         for (const s of world.sounds) sfx(s);
         if (world.choices) { showChoices(); break; }
+        if (world.event) { showEvent(); break; }
       }
       if (world.state === "dead" || world.state === "won") {
         endTimer += dt;
