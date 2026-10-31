@@ -1,6 +1,7 @@
 // 入り口: ホーム・装備の画面と、戦闘への切りかえ。
 import "./style.css";
 import { CATS, catName } from "./core/cats";
+import { talentCost, TALENTS, talentValue, trainTalent } from "./core/talents";
 import { ITEM_MAP, RARITY_NAMES } from "./core/equip";
 import { mulberry32 } from "./core/rng";
 import { CHEST_COST, claimDaily, finishRun, openChest } from "./core/run";
@@ -46,7 +47,8 @@ function renderHome(): HTMLElement {
       h("img", { class: "hero-cat", src: `cat/${save.cat}/sit.png`, alt: catName(save.cat) }),
       h("div", { class: "hero-row" },
         h("div", { class: "hero-pow" }, "戦力 ", h("b", null, fmt(powerOf(lo)))),
-        h("button", { class: "btn btn-small hero-pick", onclick: pickCat }, "🐾 ", catName(save.cat)))),
+        h("button", { class: "btn btn-small hero-pick", onclick: pickCat }, "🐾 ", catName(save.cat)),
+        h("button", { class: "btn btn-small hero-pick", onclick: openTraining }, "🏋️ 修行"))),
     h("div", { class: "ch-card" },
       h("button", { class: "ch-arrow", disabled: ch <= 1, onclick: () => setCh(ch - 1) }, "◀"),
       h("div", { class: "ch-mid" },
@@ -59,6 +61,30 @@ function renderHome(): HTMLElement {
     h("button", { class: `btn ${save.coins >= CHEST_COST ? "btn-pink" : "btn-gray"} chest`, disabled: save.coins < CHEST_COST, onclick: chest },
       "🎁 宝箱をあける ", h("small", null, `🐟${CHEST_COST}`)),
     h("p", { class: "muted small how" }, "指をすべらせて移動。止まると いちばん近い虫へ 自動で毛玉を撃ちます。"));
+}
+
+function openTraining(): void {
+  sfx("tap");
+  const body = h("div", { class: "pick" });
+  const draw = () => body.replaceChildren(
+    h("h2", null, "ねこ修行"),
+    h("p", { class: "muted small" }, "にぼしで ずっと残る力を 少しずつ 上げる"),
+    h("div", { class: "coins tr-coins" }, "🐟 ", h("b", null, fmt(save.coins))),
+    h("div", { class: "tl-list" }, TALENTS.map((t) => {
+      const lv = save.talents[t.id], cost = talentCost(lv);
+      return h("div", { class: "tl-row" },
+        h("div", { class: "tl-ico" }, t.icon),
+        h("div", { class: "tl-mid" },
+          h("b", null, `${t.name} Lv${lv}`),
+          h("small", null, lv ? t.desc(talentValue(t.id, lv)) : "まだ 修行していない"),
+          cost !== null ? h("small", { class: "tl-next" }, `→ ${t.desc(talentValue(t.id, lv + 1))}`) : h("small", { class: "tl-next" }, "最大")),
+        h("button", { class: `btn btn-small ${cost !== null && save.coins >= cost ? "btn-gold" : "btn-gray"}`, disabled: cost === null || save.coins < cost, onclick: () => {
+          if (trainTalent(save, t.id)) { writeSave(save); sfx("coin"); draw(); }
+        } }, cost === null ? "最大" : `🐟${fmt(cost)}`));
+    })),
+    h("button", { class: "btn btn-gray btn-wide", onclick: () => { m.close(); render(); } }, "とじる"));
+  draw();
+  const m = overlay(body, "", () => { m.close(); render(); });
 }
 
 function pickCat(): void {

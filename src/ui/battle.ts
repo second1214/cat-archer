@@ -6,7 +6,7 @@ import { loadoutOf, type SaveData } from "../core/save";
 import { SKILL_MAP } from "../core/skills";
 import { CHAPTER_NAMES, STAGES_PER_CHAPTER } from "../core/stages";
 import { loadCatImages, Renderer, type Stick } from "../game/render";
-import { DEVIL_COST, World } from "../game/world";
+import { World } from "../game/world";
 import { fmt, h, overlay } from "./dom";
 import { runeCard } from "./runes";
 import { sfx } from "./sfx";
@@ -123,9 +123,9 @@ export function startBattle(save: SaveData, chapter: number, onEnd: (r: BattleEn
       : overlay(h("div", { class: "lvup ev" },
         h("img", { class: "ev-cat", src: "cat/taisho/sit.png", alt: "" }),
         h("div", { class: "lvup-t" }, "のら猫ボスの 取り引き"),
-        h("div", { class: "lvup-sub" }, `「技を おしえてやる。そのかわり 体力の上限を ${Math.round(DEVIL_COST * 100)}% もらうぜ」`),
+        h("div", { class: "lvup-sub" }, `「技を おしえてやる。そのかわり 体力の上限を ${Math.round(world.devilCost * 100)}% もらうぜ」`),
         h("div", { class: "lvup-cards" },
-          ev.skills.map((id) => skillCard(id, `（体力の上限 -${Math.round(DEVIL_COST * 100)}%）`)),
+          ev.skills.map((id) => skillCard(id, `（体力の上限 -${Math.round(world.devilCost * 100)}%）`)),
           h("button", { class: "btn btn-gray", onclick: pick("refuse") }, "ことわる"))), "ov-lvup ov-devil");
   };
 
