@@ -4,7 +4,7 @@ import { weighted, type Rng } from "./rng";
 import { ENCHANT_COST, enchantSlots, G, MAX_GRADE, minGrade, rollEnchant, RUNE_MAP, RUNE_MERGE_COUNT, RUNE_UNLOCK_CHAPTER, RUNE_TYPES, RUNES, rollRune, type Enchant, type Rune } from "./runes";
 import { track } from "./missions";
 import { CHAPTERS, equippedSet, etchedSlotsOpen, type SaveData } from "./save";
-import { STAGES_PER_CHAPTER } from "./stages";
+import { STAGES_PER_CHAPTER, type EnemyKind } from "./stages";
 
 export interface RunResult {
   chapter: number;
@@ -15,6 +15,21 @@ export interface RunResult {
   runeDrops?: Rune[];  // uid はここで つけなおす
   churu?: number;
   kills?: number;
+  /** 虫の種類ごとの 倒した数（図鑑） */
+  killsBy?: Partial<Record<EnemyKind, number>>;
+  /** ハードモード */
+  hard?: boolean;
+}
+
+/** ハードを はじめてクリア: チュール・爪とぎ石 */
+export const HARD_FIRST_CHURU = 50;
+export const HARD_FIRST_STONES = 5;
+/** ハードは その章を ノーマルで クリアすると 遊べる */
+export const hardOpen = (save: SaveData, ch: number) => (save.best[ch] ?? 0) >= STAGES_PER_CHAPTER;
+
+/** 図鑑に 倒した数を 足す（ほかの モードからも 呼ぶ） */
+export function addBestiary(save: SaveData, by: Partial<Record<EnemyKind, number>> = {}): void {
+  for (const [k, n] of Object.entries(by) as [EnemyKind, number][]) save.bestiary[k] = (save.bestiary[k] ?? 0) + n;
 }
 
 /** チュールの もらい方（気軽に ガチャを回せる くらい） */
@@ -51,18 +66,20 @@ export function finishRun(save: SaveData, r: RunResult): RunReward {
   save.items.push(...items);
   const runes = (r.runeDrops ?? []).map((d) => ({ ...d, uid: save.nextUid++ }));
   save.runes.push(...runes);
-  const firstClear = r.won && (save.best[r.chapter] ?? 0) < STAGES_PER_CHAPTER;
-  const churu = (r.churu ?? 0) + (firstClear ? CHURU_FIRST_CLEAR : 0);
+  const bestMap = r.hard ? save.hardBest : save.best;
+  const firstClear = r.won && (bestMap[r.chapter] ?? 0) < STAGES_PER_CHAPTER;
+  const churu = (r.churu ?? 0) + (firstClear ? (r.hard ? HARD_FIRST_CHURU : CHURU_FIRST_CLEAR) : 0);
   save.churu += churu;
-  const stones = stonesFor(r.chapter, r.stage, r.won);
+  const stones = stonesFor(r.chapter, r.stage, r.won) * (r.hard ? 2 : 1) + (firstClear && r.hard ? HARD_FIRST_STONES : 0);
   save.stones += stones;
   const reached = r.won ? STAGES_PER_CHAPTER : Math.max(0, r.stage - 1);
   track(save, "stages", reached);
   track(save, "kills", r.kills ?? 0);
-  const newBest = reached > (save.best[r.chapter] ?? 0);
-  if (newBest) save.best[r.chapter] = reached;
+  addBestiary(save, r.killsBy);
+  const newBest = reached > (bestMap[r.chapter] ?? 0);
+  if (newBest) bestMap[r.chapter] = reached;
   let unlocked: number | null = null;
-  if (r.won && r.chapter === save.unlocked && save.unlocked < CHAPTERS) {
+  if (!r.hard && r.won && r.chapter === save.unlocked && save.unlocked < CHAPTERS) {
     save.unlocked++;
     save.chapter = save.unlocked;
     unlocked = save.unlocked;

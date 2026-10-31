@@ -4,6 +4,7 @@ import { enchantOpts, ENCHANT_Q_NAMES, G, minGrade, MAX_GRADE, RUNE_MAP, RUNE_SL
 import { activeTraits, addStats, emptyStats, ITEM_MAP, itemStats, MAX_LEVEL, MAX_RARITY, setBonuses, SLOTS, type Item, type Rarity, type Slot, type Stats } from "./equip";
 import type { SkillId } from "./skills";
 import { emptyMissions, MISSIONS, type MissionId, type MissionState } from "./missions";
+import { ENEMIES, type EnemyKind } from "./stages";
 import { DAILIES, DAILY_LEVELS, emptyDaily, type DailyId, type DailyState } from "./daily";
 import { emptyTalents, TALENT_MAX, TALENTS, talentValue, type TalentId } from "./talents";
 
@@ -55,6 +56,13 @@ export interface SaveData {
   patrolAt: number;
   /** 毎日のミッション */
   missions: MissionState;
+  /** ハードモードの 章ごとの いちばん進んだステージ */
+  hardBest: Record<number, number>;
+  /** 図鑑: 虫の種類ごとの 倒した数・受け取った ごほうびの 段 */
+  bestiary: Partial<Record<EnemyKind, number>>;
+  bestiaryClaimed: Partial<Record<EnemyKind, number>>;
+  /** 受け取った 実績 */
+  achievements: string[];
   /** ねこ修行（タレント）の レベル */
   talents: Record<TalentId, number>;
   seed: number;
@@ -87,12 +95,27 @@ export function newSave(): SaveData {
     towerBest: 0,
     patrolAt: 0,
     missions: emptyMissions(),
+    hardBest: {},
+    bestiary: {},
+    bestiaryClaimed: {},
+    achievements: [],
     talents: emptyTalents(),
     seed: Math.floor(Math.random() * 2 ** 31),
   };
 }
 
 const num = (v: unknown, d: number) => (typeof v === "number" && Number.isFinite(v) ? v : d);
+
+const stageMap = (v: unknown): Record<number, number> => {
+  const out: Record<number, number> = {};
+  if (v && typeof v === "object") for (const [k, x] of Object.entries(v)) out[Number(k)] = Math.max(0, Math.min(10, Math.floor(num(x, 0))));
+  return out;
+};
+const kindMap = (v: unknown): Partial<Record<EnemyKind, number>> => {
+  const out: Partial<Record<EnemyKind, number>> = {};
+  if (v && typeof v === "object") for (const [k, x] of Object.entries(v)) if (k in ENEMIES) out[k as EnemyKind] = Math.max(0, Math.floor(num(x, 0)));
+  return out;
+};
 
 export function normalize(raw: unknown): SaveData {
   const base = newSave();
@@ -164,6 +187,10 @@ export function normalize(raw: unknown): SaveData {
     },
     towerBest: Math.max(0, Math.floor(num(r.towerBest, 0))),
     patrolAt: Math.max(0, num(r.patrolAt, 0)),
+    hardBest: stageMap(r.hardBest),
+    bestiary: kindMap(r.bestiary),
+    bestiaryClaimed: kindMap(r.bestiaryClaimed),
+    achievements: Array.isArray(r.achievements) ? r.achievements.filter((x): x is string => typeof x === "string") : [],
     missions: {
       day: typeof r.missions?.day === "string" ? r.missions.day : "",
       prog: Object.fromEntries(MISSIONS.map((m) => [m.id, Math.max(0, Math.floor(num(r.missions?.prog?.[m.id], 0)))])) as Record<MissionId, number>,

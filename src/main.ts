@@ -11,6 +11,9 @@ import { loadCatImages } from "./game/render";
 import { startBattle } from "./ui/battle";
 import { openDaily } from "./ui/daily";
 import { openTower } from "./ui/tower";
+import { openRecords } from "./ui/records";
+import { recordsReady } from "./core/records";
+import { HARD_FIRST_CHURU, hardOpen } from "./core/run";
 import { claimPatrol, patrolPending, PATROL_MAX_H } from "./core/patrol";
 import { claimBonus, claimMission, MISSION_BONUS, missionState, MISSIONS } from "./core/missions";
 import { todayStr } from "./core/daily";
@@ -30,6 +33,8 @@ document.addEventListener("pointerdown", unlockAudio, { once: true });
 void loadCatImages(save.cat);
 
 let lastTab: "home" | "equip" | "gacha" = "home";
+/** ホームで ハードを 選んでいるか */
+let hard = false;
 function render(): void {
   // 同じタブを 描きなおすときは スクロールの位置を 保つ（合成・分解のたびに 上に戻らないように）
   const keep = lastTab === tab ? shell.querySelector(".screen")?.scrollTop ?? 0 : 0;
@@ -50,7 +55,9 @@ function render(): void {
 
 function renderHome(): HTMLElement {
   const ch = save.chapter;
-  const best = save.best[ch] ?? 0;
+  const canHard = hardOpen(save, ch);
+  if (!canHard) hard = false;
+  const best = (hard ? save.hardBest[ch] : save.best[ch]) ?? 0;
   const lo = loadoutOf(save);
   const setCh = (v: number) => { save.chapter = Math.max(1, Math.min(save.unlocked, v)); writeSave(save); render(); };
   return h("div", { class: "screen home" },
@@ -61,16 +68,21 @@ function renderHome(): HTMLElement {
         h("button", { class: "btn btn-small hero-pick", onclick: pickCat }, "🐾 ", catName(save.cat)),
         h("button", { class: "btn btn-small hero-pick", onclick: openTraining }, "🏋️ 修行"),
         h("button", { class: "btn btn-small hero-pick", onclick: () => { sfx("tap"); openDaily(save, render, shell); } }, "📅 毎日"),
-        h("button", { class: "btn btn-small hero-pick", onclick: () => { sfx("tap"); openTower(save, render, shell); } }, "🗼 タワー"))),
+        h("button", { class: "btn btn-small hero-pick", onclick: () => { sfx("tap"); openTower(save, render, shell); } }, "🗼 タワー"),
+        h("button", { class: "btn btn-small hero-pick ms-open", onclick: () => { sfx("tap"); openRecords(save, render); } }, "📖 記録", recordsReady(save) ? h("span", { class: "ms-dot" }, "!") : null))),
     h("div", { class: "ch-card" },
       h("button", { class: "ch-arrow", disabled: ch <= 1, onclick: () => setCh(ch - 1) }, "◀"),
       h("div", { class: "ch-mid" },
-        h("div", { class: "ch-no" }, `第${ch}章`),
+        h("div", { class: "ch-no" }, `第${ch}章`, hard ? h("span", { class: "ch-hard" }, " ★ハード") : null),
         h("div", { class: "ch-name" }, CHAPTER_NAMES[ch - 1]),
         h("div", { class: "ch-best" }, best >= STAGES_PER_CHAPTER ? "クリア済み ⭐" : `最高 ${best} / ${STAGES_PER_CHAPTER}`),
-        newEnemiesIn(ch).length ? h("div", { class: "ch-new" }, "新しい虫: ", newEnemiesIn(ch).map((k) => ENEMIES[k].name).join("・")) : null),
+        canHard ? h("div", { class: "ch-mode" },
+          h("button", { class: hard ? "" : "on", onclick: () => { hard = false; sfx("tap"); render(); } }, "ノーマル"),
+          h("button", { class: hard ? "on hard" : "", onclick: () => { hard = true; sfx("tap"); render(); } }, "ハード")) : null,
+        hard && best < STAGES_PER_CHAPTER ? h("div", { class: "ch-new" }, `敵 体力×3・攻撃×2。にぼし×2・はじめてのクリアで 🍥${HARD_FIRST_CHURU}`) : null,
+        !hard && newEnemiesIn(ch).length ? h("div", { class: "ch-new" }, "新しい虫: ", newEnemiesIn(ch).map((k) => ENEMIES[k].name).join("・")) : null),
       h("button", { class: "ch-arrow", disabled: ch >= save.unlocked, onclick: () => setCh(ch + 1) }, "▶")),
-    h("button", { class: "btn btn-play", onclick: () => play(ch) }, "出発！"),
+    h("button", { class: `btn btn-play ${hard ? "hard" : ""}`, onclick: () => play(ch, hard) }, hard ? "ハードで 出発！" : "出発！"),
     patrolRow(),
     h("button", { class: `btn btn-small ${missionReady() ? "btn-pink" : "btn-gray"} ms-open`, onclick: openMissions }, "📋 毎日のミッション", missionReady() ? h("span", { class: "ms-dot" }, "!") : null),
     h("button", { class: `btn ${save.coins >= CHEST_COST ? "btn-pink" : "btn-gray"} chest`, disabled: save.coins < CHEST_COST, onclick: chest },
@@ -170,11 +182,11 @@ function chest(): void {
     h("button", { class: "btn btn-gold", onclick: () => { m.close(); render(); } }, "OK")), "", () => { m.close(); render(); });
 }
 
-function play(chapter: number): void {
+function play(chapter: number, hardMode = false): void {
   sfx("tap");
   shell.style.display = "none";
   startBattle(save, chapter, (r) => {
-    const rw = finishRun(save, { chapter, stage: r.stage, won: r.won, coins: r.coins, drops: r.drops, runeDrops: r.runeDrops, churu: r.churu, kills: r.kills });
+    const rw = finishRun(save, { chapter, stage: r.stage, won: r.won, coins: r.coins, drops: r.drops, runeDrops: r.runeDrops, churu: r.churu, kills: r.kills, killsBy: r.killsBy, hard: hardMode });
     writeSave(save);
     shell.style.display = "";
     render();
@@ -182,7 +194,7 @@ function play(chapter: number): void {
     else if (rw.newBest) toast("最高記録こうしん！");
     if (rw.churu) setTimeout(() => toast(`🍥 チュール +${rw.churu}`), rw.unlocked || rw.newBest ? 1900 : 0);
     if (rw.stones) setTimeout(() => toast(`🪨 爪とぎ石 +${rw.stones}`), 3800);
-  });
+  }, undefined, hardMode);
 }
 
 render();
