@@ -129,7 +129,8 @@ export class World implements StrikeHost {
   private volleys: { t: number }[] = [];
   private orbCd = new Map<number, number>();
 
-  constructor(readonly lo: Loadout, readonly chapter: number, readonly rng: Rng, readonly heroCat = "chatora") {
+  /** lastStage: この面を クリアしたら おしまい（毎日の挑戦は 5） */
+  constructor(readonly lo: Loadout, readonly chapter: number, readonly rng: Rng, readonly heroCat = "chatora", readonly lastStage = STAGES_PER_CHAPTER) {
     this.hero = {
       x: W / 2, y: H - 1.5, r: 0.36, hp: lo.hp, maxHp: lo.hp, inv: 0, facing: 1, moving: false, dist: 0,
       atkCd: 0.3, shootAnim: 0, hurtAnim: 0, level: 1, xp: 0,
@@ -193,7 +194,7 @@ export class World implements StrikeHost {
     this.strikes?.onStageStart();
     // ときどき 床に チュールが 落ちている
     this.churuPickup = null;
-    if (n > 1 && this.rng() < CHURU_PICKUP_CHANCE) {
+    if (n > 1 && this.lastStage === STAGES_PER_CHAPTER && this.rng() < CHURU_PICKUP_CHANCE) {
       for (let i = 0; i < 30; i++) {
         const x = 1 + this.rng() * 7, y = 2 + this.rng() * 9;
         if (!this.terrain.hits(x, y, 0.4)) { this.churuPickup = { x, y, t: 0 }; break; }
@@ -334,13 +335,13 @@ export class World implements StrikeHost {
     this.coins += 5 * this.stage * this.coinMul;
     if (info.boss || this.rng() < 0.15) this.drops.push(rollItem(this.rng, 0, rollRarity(this.rng, this.chapter, info.boss)));
     if (this.lo.regen > 0) this.heal(this.hero.maxHp * this.lo.regen);
-    this.churu += CHURU_STAGE + (this.stage >= STAGES_PER_CHAPTER ? CHURU_CHAPTER : 0);
+    this.churu += CHURU_STAGE + (this.stage >= this.lastStage ? CHURU_CHAPTER : 0);
     // 5章から ボスを倒すと ルーン
     if (info.boss && this.chapter >= RUNE_UNLOCK_CHAPTER) this.runeDrops.push(rollRune(this.rng, 0, this.stage === STAGES_PER_CHAPTER));
     this.strikes.onStageClear();
     this.eshots = [];
     this.sounds.push("clear");
-    this.state = this.stage >= STAGES_PER_CHAPTER ? "won" : "clear";
+    this.state = this.stage >= this.lastStage ? "won" : "clear";
     if (this.state === "clear") {
       const opts = { laser: this.laser, strikeSource: !!this.rune.timeSword || this.rune.potion.start, strikeWeight: this.rune.strikeSkillWeight };
       if (ANGEL_STAGES.includes(this.stage)) this.event = { kind: "angel", skills: rollSkills(this.skills, this.rng, 1, opts) };

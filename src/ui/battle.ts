@@ -13,9 +13,13 @@ import { sfx } from "./sfx";
 
 export interface BattleEnd { stage: number; won: boolean; coins: number; drops: Item[]; runeDrops: Rune[]; churu: number }
 
-export function startBattle(save: SaveData, chapter: number, onEnd: (r: BattleEnd) => void): void {
+/** 毎日の挑戦などで 使う（面の数・見出し。拾った物は 出さない） */
+export interface BattleMode { stages: number; title: string }
+
+export function startBattle(save: SaveData, chapter: number, onEnd: (r: BattleEnd) => void, mode?: BattleMode): void {
   void loadCatImages(save.cat);
-  const world = new World(loadoutOf(save), chapter, mulberry32((save.seed = (save.seed * 16807 + 11) % 2147483647)), save.cat);
+  const lastSt = mode?.stages ?? STAGES_PER_CHAPTER;
+  const world = new World(loadoutOf(save), chapter, mulberry32((save.seed = (save.seed * 16807 + 11) % 2147483647)), save.cat, lastSt);
   const cv = h("canvas", { class: "bt-cv" });
   const stageEl = h("div", { class: "bt-stage" });
   const hpFill = h("div", { class: "bar-fill hp" });
@@ -136,13 +140,13 @@ export function startBattle(save: SaveData, chapter: number, onEnd: (r: BattleEn
     const drops = world.drops;
     modal = overlay(h("div", { class: "result" },
       h("img", { class: "result-cat", src: `cat/${save.cat}/${won ? "jump" : "sleep"}.png`, alt: "" }),
-      h("h2", null, won ? `第${chapter}章 クリア！` : "やられちゃった…"),
-      h("div", { class: "result-st" }, won ? `${STAGES_PER_CHAPTER} / ${STAGES_PER_CHAPTER}` : `ステージ ${world.stage} / ${STAGES_PER_CHAPTER} まで`),
-      h("div", { class: "result-rw" }, h("span", null, "🐟 にぼし"), h("b", null, `+${fmt(world.coins)}`)),
-      world.churu ? h("div", { class: "result-rw" }, h("span", null, "🍥 チュール"), h("b", null, `+${fmt(world.churu)}`)) : null,
-      drops.length ? h("div", { class: "result-items" }, drops.map((d) => h("div", { class: `icard r${d.r}` },
+      h("h2", null, won ? (mode ? `${mode.title} クリア！` : `第${chapter}章 クリア！`) : "やられちゃった…"),
+      h("div", { class: "result-st" }, won ? `${lastSt} / ${lastSt}` : `ステージ ${world.stage} / ${lastSt} まで`),
+      mode ? null : h("div", { class: "result-rw" }, h("span", null, "🐟 にぼし"), h("b", null, `+${fmt(world.coins)}`)),
+      !mode && world.churu ? h("div", { class: "result-rw" }, h("span", null, "🍥 チュール"), h("b", null, `+${fmt(world.churu)}`)) : null,
+      !mode && drops.length ? h("div", { class: "result-items" }, drops.map((d) => h("div", { class: `icard r${d.r}` },
         h("div", { class: "icard-ico" }, ITEM_MAP[d.id].icon), h("div", { class: "icard-r" }, RARITY_NAMES[d.r])))) : null,
-      world.runeDrops.length ? h("div", { class: "result-items" }, world.runeDrops.map((r) => runeCard(r))) : null,
+      !mode && world.runeDrops.length ? h("div", { class: "result-items" }, world.runeDrops.map((r) => runeCard(r))) : null,
       h("button", { class: "btn btn-gold", onclick: () => finish() }, "OK")));
   };
 
@@ -156,7 +160,7 @@ export function startBattle(save: SaveData, chapter: number, onEnd: (r: BattleEn
   let raf = 0, last = performance.now(), acc = 0;
   const hudUpdate = () => {
     const hero = world.hero;
-    stageEl.textContent = `第${chapter}章 ${CHAPTER_NAMES[chapter - 1]}　${world.stage} / ${STAGES_PER_CHAPTER}`;
+    stageEl.textContent = `${mode ? mode.title : `第${chapter}章 ${CHAPTER_NAMES[chapter - 1]}`}　${world.stage} / ${lastSt}`;
     hpFill.style.width = `${(hero.hp / hero.maxHp) * 100}%`;
     hpText.textContent = `${Math.ceil(hero.hp)} / ${hero.maxHp}`;
     xpFill.style.width = `${Math.min(1, hero.xp / world.xpNeed()) * 100}%`;

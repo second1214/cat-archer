@@ -9,6 +9,8 @@ import { loadoutOf, loadSave, powerOf, writeSave } from "./core/save";
 import { CHAPTER_NAMES, ENEMIES, newEnemiesIn, STAGES_PER_CHAPTER } from "./core/stages";
 import { loadCatImages } from "./game/render";
 import { startBattle } from "./ui/battle";
+import { openDaily } from "./ui/daily";
+import { todayStr } from "./core/daily";
 import { fmt, h, overlay, toast } from "./ui/dom";
 import { renderEquip } from "./ui/equip";
 import { renderGacha } from "./ui/gacha";
@@ -54,7 +56,8 @@ function renderHome(): HTMLElement {
       h("div", { class: "hero-row" },
         h("div", { class: "hero-pow" }, "戦力 ", h("b", null, fmt(powerOf(lo)))),
         h("button", { class: "btn btn-small hero-pick", onclick: pickCat }, "🐾 ", catName(save.cat)),
-        h("button", { class: "btn btn-small hero-pick", onclick: openTraining }, "🏋️ 修行"))),
+        h("button", { class: "btn btn-small hero-pick", onclick: openTraining }, "🏋️ 修行"),
+        h("button", { class: "btn btn-small hero-pick", onclick: () => { sfx("tap"); openDaily(save, render, shell); } }, "📅 毎日"))),
     h("div", { class: "ch-card" },
       h("button", { class: "ch-arrow", disabled: ch <= 1, onclick: () => setCh(ch - 1) }, "◀"),
       h("div", { class: "ch-mid" },
@@ -137,6 +140,6 @@ render();
 // 1日1回の チュール
 {
   const d = new Date();
-  const got = claimDaily(save, `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`);
+  const got = claimDaily(save, todayStr(d));
   if (got) { writeSave(save); render(); toast(`きょうの チュール 🍥+${got}`); }
 }
