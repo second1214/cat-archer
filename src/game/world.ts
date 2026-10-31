@@ -15,6 +15,11 @@ export const DOOR_W = 1.8;
 const SHOT_SPEED = 10;
 const ESHOT_SPEED = 3.6;
 const BASE_INTERVAL = 0.7;
+/** ゆうどう: 曲がる速さ（ラジアン/秒）と、ねらう敵までの距離 */
+const HOMING_TURN = 4.5;
+const HOMING_RANGE = 4;
+/** レーザーの曲がりぐあい（ラジアン/進む1マス） */
+const HOMING_TURN_LASER = 0.75;
 
 export interface Input { mx: number; my: number }
 
@@ -319,13 +324,14 @@ export class World {
     for (let len = 0; len < 40; len += STEP) {
       // ゆうどう: 近くの まだ当たっていない敵へ 少しずつ 曲がる
       if (homing) {
-        const tg = this.nearest(px, py + 0.3, hit, 5);
+        const tg = this.nearest(px, py + 0.3, hit, HOMING_RANGE);
         if (tg) {
           const cur = Math.atan2(cy, cx);
           let d = Math.atan2(tg.y - 0.3 - py, tg.x - px) - cur;
           while (d > Math.PI) d -= Math.PI * 2;
           while (d < -Math.PI) d += Math.PI * 2;
-          const na = cur + Math.max(-0.12, Math.min(0.12, d));
+          const lim = HOMING_TURN_LASER * STEP;
+          const na = cur + Math.max(-lim, Math.min(lim, d));
           cx = Math.cos(na); cy = Math.sin(na);
           pts.push([px, py]);
         }
@@ -370,13 +376,13 @@ export class World {
       s.life -= dt;
       // ゆうどう: 近くの まだ当たっていない敵へ 少しずつ 向きを変える
       if (homing) {
-        const tg = this.nearest(s.x, s.y + 0.3, s.hit, 5);
+        const tg = this.nearest(s.x, s.y + 0.3, s.hit, HOMING_RANGE);
         if (tg) {
           const want = Math.atan2(tg.y - 0.3 - s.y, tg.x - s.x), cur = Math.atan2(s.vy, s.vx);
           let d = want - cur;
           while (d > Math.PI) d -= Math.PI * 2;
           while (d < -Math.PI) d += Math.PI * 2;
-          const turn = Math.max(-7 * dt, Math.min(7 * dt, d));
+          const turn = Math.max(-HOMING_TURN * dt, Math.min(HOMING_TURN * dt, d));
           s.vx = Math.cos(cur + turn) * SHOT_SPEED; s.vy = Math.sin(cur + turn) * SHOT_SPEED;
         }
       }
