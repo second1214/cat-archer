@@ -4,7 +4,7 @@ import type { Rng } from "./rng";
 export type SkillId =
   | "atk" | "aspd" | "crit" | "multi" | "front" | "diag" | "side" | "back"
   | "pierce" | "bounce" | "ricochet" | "fire" | "ice" | "poison" | "bolt"
-  | "hpup" | "heal" | "vamp" | "orbit" | "dodge";
+  | "hpup" | "heal" | "vamp" | "orbit" | "dodge" | "laser" | "homing";
 
 export interface SkillDef {
   id: SkillId;
@@ -20,10 +20,12 @@ export const SKILLS: readonly SkillDef[] = [
   { id: "aspd", name: "すばやい前足", icon: "⚡", desc: "攻撃の速さ +20%", max: 5 },
   { id: "crit", name: "ねらいうち", icon: "🎯", desc: "会心の出やすさ +10%・会心ダメージ +40%", max: 4 },
   { id: "multi", name: "れんしゃ", icon: "🔁", desc: "もう1回つづけて撃つ（1発のダメージ -10%）", max: 3 },
-  { id: "front", name: "まえに2本", icon: "⏫", desc: "前に撃つ毛玉 +1（1発のダメージ -15%）", max: 3 },
+  { id: "front", name: "まえに2本", icon: "⏫", desc: "一度に撃つ数 +1（ななめ・よこ・うしろも ふえる。1発のダメージ -15%）", max: 3 },
   { id: "diag", name: "ななめうち", icon: "↗️", desc: "ななめ前にも1本ずつ撃つ", max: 2 },
   { id: "side", name: "よこうち", icon: "↔️", desc: "左右にも1本ずつ撃つ", max: 2 },
   { id: "back", name: "うしろうち", icon: "↩️", desc: "うしろにも1本撃つ", max: 2 },
+  { id: "laser", name: "レーザーポインター", icon: "🔴", desc: "ねらった敵へ レーザーも撃つ（敵をつらぬく・攻撃力の60%）", max: 2 },
+  { id: "homing", name: "ゆうどう", icon: "🧲", desc: "毛玉が 近くの敵へ 曲がっていく", max: 1 },
   { id: "pierce", name: "つらぬく", icon: "🗡️", desc: "毛玉が敵をつらぬく（ダメージ -25%）", max: 1 },
   { id: "bounce", name: "かべではねる", icon: "🧱", desc: "毛玉が壁で2回はねかえる", max: 1 },
   { id: "ricochet", name: "とびうつる", icon: "🪃", desc: "当たった毛玉が 近くの敵へ2回とびうつる", max: 1 },
@@ -42,9 +44,12 @@ export const SKILL_MAP = Object.fromEntries(SKILLS.map((s) => [s.id, s])) as Rec
 
 export type SkillCounts = Partial<Record<SkillId, number>>;
 
-/** まだ取れるスキルから、ちがうものを n 個えらぶ（おやつは体力が減っているときだけ）。 */
-export function rollSkills(owned: SkillCounts, rng: Rng, n = 3, hurt = false): SkillId[] {
-  const pool = SKILLS.filter((s) => (owned[s.id] ?? 0) < s.max && (s.id !== "heal" || hurt)).map((s) => s.id);
+/** 毛玉の代わりに レーザーを撃つとき 意味のないスキル */
+export const LASER_USELESS: readonly SkillId[] = ["pierce", "bounce", "ricochet", "homing"];
+
+/** まだ取れるスキルから、ちがうものを n 個えらぶ（おやつは体力が減っているときだけ。laser なら 毛玉だけのスキルは出さない）。 */
+export function rollSkills(owned: SkillCounts, rng: Rng, n = 3, hurt = false, laser = false): SkillId[] {
+  const pool = SKILLS.filter((s) => (owned[s.id] ?? 0) < s.max && (s.id !== "heal" || hurt) && !(laser && LASER_USELESS.includes(s.id))).map((s) => s.id);
   const out: SkillId[] = [];
   while (out.length < n && pool.length > 0) {
     const i = Math.floor(rng() * pool.length);

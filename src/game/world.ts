@@ -59,6 +59,9 @@ export interface Shot {
   life: number;
 }
 
+/** レーザー（当たりは 撃った瞬間に決まる。見た目のため 少し残す） */
+export interface Beam { x1: number; y1: number; x2: number; y2: number; t: number; crit: boolean; extra: boolean }
+
 export interface EShot { x: number; y: number; vx: number; vy: number; r: number; dmg: number; life: number }
 
 export type FxKind = "dmg" | "crit" | "dot" | "heal" | "dodge" | "die" | "hurt";
@@ -73,6 +76,7 @@ export class World {
   enemies: Enemy[] = [];
   shots: Shot[] = [];
   eshots: EShot[] = [];
+  beams: Beam[] = [];
   fx: Fx[] = [];
   sounds: SoundKind[] = [];
   skills: SkillCounts = {};
@@ -120,7 +124,7 @@ export class World {
   startStage(n: number): void {
     this.stage = n;
     this.state = "fight";
-    this.shots = []; this.eshots = []; this.volleys = [];
+    this.shots = []; this.eshots = []; this.volleys = []; this.beams = [];
     const h = this.hero;
     h.x = W / 2; h.y = H - 1.5; h.inv = 1; h.atkCd = 0.4;
     const info = stageInfo(this.chapter, n);
@@ -173,7 +177,7 @@ export class World {
 
   private offerLevel(): void {
     if (this.pendingLevels > 0 && !this.choices) {
-      this.choices = rollSkills(this.skills, this.rng, 3, this.hero.hp < this.hero.maxHp * 0.8);
+      this.choices = rollSkills(this.skills, this.rng, 3, this.hero.hp < this.hero.maxHp * 0.8, this.lo.laser);
       if (this.choices.length === 0) { this.pendingLevels = 0; this.choices = null; }
     }
   }
@@ -276,13 +280,9 @@ export class World {
     const a = Math.atan2(target.y - h.y, target.x - h.x);
     h.facing = Math.cos(a) >= 0 ? 1 : -1;
     h.shootAnim = 0.2;
-    const dmg = this.atk * (1 - 0.1 * this.n("multi")) * (1 - 0.15 * this.n("front")) * (this.pierce ? 0.75 : 1);
-    const nFront = 1 + this.n("front");
-    for (let i = 0; i < nFront; i++) {
-      const off = (i - (nFront - 1) / 2) * 0.28;
-      this.addShot(h.x - Math.sin(a) * off, h.y + Math.cos(a) * off, a, dmg);
-    }
-    const angles: number[] = [];
+    const laser = this.lo.laser;
+    const dmg = this.atk * (1 - 0.1 * this.n("multi")) * (1 - 0.15 * this.n("front")) * (this.pierce && !laser ? 0.75 : 1);
+    const angles: number[] = [a];
     const d = this.n("diag"), s = this.n("side"), b = this.n("back");
     if (d >= 1) angles.push(a + Math.PI / 4, a - Math.PI / 4);
     if (d >= 2) angles.push(a + Math.PI / 8, a - Math.PI / 8);
@@ -290,8 +290,37 @@ export class World {
     if (s >= 2) angles.push(a + Math.PI * 0.62, a - Math.PI * 0.62);
     if (b >= 1) angles.push(a + Math.PI);
     if (b >= 2) angles.push(a + Math.PI * 0.9, a - Math.PI * 0.9);
-    for (const an of angles) this.addShot(h.x, h.y, an, dmg);
+    // 「まえに2本」は どの向きの毛玉も ならべて ふやす
+    const n = 1 + this.n("front");
+    for (const an of angles) {
+      for (let i = 0; i < n; i++) {
+        const off = (i - (n - 1) / 2) * 0.28;
+        const x = h.x - Math.sin(an) * off, y = h.y + Math.cos(an) * off;
+        if (laser) this.fireBeam(x, y, an, dmg, false); else this.addShot(x, y, an, dmg);
+      }
+    }
+    if (this.n("laser")) this.fireBeam(h.x, h.y, a, this.atk * (0.6 + 0.4 * (this.n("laser") - 1)), true);
     this.sounds.push("shoot");
+  }
+
+  /** レーザー: 壁か 物まで まっすぐ。とちゅうの敵 ぜんぶに当たる */
+  private fireBeam(x: number, y: number, a: number, dmg: number, extra: boolean): void {
+    const crit = this.rng() < this.critRate;
+    const v = crit ? dmg * this.critMul : dmg;
+    const sx = x, sy = y - 0.35, cx = Math.cos(a), cy = Math.sin(a);
+    let len = 0;
+    for (; len < 30; len += 0.1) {
+      const px = sx + cx * len, py = sy + cy * len;
+      if (px < 0 || px > W || py < 0 || py > H || this.terrain.blocksShot(px, py + 0.3)) break;
+    }
+    for (const e of this.enemies) {
+      if (e.dead) continue;
+      const ex = e.x - sx, ey = e.y - 0.3 - sy;
+      const along = ex * cx + ey * cy;
+      if (along < 0 || along > len + e.def.r) continue;
+      if (Math.abs(ex * cy - ey * cx) < e.def.r + 0.12) this.hitEnemy(e, v, crit, true);
+    }
+    this.beams.push({ x1: sx, y1: sy, x2: sx + cx * len, y2: sy + cy * len, t: 0, crit, extra });
   }
 
   private addShot(x: number, y: number, a: number, dmg: number): void {
@@ -304,8 +333,23 @@ export class World {
   }
 
   private moveShots(dt: number): void {
+    for (const b of this.beams) b.t += dt;
+    this.beams = this.beams.filter((b) => b.t < 0.14);
+    const homing = this.n("homing") > 0;
     for (const s of this.shots) {
       s.life -= dt;
+      // ゆうどう: 近くの まだ当たっていない敵へ 少しずつ 向きを変える
+      if (homing) {
+        const tg = this.nearest(s.x, s.y + 0.3, s.hit, 5);
+        if (tg) {
+          const want = Math.atan2(tg.y - 0.3 - s.y, tg.x - s.x), cur = Math.atan2(s.vy, s.vx);
+          let d = want - cur;
+          while (d > Math.PI) d -= Math.PI * 2;
+          while (d < -Math.PI) d += Math.PI * 2;
+          const turn = Math.max(-7 * dt, Math.min(7 * dt, d));
+          s.vx = Math.cos(cur + turn) * SHOT_SPEED; s.vy = Math.sin(cur + turn) * SHOT_SPEED;
+        }
+      }
       s.x += s.vx * dt; s.y += s.vy * dt;
       // 壁
       if (s.x < 0 || s.x > W || s.y < 0 || s.y > H) {
