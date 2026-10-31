@@ -13,19 +13,25 @@ jobs:
         run: |
           mkdir -p out && cd out
           cat > urls.txt <<'URLS'
-          gv_runes https://archero-2.game-vault.net/wiki/Runes
-          gv_skills https://archero-2.game-vault.net/wiki/Skills
-          hub_rune https://archero2hub.com/en/rune
-          hub_options https://archero2hub.com/en/rune/options
-          hub_twinborn https://archero2hub.com/en/guide/twinborn-runes
-          mobi_runes https://mobi.gg/en/tips/archero-2-runes/
-          mobi_skills https://mobi.gg/en/tips/archero-2-skill-tier-list/
-          theria_runes https://theriagames.com/guide/archero-2-runes-guide/
-          theria_strike https://theriagames.com/guide/archero-2-etched-sword-strike-build/
-          mturbo_etched https://mturbogamer.com/2026/10/archero-2-etched-runes-guide/
-          pgg_runes https://progameguides.com/archero-2/archero-2-runes-tier-list/
-          pgg_skills https://progameguides.com/archero-2/archero-2-skills-tier-list/
-          roonby https://roonby.com/2024/12/13/archero-2-guide-runes-how-to-get-stat-information/
+          gv_main https://archero-2.game-vault.net/wiki/Main_Page
+          gv_gear https://archero-2.game-vault.net/wiki/Gear
+          gv_chars https://archero-2.game-vault.net/wiki/Characters
+          gv_artifacts https://archero-2.game-vault.net/wiki/Artifacts
+          gv_talent https://archero-2.game-vault.net/wiki/Talent_Cards
+          gv_mech https://archero-2.game-vault.net/wiki/Game_Mechanics
+          gv_currency https://archero-2.game-vault.net/wiki/Currency_and_Items
+          gv_events https://archero-2.game-vault.net/wiki/Events
+          gv_pull https://archero-2.game-vault.net/wiki/Pull_Rates
+          gv_tips https://archero-2.game-vault.net/wiki/Collection_of_game_Tips
+          gv_begin https://archero-2.game-vault.net/wiki/Ultimate_Beginners_Guide
+          gv_chapters https://archero-2.game-vault.net/wiki/Chapters
+          gv_monsters https://archero-2.game-vault.net/wiki/Monsters
+          hub_gear https://archero2hub.com/en/gear
+          hub_home https://archero2hub.com/en
+          mobi_gear https://mobi.gg/en/tips/archero-2-gear/
+          mobi_chapters https://mobi.gg/en/tips/archero-2-chapters/
+          mobi_tips https://mobi.gg/en/tips/archero-2-tips/
+          fandom_a2 https://archero-2.fandom.com/wiki/Archero_2_Wiki
           URLS
           sed -i 's/^ *//' urls.txt
           while read -r name url; do
