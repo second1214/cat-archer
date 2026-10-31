@@ -52,6 +52,9 @@ export interface SaveData {
   daily: DailyState;
   /** キャットタワーで クリアした いちばん上の階 */
   towerBest: number;
+  /** キャットタワーの チケットを 使った日・数 */
+  towerDay: string;
+  towerUsed: number;
   /** パトロールを 最後に 受け取った時刻（ミリ秒。0 は まだ） */
   patrolAt: number;
   /** 毎日のミッション */
@@ -93,6 +96,8 @@ export function newSave(): SaveData {
     runePity: 0,
     daily: emptyDaily(),
     towerBest: 0,
+    towerDay: "",
+    towerUsed: 0,
     patrolAt: 0,
     missions: emptyMissions(),
     hardBest: {},
@@ -186,6 +191,8 @@ export function normalize(raw: unknown): SaveData {
       best: Object.fromEntries(DAILIES.map((d) => [d.id, Math.max(0, Math.min(DAILY_LEVELS, Math.floor(num(r.daily?.best?.[d.id], 0))))])) as Record<DailyId, number>,
     },
     towerBest: Math.max(0, Math.floor(num(r.towerBest, 0))),
+    towerDay: typeof r.towerDay === "string" ? r.towerDay : "",
+    towerUsed: Math.max(0, Math.floor(num(r.towerUsed, 0))),
     patrolAt: Math.max(0, num(r.patrolAt, 0)),
     hardBest: stageMap(r.hardBest),
     bestiary: kindMap(r.bestiary),

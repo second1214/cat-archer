@@ -21,7 +21,7 @@ export interface BattleMode { stages: number; title: string; tower?: number }
 export function startBattle(save: SaveData, chapter: number, onEnd: (r: BattleEnd) => void, mode?: BattleMode, hard = false): void {
   void loadCatImages(save.cat);
   const lastSt = mode?.stages ?? STAGES_PER_CHAPTER;
-  const world = new World(loadoutOf(save), chapter, mulberry32((save.seed = (save.seed * 16807 + 11) % 2147483647)), save.cat, lastSt, mode?.tower ?? 0, hard);
+  const world = new World(loadoutOf(save), chapter, mulberry32((save.seed = (save.seed * 16807 + 11) % 2147483647)), save.cat, mode?.tower ? mode.tower + lastSt - 1 : lastSt, mode?.tower ?? 0, hard);
   const cv = h("canvas", { class: "bt-cv" });
   const stageEl = h("div", { class: "bt-stage" });
   const hpFill = h("div", { class: "bar-fill hp" });
@@ -122,9 +122,15 @@ export function startBattle(save: SaveData, chapter: number, onEnd: (r: BattleEn
     const pick = (c: Parameters<typeof world.chooseEvent>[0]) => () => { modal?.close(); modal = null; world.chooseEvent(c); };
     const skillCard = (id: (typeof ev.skills)[number], sub: string) => {
       const d = SKILL_MAP[id];
-      return h("button", { class: "lvup-card", onclick: pick(id) }, h("div", { class: "lvup-ico" }, d.icon), h("div", { class: "lvup-n" }, d.name), h("div", { class: "lvup-d" }, `${d.desc}${sub}`));
+      return h("button", { class: `lvup-card tier${d.tier ?? 0}`, onclick: pick(id) }, d.tier ? h("div", { class: "lvup-tier" }, TIER_NAMES[d.tier]) : null, h("div", { class: "lvup-ico" }, d.icon), h("div", { class: "lvup-n" }, d.name), h("div", { class: "lvup-d" }, `${d.desc}${sub}`));
     };
-    modal = ev.kind === "angel"
+    modal = ev.kind === "guard"
+      ? overlay(h("div", { class: "lvup ev" },
+        h("img", { class: "ev-cat", src: "cat/kuro/sit.png", alt: "" }),
+        h("div", { class: "lvup-t" }, "タワーの番猫"),
+        h("div", { class: "lvup-sub" }, "「よく のぼってきたな。ひとつ 技を さずけよう」"),
+        h("div", { class: "lvup-cards" }, ev.skills.map((id) => skillCard(id, "")))), "ov-lvup ov-angel")
+      : ev.kind === "angel"
       ? overlay(h("div", { class: "lvup ev" },
         h("div", { class: "ev-ico" }, "🙌"),
         h("div", { class: "lvup-t" }, "飼い主の ごほうび"),
@@ -166,7 +172,7 @@ export function startBattle(save: SaveData, chapter: number, onEnd: (r: BattleEn
     modal = overlay(h("div", { class: "result" },
       h("img", { class: "result-cat", src: `cat/${save.cat}/${won ? "jump" : "sleep"}.png`, alt: "" }),
       h("h2", null, won ? (mode ? `${mode.title} クリア！` : `第${chapter}章${hard ? " ハード" : ""} クリア！`) : "やられちゃった…"),
-      h("div", { class: "result-st" }, mode?.tower ? `${world.stage - 1}階まで クリア` : won ? `${lastSt} / ${lastSt}` : `ステージ ${world.stage} / ${lastSt} まで`),
+      h("div", { class: "result-st" }, mode?.tower ? (won ? `${world.stage}階まで のぼった` : `${world.stage}階で やられた（この${lastSt}階は 数えない）`) : won ? `${lastSt} / ${lastSt}` : `ステージ ${world.stage} / ${lastSt} まで`),
       mode ? null : h("div", { class: "result-rw" }, h("span", null, "🐟 にぼし"), h("b", null, `+${fmt(world.coins)}`)),
       !mode && world.churu ? h("div", { class: "result-rw" }, h("span", null, "🍥 チュール"), h("b", null, `+${fmt(world.churu)}`)) : null,
       !mode && drops.length ? h("div", { class: "result-items" }, drops.map((d) => h("div", { class: `icard r${d.r}` },
@@ -185,7 +191,7 @@ export function startBattle(save: SaveData, chapter: number, onEnd: (r: BattleEn
   let raf = 0, last = performance.now(), acc = 0;
   const hudUpdate = () => {
     const hero = world.hero;
-    stageEl.textContent = `${mode ? mode.title : `第${chapter}章${hard ? "★ハード" : ""} ${CHAPTER_NAMES[chapter - 1]}`}　${mode?.tower ? `${world.stage}階` : `${world.stage} / ${lastSt}`}`;
+    stageEl.textContent = `${mode ? mode.title : `第${chapter}章${hard ? "★ハード" : ""} ${CHAPTER_NAMES[chapter - 1]}`}　${mode?.tower ? `${world.stage}階（${world.stage - mode.tower + 1} / ${lastSt}）` : `${world.stage} / ${lastSt}`}`;
     hpFill.style.width = `${(hero.hp / hero.maxHp) * 100}%`;
     hpText.textContent = `${Math.ceil(hero.hp)} / ${hero.maxHp}`;
     xpFill.style.width = `${Math.min(1, hero.xp / world.xpNeed()) * 100}%`;
