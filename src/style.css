@@ -302,3 +302,12 @@ button:disabled { cursor: default; }
 .gc-hero.omi { background: linear-gradient(135deg, #c8343a, #f0a050); margin-top: 18px; }
 .rn-en-row button { white-space: nowrap; flex-shrink: 0; }
 .gc-hero.omi .gc-title, .gc-hero.omi .gc-sub { color: #fff; }
+
+/* 毎日の挑戦 */
+.dl-card { text-align: left; padding: 10px 12px; margin: 8px 0; border-radius: 14px; background: #fff7ea; border: 2px solid #f0dcc0; display: flex; flex-direction: column; gap: 6px; }
+.dl-card.off { opacity: .6; }
+.dl-h { display: flex; justify-content: space-between; align-items: center; }
+.dl-left { font-size: 12px; padding: 2px 8px; border-radius: 10px; background: #ffe2a8; }
+.dl-left.none { background: #ddd; color: #888; }
+.dl-lv { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.dl-lv .ch-arrow { width: 36px; height: 36px; }
