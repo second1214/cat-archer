@@ -1,0 +1,7 @@
+BGM（すべて CC0 / パブリックドメイン。OpenGameArt.org）
+音量をそろえ、モノラル 64kbps の mp3 に変換して使用。
+
+home.mp3  : "4 Music Box Tracks" より cute tune  https://opengameart.org/content/4-music-box-tracks
+field.mp3 : "JRPG Pack 1 Exploration" より Grasslands（Juhani Junkala）  https://opengameart.org/content/jrpg-pack-1-exploration
+tower.mp3 : "JRPG Pack 1 Exploration" より Prairie Nights（Juhani Junkala）  https://opengameart.org/content/jrpg-pack-1-exploration
+boss.mp3  : "Boss Battle #2 [Symphonic Metal]"  https://opengameart.org/content/boss-battle-2-symphonic-metal

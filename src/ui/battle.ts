@@ -11,7 +11,7 @@ import { loadCatImages, Renderer, type Stick } from "../game/render";
 import { World } from "../game/world";
 import { fmt, h, overlay } from "./dom";
 import { runeCard } from "./runes";
-import { sfx } from "./sfx";
+import { bgm, sfx } from "./sfx";
 
 export interface BattleEnd { stage: number; won: boolean; coins: number; drops: Item[]; runeDrops: Rune[]; churu: number; kills: number; killsBy: World["killsBy"] }
 
@@ -38,6 +38,8 @@ export function startBattle(save: SaveData, chapter: number, onEnd: (r: BattleEn
       bossBar));
   document.getElementById("app")!.append(root);
 
+  const music = mode ? "tower" : "field";
+  bgm(music);
   const ren = new Renderer(cv);
   const onResize = () => ren.resize();
   window.addEventListener("resize", onResize);
@@ -190,6 +192,7 @@ export function startBattle(save: SaveData, chapter: number, onEnd: (r: BattleEn
     lvEl.textContent = `Lv${hero.level}`;
     const boss = world.enemies.find((e) => e.def.boss);
     bossBar.style.display = boss ? "" : "none";
+    if (!ended) bgm(boss ? "boss" : music);
     if (boss) {
       (bossBar.firstChild as HTMLElement).textContent = boss.def.name;
       (bossBar.querySelector(".bar-fill") as HTMLElement).style.width = `${(boss.hp / boss.maxHp) * 100}%`;

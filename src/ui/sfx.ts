@@ -7,10 +7,12 @@ export const isMuted = () => muted;
 export function setMuted(v: boolean): void {
   muted = v;
   try { localStorage.setItem("cat-archer/mute", v ? "1" : "0"); } catch { /* なし */ }
+  syncBgm();
 }
 
 /** 最初のタップで 音を使えるようにする（スマホは さわるまで鳴らせない）。 */
 export function unlockAudio(): void {
+  startBgm();
   if (ctx) return;
   try { ctx = new AudioContext(); } catch { ctx = null; }
 }
@@ -44,4 +46,39 @@ export function sfx(kind: string): void {
     case "tap": tone(880, 0.04, "sine", 0.04); break;
     case "coin": tone(1200, 0.08, "square", 0.03, 1.3); break;
   }
+}
+
+// ---------------- BGM（CC0 の曲。public/bgm、出どころは public/bgm/CREDITS.txt） ----------------
+export type BgmId = "home" | "field" | "tower" | "boss";
+const BGM_VOL = 0.32;
+let bgmEl: HTMLAudioElement | null = null;
+let bgmWant: BgmId | null = null;
+let bgmNow: BgmId | null = null;
+let bgmReady = false;
+
+/** 流す曲を 決める（同じ曲なら そのまま）。null で 止める */
+export function bgm(id: BgmId | null): void {
+  bgmWant = id;
+  syncBgm();
+}
+
+function syncBgm(): void {
+  if (typeof Audio === "undefined") return;
+  const want = muted ? null : bgmWant;
+  if (want === bgmNow) return;
+  bgmEl?.pause();
+  bgmNow = want;
+  if (!want) { bgmEl = null; return; }
+  bgmEl = new Audio(`bgm/${want}.mp3`);
+  bgmEl.loop = true;
+  bgmEl.volume = BGM_VOL;
+  // スマホは さわるまで 鳴らせない → unlockAudio で もう一度
+  if (bgmReady) bgmEl.play().catch(() => { bgmNow = null; });
+}
+
+/** 最初のタップのあと（unlockAudio から） */
+function startBgm(): void {
+  bgmReady = true;
+  bgmNow = null;
+  syncBgm();
 }

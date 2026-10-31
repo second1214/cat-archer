@@ -22,7 +22,7 @@ import { renderEquip } from "./ui/equip";
 import { renderGacha } from "./ui/gacha";
 import { runeCard } from "./ui/runes";
 import { GRADE_NAMES, RUNE_MAP } from "./core/runes";
-import { isMuted, setMuted, sfx, unlockAudio } from "./ui/sfx";
+import { bgm, isMuted, setMuted, sfx, unlockAudio } from "./ui/sfx";
 
 const save = loadSave();
 let tab: "home" | "equip" | "gacha" = "home";
@@ -39,6 +39,7 @@ function render(): void {
   // 同じタブを 描きなおすときは スクロールの位置を 保つ（合成・分解のたびに 上に戻らないように）
   const keep = lastTab === tab ? shell.querySelector(".screen")?.scrollTop ?? 0 : 0;
   lastTab = tab;
+  bgm("home");
   const body = tab === "home" ? renderHome() : tab === "equip" ? renderEquip(save, render) : renderGacha(save, render);
   shell.replaceChildren(
     h("header", { class: "top" },
