@@ -1,0 +1,14 @@
+/en/artifact
+/en/artifact/catalog
+/en/artifact/shard-table
+/en/event/contract-mystling/guide
+/en/gear/godforge
+/en/guide/etched-rune
+/en/guide/gear-swap
+/en/guide/godforge
+/en/guide/magic-plant-defense
+/en/mystling
+/en/mystling/calculator
+/en/mystling/shard-table
+/en/umbral-tempest/class-talents
+/en/umbral-tempest/universal-talents

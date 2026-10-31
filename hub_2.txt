@@ -1,0 +1,350 @@
+Artifact Codex · Archero 2
+Archero 2 HubSupport
+Home
+Artifacts
+Artifact Codex
+Artifact Codex
+Set compositions, set effects, and individual artifact options at a glance.
+Artifact Shards →Stat Calculator →
+Set Artifacts
+Rare1
+Knight's Oath
+Gladiator’s Helm
+Sword in the Stone
+Iron Throne
+Supreme Staff
+Set Base Stats
+[Activate]ATK +1% Max HP +1%
+[All ★3]ATK +1.5% Max HP +1.5%
+[All ★6]ATK +2% Max HP +2%
+[All ★9]ATK +2.5% Max HP +2.5%
+[All ★12]ATK +3% Max HP +3%
+[All ★15]ATK +3.5% Max HP +3.5%
+Epic2
+Wonderful Plant
+Pumpkin Lantern
+Four-Leaf Clover
+Laurel Wreath
+Set Base Stats
+[Activate]ATK +2% Max HP +2%
+[All ★3]ATK +3% Max HP +3%
+[All ★6]ATK +4% Max HP +4%
+[All ★9]ATK +5% Max HP +5%
+[All ★12]ATK +6% Max HP +6%
+[All ★15]ATK +7% Max HP +7%
+Hypnosis Stories
+Crystal Shoes
+Red Hood
+Magic Lamp
+Magic Carpet
+Set Base Stats
+[Activate]ATK +2% Max HP +2%
+[All ★3]ATK +3% Max HP +3%
+[All ★6]ATK +4% Max HP +4%
+[All ★9]ATK +5% Max HP +5%
+[All ★12]ATK +6% Max HP +6%
+[All ★15]ATK +7% Max HP +7%
+Legendary8
+Sleepless Stories
+Poison Apple
+Gargoyle
+Damocles’ Sword
+Set Base Stats
+[Activate]ATK +4% Max HP +4%
+[All ★3]ATK +6% Max HP +6%
+[All ★6]ATK +8% Max HP +8%
+[All ★9]ATK +10% Max HP +10%
+[All ★12]ATK +12% Max HP +12%
+[All ★15]ATK +14% Max HP +14%
+Rare Treasure
+Brisingamen
+Healing Grail
+Fire Phoenix Feather
+Set Base Stats
+[Activate]ATK +4% Max HP +4%
+[All ★3]ATK +6% Max HP +6%
+[All ★6]ATK +8% Max HP +8%
+[All ★9]ATK +10% Max HP +10%
+[All ★12]ATK +12% Max HP +12%
+[All ★15]ATK +14% Max HP +14%
+Viking Battle Cry
+Attack Horn
+Bull Skull
+Dragon Heart
+Set Base Stats
+[Activate]ATK +4% Max HP +4%
+[All ★3]ATK +6% Max HP +6%
+[All ★6]ATK +8% Max HP +8%
+[All ★9]ATK +10% Max HP +10%
+[All ★12]ATK +12% Max HP +12%
+[All ★15]ATK +14% Max HP +14%
+Heartseeker Arrow
+Cupid's Bow
+Cupid's Arrow
+Set Base Stats
+[Activate]ATK +4% Max HP +4%
+[All ★3]ATK +6% Max HP +6%
+[All ★6]ATK +8% Max HP +8%
+[All ★9]ATK +10% Max HP +10%
+[All ★12]ATK +12% Max HP +12%
+[All ★15]ATK +14% Max HP +14%
+Battle Rite
+Thronebreaker Shield
+Dice of Destiny
+Protective Blazon
+Set Base Stats
+[Activate]ATK +8% Max HP +8%
+[All ★3]ATK +12% Max HP +12%
+[All ★6]ATK +16% Max HP +16%
+[All ★9]ATK +20% Max HP +20%
+[All ★12]ATK +24% Max HP +24%
+[All ★15]ATK +28% Max HP +28%
+Defiance of Fate
+Medusa's Eye
+Thorned Threeheart
+Broodmother Scale
+Set Base Stats
+[Activate]ATK +4% Max HP +4%
+[All ★3]ATK +6% Max HP +6%
+[All ★6]ATK +8% Max HP +8%
+[All ★9]ATK +10% Max HP +10%
+[All ★12]ATK +12% Max HP +12%
+[All ★15]ATK +14% Max HP +14%
+Fright Night
+Boltfang Candy Jar
+Frostflame Lamp
+Set Base Stats
+[Activate]ATK +4% Max HP +4%
+[All ★3]ATK +6% Max HP +6%
+[All ★6]ATK +8% Max HP +8%
+[All ★9]ATK +10% Max HP +10%
+[All ★12]ATK +12% Max HP +12%
+[All ★15]ATK +14% Max HP +14%
+Lawbreaker
+Voidblade
+Quiet Quill
+Set Base Stats
+[Activate]ATK +4% Max HP +4%
+[All ★3]ATK +6% Max HP +6%
+[All ★6]ATK +8% Max HP +8%
+[All ★9]ATK +10% Max HP +10%
+[All ★12]ATK +12% Max HP +12%
+[All ★15]ATK +14% Max HP +14%
+Mythic3
+Heavenly Music
+Magic Harp
+Pan’s Flute
+Tidal Conch
+Set Base Stats
+[Activate]ATK +12% Max HP +12%
+[All ★3]ATK +18% Max HP +18%
+[All ★6]ATK +24% Max HP +24%
+[All ★9]ATK +30% Max HP +30%
+[All ★12]ATK +36% Max HP +36%
+[All ★15]ATK +42% Max HP +42%
+Golden Dragon's Treasure
+Golden Fleece
+Golden Mask
+Goldfinger
+Set Base Stats
+[Activate]ATK +12% Max HP +12%
+[All ★3]ATK +18% Max HP +18%
+[All ★6]ATK +24% Max HP +24%
+[All ★9]ATK +30% Max HP +30%
+[All ★12]ATK +36% Max HP +36%
+[All ★15]ATK +42% Max HP +42%
+Fateweaver
+Skyhawk Gaze
+Karma Spindle
+Dread Omen
+Set Base Stats
+[Activate]ATK +12% Max HP +12%
+[All ★3]ATK +18% Max HP +18%
+[All ★6]ATK +24% Max HP +24%
+[All ★9]ATK +30% Max HP +30%
+[All ★12]ATK +36% Max HP +36%
+[All ★15]ATK +42% Max HP +42%
+Standalone Artifacts
+Demon King’s Eye
+Ravenous Chain
+Demon Blood
+Swiftwind Jade
+Aeon Spire
+Bladeborne
+Everburn Comet
+Gungnir
+How to use the Artifact Codex
+Artifacts are a permanent stat layer that operates separately from your character roster. Once activated and starred up, they apply to whichever character you bring into combat, making them a steady long-term investment even when you swap mains.
+Each artifact has a rarity (Rare / Epic / Legendary / Mythic) and may belong to a set. Owning all artifacts of a set unlocks a set bonus whose strength is gated by the lowest ★ across the set members — so evenly leveling all set pieces beats over-investing a single one.Read more
+This codex lists all 14 sets plus the standalone artifacts that sit outside any set. Each card shows the rarity, individual flavor, and the set-effect ★ schedule so you can quickly decide which sets to chase.
+Shard requirements per ★ are tracked on the “Artifact Shards” page; the final impact on your build can be simulated in the “Stat Calculator”.
+FAQ
+QHow do set bonuses activate?
+Owning all artifacts in a set activates the bonus. Its strength is keyed to the lowest ★ across the set members, so balanced star-up beats focusing on a single piece.QSingle mythic vs. a full legendary set — which is better?
+A single mythic gives you the largest individual stat boost but no set bonus. A complete legendary set provides stacked ATK/HP % from set effects. Most builds layer both: complete legendary sets first, then add a mythic standalone on top.QHow do standalone artifacts fit in?
+Standalones do not contribute to set bonuses but their personal effects are strong. Pick the standalones that match your build direction (offense, survivability, or a specific skill synergy) from the “Standalone Artifacts” section.QWhen are new artifacts added to the codex?
+New artifacts are added shortly after each major patch. The in-game tooltip is authoritative for the very latest releases; this page is for one-screen comparison and planning.
+H
+By Hotteok · Playing since Feb 2025 · 450 days
+Every number and recommendation on this page is verified in-game by the author and kept up to date.
+Published 2026-05-31Updated 2026-06-25How we verifyReport an error
+Related Pages
+Artifact Shards
+Stat Calculator
+Character Tier List
+Character Catalog
+About·Privacy Policy·Copyright/DMCA·Terms of Service·Contact·Support·Report Issue
+Archero 2 is a trademark of Habby Pte. Ltd. Game data, names, images, and assets are © Habby Pte. Ltd. Archero2 Hub is an unofficial fan-run community resource and is not affiliated with, endorsed, or sponsored by Habby.
+Archero 2 HubSupport
+Event10
+Fishing Event Guide
+Gauge timing by fish grade and fishing mini-game guide.
+Fishing Shop Guide
+Shop purchase priority based on your etching unlock status.
+Twin Core Efficiency
+Twin Cores per fishing weight (kg) and cores per 1,000 kg, in one chart.
+Vibrant Voyage Core Efficiency
+A table of cumulative milestone rewards and badge/core efficiency per draw.
+Dice Guide
+Reach 100,000 points with the optimal dice multiplier strategy.
+Island Treasure Planner
+Calculate the dice you need for any target score and how short you are.
+Contract Mystling Guide
+Probabilities, milestones, and the fund breakdown for the Mystling Fool.
+Summon Event Guide
+9-stage milestone rewards, recommended route to reach the 400-pull pity in 3 months, cumulative Summon Points distribution, and single-pull reward probabilities.
+Event Missions
+Check resources required for each event mission.
+Redeem Codes
+Check the latest Archero 2 redeem codes and enter them right away.Guides12
+Twinborn Rune Guide
+Fuse two same-series runes (Enhancement, Ability, or Blessing) into a single slot. Rules, unlocks, and materials at a glance.
+Tracking Eye Guide
+How to maximize your odds of rolling Tracking — Rabbit Foot, Seraph, Symphony / Echo Scythe, Intelligence enchant, and ability picks.
+Best Spending Plan
+Buying priorities by monthly budget — get the most value for free, light, medium, and heavy spenders.
+Beginner's Roadmap
+Step-by-step progression guide from chapter 1 — what to prioritize, what to avoid, and how to clear early walls fast.
+Gem Spending Guide
+Where to spend (and not spend) your diamonds — Mythstone chests, Rune Ruins, and common F2P mistakes.
+Shop Buying Guide
+Purchase priority for Guild, Expedition, Island, Arena, and Event shops — by engraving unlock stage.
+Gear Sets Guide
+Compare Griffin, Oracle, and Dragoon set traits, F2P/low-spender pick strategy, and final PvP/PvE builds.
+Gear Swap Guide
+Scroll swap costs, sources, and best timing — plus series swap conditions, cooldown, and what carries over.
+Godforge Guide
+Upgrade conditions, set-specific material sources, and the weapon-first priority strategy for Godforge.
+Etched Rune Guide
+Unlock conditions, rune types, build-specific combinations, and where to obtain etched runes.
+Shackled Jungle Guide
+Rune Enchantment Stone content — boss mechanics, avoiding skip loss, recommended active skills and rune builds.
+Magic Plant Defense Guide
+Pet egg content — how it works, solo vs party differences, egg grade rates per stage, and recommended runes, skills, and characters.Calculators9
+Stat Calculator
+Calculate ATK/HP and set effects by artifact star level.
+Arrow Ability Calculator
+Compare expected damage and change rates by front/diagonal arrow ability combos.
+Character Shard Calculator
+Select character rarity and target star to calculate shard farming days.
+Gem Income Calculator
+Pick your Arena rank, Seal Battle group, and owned passes to estimate monthly gem income on a 4-week basis.
+Aeon Core Calculator
+Enter pity count, event days, target cores and find the optimal purchase plan.
+Rune Simulator
+Expected results per pull count and target rune achievement calculator.
+Rune Upgrade Calculator
+Pick the Epic+ runes you own to see how many more Epic runes you need for your target grade.
+Damage Efficiency
+Enter your current stat totals to see which stat gives the best damage efficiency to raise next.
+Vibrant Voyage Core Calculator
+Calculates the draws and cost to reach your core or relic shard goal, by luck percentile.LabNEW4
+Lightwing Arrow Test
+Lightwing Arrow proc rate and Lucky Cracker / Band-Aid synergy verified across 1,000 shots.
+Sprite Damage TestNEW
+How sprites inherit ATK, how sprite damage % stacks, and what the Assault rune adds, verified in-game.
+Damage FormulaNEW
+How one hit is calculated, which stats add and which multiply, and what changes per mode, verified in-game.
+Swift Arrow Test
+Verified in-game: Swift Arrow cuts damage by 20% and shrinks Energy Ring hit count.Characters4
+Character Catalog
+Hero abilities, star-breakthrough effects, and skin effects at a glance.
+Character Tier List
+Recommended character tiers for PvP and PvE modes.
+Character Resonance
+Recommended character resonance compositions for PvP and PvE.
+Shard Requirements
+View shard requirements per star level for Rare, Epic and Legendary characters.Artifacts2
+Artifact Codex
+Browse every artifact set bonus and individual effect on a single page.
+Artifact Shards
+View shard requirements per star level for Legendary and Mythic artifacts.Gear5
+Gear Tier List
+Recommended gear set combinations for PvP and PvE modes.
+Gear Effects
+Gear options by grade from Common to Chaotic, plus Godforge.
+Godforge
+Materials and effects needed to Godforge one gear from 0★ to 5★.
+Gear Fusion
+Fusion path and total materials from S Epic to S Chaotic.
+Gear Upgrade Cost
+Calculate gold and scrolls needed for gear upgrades.Runes6
+Rune Tier List
+Recommended rune tiers for PvP and PvE modes.
+Rune Effects
+Rune options and enchantments by grade, Common to Mythic.
+Rune Builds
+Recommended rune combinations and enchantments by equipment.
+Rune Enchantment Tier
+View enchantment options and tiers for each rune.
+Rune Fusion
+Base runes required to craft 1 Mythic rune with step-by-step fusion recipes.
+Twinborn Runes
+Twinborn Workshop unlock condition, 15 fusion groups across Enhancement, Ability & Blessing runes, Runic Remnant & Twinborn Core costs, and rune dismantle yield — all at a glance.Builds3
+Build Editor
+Compose a character, gear, and runes; share via link.
+Build Ranking
+Browse popular builds sorted by views.
+Tier List
+Rank characters, gear, and runes from S to D and share.Mystlings2
+Mystling Shard Cost
+Check the standard shard cost and cumulative total for Mystling 0 to 25 stars.
+Mystling Calculator
+Calculate event tickets and package plans for your target Mystling stars.View allSkill2
+Skill Catalog
+Browse every in-game skill with stats and effects.
+Skill Tier List
+Recommended skill tiers at a glance.GuildNEW6
+Guild Merchant
+Check bargain prices and recommendations for guild merchant items.
+Guild Research
+Effects and coin costs for all 27 guild research entries across combat, growth, and events.
+Guild RaidNEW
+Difficulty tiers, node layout, boss HP, settlement rewards and Frenzy Challenge.
+Guild BanquetNEW
+Festivity thresholds for 6 banquet tiers, red packet odds and expected value, cheer mechanics.
+Guild Boss
+Check the daily guild boss schedule and stats.
+Guild Boss Rewards
+View reward box contents for each damage milestone.Umbral Tempest4
+Universal Talent
+Calculate Umbral Tempest universal talent levels and total Virtus Dust cost.
+Class Talent
+Umbral Tempest class talent trees with recommended builds.
+Class Guide
+Umbral Tempest class tier list and recommendations — Ranger, Alchemist, Druid, Diviner.
+What to Buy (F2P)
+Recommended purchase order and item prices for the Abyssal Crystal & Gloom Shard shop.Achievements3
+Chapter Rewards
+Key rewards granted for clearing chapters 1–210.
+Hard Chapter Rewards
+Key rewards for clearing Hard difficulty chapters.
+Sky Tower Rewards
+Key rewards for reaching Sky Tower floors.View allMore1
+Sacred Hall
+Costs and unlock rewards for each Sacred Hall phase (LV1–LV24).
+Home
+Guide
+Event
+Tools
+All

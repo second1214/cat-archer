@@ -1,0 +1,267 @@
+Gear Swap Guide · Archero 2
+Archero 2 HubSupport
+Home
+Guides
+Gear Swap Guide
+Gear Swap Guide
+Everything about scroll swaps and series swaps — conditions, optimal timing, and key notes.
+Published: 2026-05-03Updated: 2026-05-03
+Scroll Swap
+A scroll swap takes one spare S Epic gear piece you own and replaces it with a random S Epic piece from the same series. It does not swap your currently equipped gear.
+You cannot predict which slot type you will get, so when and what you swap matters a great deal.
+Swap Cost (S Epic standard)
+Weapon
+20
+All other 5 slots
+10
+How It Works
+•Random draw from the same-series S Epic pool — no guarantee of any specific slot type
+•The gear you swap is immediately consumed (cannot be undone)
+•The result keeps the same grade as the gear you used
+•Getting a type you already have plenty of is entirely possible
+Gear Imbalance Example
+This is a typical imbalance from random drops. Scrolling an excess piece gives you a chance to fill the missing slot types.
+6Surplus
+0OK
+4Surplus
+6Deficit
+0OK
+5Deficit
+Scroll Sources
+Paid Packages
+Scrolls can be obtained directly from paid packages.
+Guild Expedition Shop2× per week
+Available for purchase at Thunder Os rank or higher.
+Arena Shop1× per week (90% off)
+Available once per week at a 90% discount — the most cost-efficient source.
+Grand Arena Shop2× per week
+Purchasable with Grand Arena points.
+When to Use Scrolls
+✕
+Before Chaotic — Not Recommended
+•All 6 gear types drop randomly — certain types can pile up fast
+•Even scrolling an excess piece gives no guarantee of the type you need
+•A severe imbalance can significantly delay your Chaotic completion
+✓
+Just Before Chaotic — Recommended
+•You can see exactly which gear types are missing at this point
+•Scrolling only the excess pieces shortens the path to Chaotic
+•Securing Godforge materials first lets you squeeze double value from each scroll
+After the Godforge update, excess Chaotic gear can be dismantled as enhancement materials, which partially eases imbalances. However, Lv1 Rank 4 still requires dismantling ~24 S-grade pieces, so the problem is not fully resolved.
+Step-by-Step Strategy
+1
+Early ~ MythicSave
+You don't know which gear types will run short yet. Don't use any scrolls — just stockpile.
+2
+Building Mythic+3Assess
+Check which gear types are in excess and which are lacking. Still hold your scrolls.
+3
+1–2 types short of ChaoticFix imbalance
+Now you know exactly what you need. Scroll the excess pieces and fast-track your Chaotic.
+Series Swap
+The series swap feature lets you convert your entire currently equipped set to a different series — for example, Oracle to Dragoon or vice versa.
+Available Sets
+Oracle
+→ Dragoon→ Griffin
+Dragoon
+→ Oracle→ Griffin
+Griffin
+→ Oracle→ Dragoon
+You can swap freely to any of the three sets — not a fixed rotation. Re-swap available after the 30-day cooldown.
+Grade Transfer Example
+Before (Oracle)
+WeaponChaotic
+AmuletChaotic
+RingMythic+3
+HelmetMythic+3
+ArmorChaotic
+BootsMythic+3
+After (Dragoon)
+WeaponChaotic
+AmuletChaotic
+RingMythic+3
+HelmetMythic+3
+ArmorChaotic
+BootsMythic+3
+Non-Chaotic pieces (e.g. Mythic+3) also transfer at their current grade. All 6 pieces at Mythic+3 or above meets the swap condition.
+Requirements
+•All 6 slots (Weapon, Necklace, Ring, Helmet, Armor, Boots) must be Mythic+3 or higher
+•30-day cooldown must have elapsed since the last swap
+Example: swap on Mar 1 → eligible again from Mar 31 onward
+What Carries Over
+✓Godforge enhancement level
+✓Gear level (reinforcement value)
+✕Weapon skin
+Note
+Weapon skins do not transfer on a series swap. If you own a skin, check this before swapping.
+FAQ
+QCan I use a scroll to swap an Oracle piece into a Dragoon piece?
+No. Scroll swaps are within the same series only. An Oracle piece will always convert into another Oracle piece of a random slot type. To change series entirely, you need the Series Swap feature.QShould I use scrolls early or save them?
+Save them until you are about to reach Chaotic grade. Using them carelessly before that can cause slot imbalances. Since the Godforge update, excess gear can be used as materials, which eases the problem — but the safest approach is still to use scrolls just before completing Chaotic.QDo enhancement levels carry over on a series swap?
+Yes, Godforge enhancement levels transfer intact. Gear levels also carry over. However, weapon skins do not transfer, so be careful.QIs a series swap impossible before reaching Mythic+3 on all 6 slots?
+Yes, all 6 slots must be Mythic+3 or higher for a series swap. If even one slot is Mythic+2 or below, the swap is unavailable. This condition generally requires at least 60 S-grade gear pieces.QWhy is the Arena Shop the best source for scrolls?
+The Arena Shop offers one scroll per week at a 90% discount. Compared to other sources, the cost is far lower, so purchasing it every week without fail is strongly recommended.
+H
+By Hotteok · Playing since Feb 2025 · 450 days
+Every number and recommendation on this page is verified in-game by the author and kept up to date.
+Published 2026-05-03Updated 2026-05-03How we verifyReport an error
+Related Pages
+Gear Sets Guide
+Gear Tier List
+Godforge
+Shop Buying Guide
+About·Privacy Policy·Copyright/DMCA·Terms of Service·Contact·Support·Report Issue
+Archero 2 is a trademark of Habby Pte. Ltd. Game data, names, images, and assets are © Habby Pte. Ltd. Archero2 Hub is an unofficial fan-run community resource and is not affiliated with, endorsed, or sponsored by Habby.
+Archero 2 HubSupport
+Event10
+Fishing Event Guide
+Gauge timing by fish grade and fishing mini-game guide.
+Fishing Shop Guide
+Shop purchase priority based on your etching unlock status.
+Twin Core Efficiency
+Twin Cores per fishing weight (kg) and cores per 1,000 kg, in one chart.
+Vibrant Voyage Core Efficiency
+A table of cumulative milestone rewards and badge/core efficiency per draw.
+Dice Guide
+Reach 100,000 points with the optimal dice multiplier strategy.
+Island Treasure Planner
+Calculate the dice you need for any target score and how short you are.
+Contract Mystling Guide
+Probabilities, milestones, and the fund breakdown for the Mystling Fool.
+Summon Event Guide
+9-stage milestone rewards, recommended route to reach the 400-pull pity in 3 months, cumulative Summon Points distribution, and single-pull reward probabilities.
+Event Missions
+Check resources required for each event mission.
+Redeem Codes
+Check the latest Archero 2 redeem codes and enter them right away.Guides12
+Twinborn Rune Guide
+Fuse two same-series runes (Enhancement, Ability, or Blessing) into a single slot. Rules, unlocks, and materials at a glance.
+Tracking Eye Guide
+How to maximize your odds of rolling Tracking — Rabbit Foot, Seraph, Symphony / Echo Scythe, Intelligence enchant, and ability picks.
+Best Spending Plan
+Buying priorities by monthly budget — get the most value for free, light, medium, and heavy spenders.
+Beginner's Roadmap
+Step-by-step progression guide from chapter 1 — what to prioritize, what to avoid, and how to clear early walls fast.
+Gem Spending Guide
+Where to spend (and not spend) your diamonds — Mythstone chests, Rune Ruins, and common F2P mistakes.
+Shop Buying Guide
+Purchase priority for Guild, Expedition, Island, Arena, and Event shops — by engraving unlock stage.
+Gear Sets Guide
+Compare Griffin, Oracle, and Dragoon set traits, F2P/low-spender pick strategy, and final PvP/PvE builds.
+Gear Swap Guide
+Scroll swap costs, sources, and best timing — plus series swap conditions, cooldown, and what carries over.
+Godforge Guide
+Upgrade conditions, set-specific material sources, and the weapon-first priority strategy for Godforge.
+Etched Rune Guide
+Unlock conditions, rune types, build-specific combinations, and where to obtain etched runes.
+Shackled Jungle Guide
+Rune Enchantment Stone content — boss mechanics, avoiding skip loss, recommended active skills and rune builds.
+Magic Plant Defense Guide
+Pet egg content — how it works, solo vs party differences, egg grade rates per stage, and recommended runes, skills, and characters.Calculators9
+Stat Calculator
+Calculate ATK/HP and set effects by artifact star level.
+Arrow Ability Calculator
+Compare expected damage and change rates by front/diagonal arrow ability combos.
+Character Shard Calculator
+Select character rarity and target star to calculate shard farming days.
+Gem Income Calculator
+Pick your Arena rank, Seal Battle group, and owned passes to estimate monthly gem income on a 4-week basis.
+Aeon Core Calculator
+Enter pity count, event days, target cores and find the optimal purchase plan.
+Rune Simulator
+Expected results per pull count and target rune achievement calculator.
+Rune Upgrade Calculator
+Pick the Epic+ runes you own to see how many more Epic runes you need for your target grade.
+Damage Efficiency
+Enter your current stat totals to see which stat gives the best damage efficiency to raise next.
+Vibrant Voyage Core Calculator
+Calculates the draws and cost to reach your core or relic shard goal, by luck percentile.LabNEW4
+Lightwing Arrow Test
+Lightwing Arrow proc rate and Lucky Cracker / Band-Aid synergy verified across 1,000 shots.
+Sprite Damage TestNEW
+How sprites inherit ATK, how sprite damage % stacks, and what the Assault rune adds, verified in-game.
+Damage FormulaNEW
+How one hit is calculated, which stats add and which multiply, and what changes per mode, verified in-game.
+Swift Arrow Test
+Verified in-game: Swift Arrow cuts damage by 20% and shrinks Energy Ring hit count.Characters4
+Character Catalog
+Hero abilities, star-breakthrough effects, and skin effects at a glance.
+Character Tier List
+Recommended character tiers for PvP and PvE modes.
+Character Resonance
+Recommended character resonance compositions for PvP and PvE.
+Shard Requirements
+View shard requirements per star level for Rare, Epic and Legendary characters.Artifacts2
+Artifact Codex
+Browse every artifact set bonus and individual effect on a single page.
+Artifact Shards
+View shard requirements per star level for Legendary and Mythic artifacts.Gear5
+Gear Tier List
+Recommended gear set combinations for PvP and PvE modes.
+Gear Effects
+Gear options by grade from Common to Chaotic, plus Godforge.
+Godforge
+Materials and effects needed to Godforge one gear from 0★ to 5★.
+Gear Fusion
+Fusion path and total materials from S Epic to S Chaotic.
+Gear Upgrade Cost
+Calculate gold and scrolls needed for gear upgrades.Runes6
+Rune Tier List
+Recommended rune tiers for PvP and PvE modes.
+Rune Effects
+Rune options and enchantments by grade, Common to Mythic.
+Rune Builds
+Recommended rune combinations and enchantments by equipment.
+Rune Enchantment Tier
+View enchantment options and tiers for each rune.
+Rune Fusion
+Base runes required to craft 1 Mythic rune with step-by-step fusion recipes.
+Twinborn Runes
+Twinborn Workshop unlock condition, 15 fusion groups across Enhancement, Ability & Blessing runes, Runic Remnant & Twinborn Core costs, and rune dismantle yield — all at a glance.Builds3
+Build Editor
+Compose a character, gear, and runes; share via link.
+Build Ranking
+Browse popular builds sorted by views.
+Tier List
+Rank characters, gear, and runes from S to D and share.Mystlings2
+Mystling Shard Cost
+Check the standard shard cost and cumulative total for Mystling 0 to 25 stars.
+Mystling Calculator
+Calculate event tickets and package plans for your target Mystling stars.View allSkill2
+Skill Catalog
+Browse every in-game skill with stats and effects.
+Skill Tier List
+Recommended skill tiers at a glance.GuildNEW6
+Guild Merchant
+Check bargain prices and recommendations for guild merchant items.
+Guild Research
+Effects and coin costs for all 27 guild research entries across combat, growth, and events.
+Guild RaidNEW
+Difficulty tiers, node layout, boss HP, settlement rewards and Frenzy Challenge.
+Guild BanquetNEW
+Festivity thresholds for 6 banquet tiers, red packet odds and expected value, cheer mechanics.
+Guild Boss
+Check the daily guild boss schedule and stats.
+Guild Boss Rewards
+View reward box contents for each damage milestone.Umbral Tempest4
+Universal Talent
+Calculate Umbral Tempest universal talent levels and total Virtus Dust cost.
+Class Talent
+Umbral Tempest class talent trees with recommended builds.
+Class Guide
+Umbral Tempest class tier list and recommendations — Ranger, Alchemist, Druid, Diviner.
+What to Buy (F2P)
+Recommended purchase order and item prices for the Abyssal Crystal & Gloom Shard shop.Achievements3
+Chapter Rewards
+Key rewards granted for clearing chapters 1–210.
+Hard Chapter Rewards
+Key rewards for clearing Hard difficulty chapters.
+Sky Tower Rewards
+Key rewards for reaching Sky Tower floors.View allMore1
+Sacred Hall
+Costs and unlock rewards for each Sacred Hall phase (LV1–LV24).
+Home
+Guide
+Event
+Tools
+All

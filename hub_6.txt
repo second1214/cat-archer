@@ -1,0 +1,256 @@
+Archero 2 Etched Rune Guide — Unlock & F2P Build Path
+Archero 2 HubSupport
+Home
+Guides
+Etched Rune Guide
+Etched Rune Guide
+Published: 2026-04-30Updated: 2026-05-02
+What Are Etched Runes?
+Etched Runes are special runes that unlock once your Enhancement, Ability, and Blessing Runes all reach a certain grade. Unlike regular runes, they cannot be obtained through chapter farming or Rune Ruins pulls — they are only available through limited sources such as the Fishing Event, Island Shop, Guild Expedition Shop, and packages.
+Etched Runes amplify the performance of your Enhancement and Ability Runes. The main weapon types (Arrow of Echoes, Echo Scythe) directly strengthen your arrows, while the remaining Etched Runes generate synergy when paired with specific Enhancement or Ability Runes.
+Unlock Requirements — Etched Slot Grades
+Etched Slot 1
+All Runes Epic
+Etched Slot 2
+All Runes Legendary
+Etched Slot 3
+All Runes Legendary+2
+Enhancement and Ability Runes can reach Epic and Legendary relatively quickly, but Blessing Runes are far harder to upgrade since they only come from limited sources like the Fishing Event, Island Shop, Guild Expedition Shop, and packages. In practice, Blessing Runes are almost always the real bottleneck for unlocking Etched slots.
+When spending currency in events or guild shops, prioritize securing Blessing Runes above all else. Unlocking Etched Slot 1 as quickly as possible is the single biggest lever for overall power growth.
+Prioritize Blessing Runes
+In the Guild Expedition Shop, follow this purchase priority: Divine Forge Cores → Tata Fragments → Orbs → Blessing Runes. Since unlocking Etched slots is the end goal, heavy investment in Blessing Runes is the default strategy.
+Etched Rune Types
+Etched Runes fall into 8 broad categories. Every Etched Rune reaches its full potential when paired with specific Enhancement or Ability Runes.
+Main Weapon
+Two runes in this category: Arrow of Echoes and Echo Scythe. Arrow of Echoes Legendary is universally powerful thanks to its automatic diagonal arrow option — it should be the first Etched Rune you push to Legendary, regardless of build. Echo Scythe Rare is a universal staple that increases main weapon ability trigger chance.
+Orb
+Two runes: Pulsing Orb and Orbital Orb. These have strong synergy with Orb-type skills in Griffin and Oracle builds. If your build revolves around Orb-related Enhancement and Ability Runes, these are a high-priority investment.
+Strike
+Two runes: Sword Strike Split and Swordstrike Aerie. If you are building around Strike, these are the next Etched Runes to invest in after Arrow of Echoes. They generate meaningful synergy when paired with Strike-related Ability and Enhancement Runes.
+Elemental
+Two runes: Elemental Crit and Elemental Domain. Essential for Dragon Knight + Elemental/Meteor builds, and also useful as a supplementary option in Griffin and Oracle builds.
+Sprite
+Two runes: Sprite's Awe and Sprite Assist. Suited for players building around Sprites. Their effect is maximized when combined with Sprite-related Ability Runes.
+Meteor
+One rune: Meteor Split. A core Etched Rune in Dragon Knight + Meteor builds, used alongside Elemental Crit.
+Potion
+One rune: Potion Spring. Used in Dragon Knight builds alongside Meteor Split and Elemental Crit, generating synergy with Potion-related Ability Runes.
+Plant
+One rune: Wave of Life. Relatively low utility in the current meta — consider investing in other Etched Rune categories first.
+Build-Specific Etched Rune Recommendations
+The following combinations are recommended for the current meta. Secure Arrow of Echoes Legendary first in every build, then work through the build-specific Etched Runes in order.
+Griffin / Oracle + Orb Build
+→
+→
+→
+Arrow of Echoes (Legendary) → Pulsing Orb → Orbital Orb → Elemental Crit
+Elemental Crit is not strictly required, but adds meaningful firepower when included.
+Dragon Knight + Elemental / Meteor Build
+→
+→
+→
+Arrow of Echoes (Legendary) → Elemental Crit → Meteor Split → Potion Spring
+Meteor Split and Elemental Crit are best treated as a pair — try to obtain both together.
+Strike Build
+→
+→
+Arrow of Echoes (Legendary) → Swordstrike Aerie → Sword Strike Split
+Synergy kicks in when your Strike Enhancement and Ability Runes are also in place.
+Sprite Build
+→
+→
+Arrow of Echoes (Legendary) → Sprite's Awe → Sprite Assist
+Etched Rune effects shine brightest when your Sprite Ability Runes are Legendary or higher.
+Recommended: Echo Scythe
+Main weapon damage makes up a very large portion of output in chapters and boss fights. Both Symphony and Echo Scythe boost the chance of main weapon abilities appearing from Rare grade onwards, so equipping both together significantly raises expected damage. Recommended once you have 2+ etched rune slots unlocked to run them simultaneously.
+Where to Get Etched Runes
+Fishing EventRecommended
+By far the best free-to-play route. Even without buying extra bait — just completing missions — you can earn roughly 2 Epic Etched Runes. Spending an additional ~15,000 gems on Golden Tickets brings that up to around 4 Epic Etched Runes.
+Guild Expedition ShopRecommended
+Buy Divine Forge Cores, Tata Fragments, Orbs, and Blessing Runes first, then spend leftover points on Etched Runes. Routing surplus points here lets you accumulate them steadily over time.
+Island Shop
+If you haven't reached Divine Forge level 5 on all equipment pieces, spending Island Tickets on Etched Runes is inefficient. Divine Forge materials take priority over Etched Runes in the Island Shop.
+Packages / Aurora
+If you're willing to spend, packages or Aurora (paid currency) can fast-track an Etched Rune to Legendary. If not, running the Fishing Event twice (~2 months) is enough to fully upgrade one Legendary Etched Rune on its own.
+Source Summary
+The Fishing Event is the backbone of Etched Rune progression. Participate every time it runs without exception, and build a routine of channeling leftover Guild Expedition Shop points into Etched Runes.
+Common Mistakes
+Collecting without a build plan
+Spreading investment across all 13 Etched Runes puts you far behind players who focus on a specific build. Decide your build direction first, then upgrade the matching Etched Runes.
+Buying Etched Runes first in the Island Shop
+If Divine Forge isn't at level 5 across all slots, spending Island Tickets on Etched Runes is a poor use of resources. Divine Forge materials come first.
+Expecting Etched slot unlock without Blessing Rune investment
+Even if your Enhancement and Ability Runes are Legendary, Etched slots won't open if your Blessing Runes are below Epic. Blessing Runes are the real gating factor for unlock.
+Delaying Echo Scythe
+Even at Rare grade, Echo Scythe raises main weapon ability trigger chance — making it a universal necessity. Pick it up early regardless of your build.
+Frequently Asked Questions
+QHow many Etched Rune slots are there?
+There are 3 in total. Etched Slot 1 requires all runes at Epic; Slot 2 requires all runes at Legendary; Slot 3 requires all runes at Legendary+2.QWhy does unlocking Etched slots take so long?
+Enhancement and Ability Runes can be farmed relatively easily through chapters and Rune Ruins, but Blessing Runes are locked behind limited sources — Fishing Events, the Island Shop, and the Guild Expedition Shop. For most players, Blessing Runes are the primary bottleneck.QDo I need to push Arrow of Echoes all the way to Legendary?
+You get the main weapon ability chance boost starting from Rare, so Legendary is not strictly required. However, the diagonal arrow option at Legendary is powerful in every build, making Arrow of Echoes the recommended first target for a Legendary Etched Rune.QCan Etched Runes be enchanted?
+There is currently no system to enchant Etched Runes. Upgrading their grade is the only way to strengthen them.QWhere can I see build combination recommendations?
+Check the Rune Combination Recommendations page on this site (/rune/combination) for Enhancement, Ability, and Etched Rune combos by build. Review it before committing to a build.
+H
+By Hotteok · Playing since Feb 2025 · 450 days
+Every number and recommendation on this page is verified in-game by the author and kept up to date.
+Published 2026-04-30Updated 2026-05-02How we verifyReport an error
+Related Pages
+Rune Builds
+Rune Tier List
+Rune Enchantment Tier
+Shackled Jungle Guide
+About·Privacy Policy·Copyright/DMCA·Terms of Service·Contact·Support·Report Issue
+Archero 2 is a trademark of Habby Pte. Ltd. Game data, names, images, and assets are © Habby Pte. Ltd. Archero2 Hub is an unofficial fan-run community resource and is not affiliated with, endorsed, or sponsored by Habby.
+Archero 2 HubSupport
+Event10
+Fishing Event Guide
+Gauge timing by fish grade and fishing mini-game guide.
+Fishing Shop Guide
+Shop purchase priority based on your etching unlock status.
+Twin Core Efficiency
+Twin Cores per fishing weight (kg) and cores per 1,000 kg, in one chart.
+Vibrant Voyage Core Efficiency
+A table of cumulative milestone rewards and badge/core efficiency per draw.
+Dice Guide
+Reach 100,000 points with the optimal dice multiplier strategy.
+Island Treasure Planner
+Calculate the dice you need for any target score and how short you are.
+Contract Mystling Guide
+Probabilities, milestones, and the fund breakdown for the Mystling Fool.
+Summon Event Guide
+9-stage milestone rewards, recommended route to reach the 400-pull pity in 3 months, cumulative Summon Points distribution, and single-pull reward probabilities.
+Event Missions
+Check resources required for each event mission.
+Redeem Codes
+Check the latest Archero 2 redeem codes and enter them right away.Guides12
+Twinborn Rune Guide
+Fuse two same-series runes (Enhancement, Ability, or Blessing) into a single slot. Rules, unlocks, and materials at a glance.
+Tracking Eye Guide
+How to maximize your odds of rolling Tracking — Rabbit Foot, Seraph, Symphony / Echo Scythe, Intelligence enchant, and ability picks.
+Best Spending Plan
+Buying priorities by monthly budget — get the most value for free, light, medium, and heavy spenders.
+Beginner's Roadmap
+Step-by-step progression guide from chapter 1 — what to prioritize, what to avoid, and how to clear early walls fast.
+Gem Spending Guide
+Where to spend (and not spend) your diamonds — Mythstone chests, Rune Ruins, and common F2P mistakes.
+Shop Buying Guide
+Purchase priority for Guild, Expedition, Island, Arena, and Event shops — by engraving unlock stage.
+Gear Sets Guide
+Compare Griffin, Oracle, and Dragoon set traits, F2P/low-spender pick strategy, and final PvP/PvE builds.
+Gear Swap Guide
+Scroll swap costs, sources, and best timing — plus series swap conditions, cooldown, and what carries over.
+Godforge Guide
+Upgrade conditions, set-specific material sources, and the weapon-first priority strategy for Godforge.
+Etched Rune Guide
+Unlock conditions, rune types, build-specific combinations, and where to obtain etched runes.
+Shackled Jungle Guide
+Rune Enchantment Stone content — boss mechanics, avoiding skip loss, recommended active skills and rune builds.
+Magic Plant Defense Guide
+Pet egg content — how it works, solo vs party differences, egg grade rates per stage, and recommended runes, skills, and characters.Calculators9
+Stat Calculator
+Calculate ATK/HP and set effects by artifact star level.
+Arrow Ability Calculator
+Compare expected damage and change rates by front/diagonal arrow ability combos.
+Character Shard Calculator
+Select character rarity and target star to calculate shard farming days.
+Gem Income Calculator
+Pick your Arena rank, Seal Battle group, and owned passes to estimate monthly gem income on a 4-week basis.
+Aeon Core Calculator
+Enter pity count, event days, target cores and find the optimal purchase plan.
+Rune Simulator
+Expected results per pull count and target rune achievement calculator.
+Rune Upgrade Calculator
+Pick the Epic+ runes you own to see how many more Epic runes you need for your target grade.
+Damage Efficiency
+Enter your current stat totals to see which stat gives the best damage efficiency to raise next.
+Vibrant Voyage Core Calculator
+Calculates the draws and cost to reach your core or relic shard goal, by luck percentile.LabNEW4
+Lightwing Arrow Test
+Lightwing Arrow proc rate and Lucky Cracker / Band-Aid synergy verified across 1,000 shots.
+Sprite Damage TestNEW
+How sprites inherit ATK, how sprite damage % stacks, and what the Assault rune adds, verified in-game.
+Damage FormulaNEW
+How one hit is calculated, which stats add and which multiply, and what changes per mode, verified in-game.
+Swift Arrow Test
+Verified in-game: Swift Arrow cuts damage by 20% and shrinks Energy Ring hit count.Characters4
+Character Catalog
+Hero abilities, star-breakthrough effects, and skin effects at a glance.
+Character Tier List
+Recommended character tiers for PvP and PvE modes.
+Character Resonance
+Recommended character resonance compositions for PvP and PvE.
+Shard Requirements
+View shard requirements per star level for Rare, Epic and Legendary characters.Artifacts2
+Artifact Codex
+Browse every artifact set bonus and individual effect on a single page.
+Artifact Shards
+View shard requirements per star level for Legendary and Mythic artifacts.Gear5
+Gear Tier List
+Recommended gear set combinations for PvP and PvE modes.
+Gear Effects
+Gear options by grade from Common to Chaotic, plus Godforge.
+Godforge
+Materials and effects needed to Godforge one gear from 0★ to 5★.
+Gear Fusion
+Fusion path and total materials from S Epic to S Chaotic.
+Gear Upgrade Cost
+Calculate gold and scrolls needed for gear upgrades.Runes6
+Rune Tier List
+Recommended rune tiers for PvP and PvE modes.
+Rune Effects
+Rune options and enchantments by grade, Common to Mythic.
+Rune Builds
+Recommended rune combinations and enchantments by equipment.
+Rune Enchantment Tier
+View enchantment options and tiers for each rune.
+Rune Fusion
+Base runes required to craft 1 Mythic rune with step-by-step fusion recipes.
+Twinborn Runes
+Twinborn Workshop unlock condition, 15 fusion groups across Enhancement, Ability & Blessing runes, Runic Remnant & Twinborn Core costs, and rune dismantle yield — all at a glance.Builds3
+Build Editor
+Compose a character, gear, and runes; share via link.
+Build Ranking
+Browse popular builds sorted by views.
+Tier List
+Rank characters, gear, and runes from S to D and share.Mystlings2
+Mystling Shard Cost
+Check the standard shard cost and cumulative total for Mystling 0 to 25 stars.
+Mystling Calculator
+Calculate event tickets and package plans for your target Mystling stars.View allSkill2
+Skill Catalog
+Browse every in-game skill with stats and effects.
+Skill Tier List
+Recommended skill tiers at a glance.GuildNEW6
+Guild Merchant
+Check bargain prices and recommendations for guild merchant items.
+Guild Research
+Effects and coin costs for all 27 guild research entries across combat, growth, and events.
+Guild RaidNEW
+Difficulty tiers, node layout, boss HP, settlement rewards and Frenzy Challenge.
+Guild BanquetNEW
+Festivity thresholds for 6 banquet tiers, red packet odds and expected value, cheer mechanics.
+Guild Boss
+Check the daily guild boss schedule and stats.
+Guild Boss Rewards
+View reward box contents for each damage milestone.Umbral Tempest4
+Universal Talent
+Calculate Umbral Tempest universal talent levels and total Virtus Dust cost.
+Class Talent
+Umbral Tempest class talent trees with recommended builds.
+Class Guide
+Umbral Tempest class tier list and recommendations — Ranger, Alchemist, Druid, Diviner.
+What to Buy (F2P)
+Recommended purchase order and item prices for the Abyssal Crystal & Gloom Shard shop.Achievements3
+Chapter Rewards
+Key rewards granted for clearing chapters 1–210.
+Hard Chapter Rewards
+Key rewards for clearing Hard difficulty chapters.
+Sky Tower Rewards
+Key rewards for reaching Sky Tower floors.View allMore1
+Sacred Hall
+Costs and unlock rewards for each Sacred Hall phase (LV1–LV24).
+Home
+Guide
+Event
+Tools
+All

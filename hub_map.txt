@@ -1,0 +1,14 @@
+hub_1 https://archero2hub.com/en/artifact
+hub_2 https://archero2hub.com/en/artifact/catalog
+hub_3 https://archero2hub.com/en/artifact/shard-table
+hub_4 https://archero2hub.com/en/event/contract-mystling/guide
+hub_5 https://archero2hub.com/en/gear/godforge
+hub_6 https://archero2hub.com/en/guide/etched-rune
+hub_7 https://archero2hub.com/en/guide/gear-swap
+hub_8 https://archero2hub.com/en/guide/godforge
+hub_9 https://archero2hub.com/en/guide/magic-plant-defense
+hub_10 https://archero2hub.com/en/mystling
+hub_11 https://archero2hub.com/en/mystling/calculator
+hub_12 https://archero2hub.com/en/mystling/shard-table
+hub_13 https://archero2hub.com/en/umbral-tempest/class-talents
+hub_14 https://archero2hub.com/en/umbral-tempest/universal-talents

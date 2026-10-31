@@ -1,0 +1,281 @@
+Umbral Tempest Class Talent Builds · Archero 2
+Archero 2 HubSupport
+Home
+Umbral Tempest
+Class Talent
+Class Talent
+Browse Umbral Tempest class talent builds.
+RangerAlchemistDruidDiviner
+SpeedDamageCustomEdit
+Week 1Week 2Week 3
+Cumulative cap100/1000/10
+No recommended talents yet.
+Active Talent
+3
+MAX
+0/3
+3
+MAX
+0/3
+1
+MAX
+Trigger Talent
+Consumes 10 Soul Crystals from Active Talent
+3
+MAX
+1
+1/3
+0/3
+2
+2/3
+0/3
+0/3
+0/3
+0/3
+0/3
+0/1
+0/2
+1
+MAX
+0/1
+0/1
+0/3
+0/2
+0/2
+Enhance Talent
+Consumes 30 Soul Crystals from Trigger Talent
+3
+MAX
+1
+MAX
+2
+2/5
+0/3
+0/3
+0/3
+0/3
+0/3
+0/3
+0/3
+1
+1/3
+0/3
+0/2
+0/2
+Core Talent
+Consumes 60 Soul Crystals from Enhance Talent
+0/1
+0/1
+0/1
+0/2
+0/1
+0/2
+0/2
+Soul Crystal income
+ | Week
+ | Ebonrot Front
+ | Doomsday Clash
+ | Solitary Trial
+ | Total
+ | Week 1
+ | 30
+ | 10
+ | 60
+ | 100
+ | Week 2
+ | 50
+ | 30
+ | —
+ | 180
+ | Week 3
+ | 50
+ | 50
+ | —
+ | 280
+ | Week 4
+ | 50
+ | —
+ | —
+ | 330
+Starlight Essence total10 / 25 / 40 / 60
+·
+Ebonrot Front: a weekly acquisition cap that resets every week.
+·
+Doomsday Clash: one first clear per difficulty. Vanguard unlocks on season day 1, Commander on day 8, Overlord on day 15.
+·
+Solitary Trial: 20 from server-wide damage progress plus 40 from personal wave progress — season-long rewards you can start banking in week 1.
+Class Talent Guide
+Class Talents are a system that progressively unlocks Active, Trigger, Enhance, and Core talents for each of Umbral Tempest's 4 classes (Ranger, Alchemist, Druid, Diviner). You spend Soul Crystals to advance through the stages, and which talents you invest in — and in what order — can dramatically change a class's direction (Speed-focused, Damage-focused, etc.) even within the same class.
+This page lays out the talent trees of top Speed and Damage rankers for each class, split by week so you can copy them directly. The season 2 expansion branches are folded in as far as the unlock gates and that week's obtainable currency allow (weekly acquisition cap plus first-clear rewards from each Doomsday Clash difficulty); where a stage forces a choice between two expansion nodes, the left one is used.Read more
+A "Custom" mode is also available alongside the recommended builds. You can set talent levels manually and trade builds with friends via shareable URLs, so rather than copying the recommended builds verbatim, we suggest tuning a few talents to match your character pool and stats.
+If you haven't decided which class to play yet, check this site's "Class Guide" page first. Class performance varies significantly based on your character pool (especially whether you own Thor 5★ and Cleo), so the most stable flow is to pick a class first, then follow a build from this page.
+Frequently Asked Questions
+QHow do Week 1 and Week 2 builds differ?
+More talents unlock as the season progresses, so for Week 1 we recommend the most efficient build within the initial unlock range, and from Week 2 onward we recommend an expanded build that includes the newly opened talents. Pick the tab that matches your current week and follow it.QDo I have to follow the recommended builds exactly?
+Ranker builds are often designed around top-tier character pools and stats, so F2P or light-spending players who copy them directly may find some talents underperforming. Use the recommendations on this page as a baseline and tune a few talents in Custom mode to fit your build — that's generally more efficient.QHow do I farm Soul Crystals?
+Soul Crystals drop mainly from Umbral Tempest seasonal content (Solitary Trial, Doomsday, Ebonrot). The total needed to reach the Core Talent stage is significant, so check the total Soul Crystal cost of the recommended build on this page at the start of the season and plan accordingly.QHow do I change my build?
+Players without a pass can reset Class Talents once per day, and pass holders can reset freely with no daily limit. This page provides Speed and Damage recommended builds as presets for Week 1 and Week 2, so combined with the in-game preset feature, you can swap your entire talent tree at once whenever your content focus shifts. Simulate your build in Custom mode, save it as a preset, and switch presets as you change content during the season.
+H
+By Hotteok · Playing since Feb 2025 · 450 days
+Every number and recommendation on this page is verified in-game by the author and kept up to date.
+Published 2026-04-20Updated 2026-09-09How we verifyReport an error
+Related Pages
+Universal Talent
+Class Guide
+What to Buy (F2P)
+Tier List
+About·Privacy Policy·Copyright/DMCA·Terms of Service·Contact·Support·Report Issue
+Archero 2 is a trademark of Habby Pte. Ltd. Game data, names, images, and assets are © Habby Pte. Ltd. Archero2 Hub is an unofficial fan-run community resource and is not affiliated with, endorsed, or sponsored by Habby.
+Archero 2 HubSupport
+Event10
+Fishing Event Guide
+Gauge timing by fish grade and fishing mini-game guide.
+Fishing Shop Guide
+Shop purchase priority based on your etching unlock status.
+Twin Core Efficiency
+Twin Cores per fishing weight (kg) and cores per 1,000 kg, in one chart.
+Vibrant Voyage Core Efficiency
+A table of cumulative milestone rewards and badge/core efficiency per draw.
+Dice Guide
+Reach 100,000 points with the optimal dice multiplier strategy.
+Island Treasure Planner
+Calculate the dice you need for any target score and how short you are.
+Contract Mystling Guide
+Probabilities, milestones, and the fund breakdown for the Mystling Fool.
+Summon Event Guide
+9-stage milestone rewards, recommended route to reach the 400-pull pity in 3 months, cumulative Summon Points distribution, and single-pull reward probabilities.
+Event Missions
+Check resources required for each event mission.
+Redeem Codes
+Check the latest Archero 2 redeem codes and enter them right away.Guides12
+Twinborn Rune Guide
+Fuse two same-series runes (Enhancement, Ability, or Blessing) into a single slot. Rules, unlocks, and materials at a glance.
+Tracking Eye Guide
+How to maximize your odds of rolling Tracking — Rabbit Foot, Seraph, Symphony / Echo Scythe, Intelligence enchant, and ability picks.
+Best Spending Plan
+Buying priorities by monthly budget — get the most value for free, light, medium, and heavy spenders.
+Beginner's Roadmap
+Step-by-step progression guide from chapter 1 — what to prioritize, what to avoid, and how to clear early walls fast.
+Gem Spending Guide
+Where to spend (and not spend) your diamonds — Mythstone chests, Rune Ruins, and common F2P mistakes.
+Shop Buying Guide
+Purchase priority for Guild, Expedition, Island, Arena, and Event shops — by engraving unlock stage.
+Gear Sets Guide
+Compare Griffin, Oracle, and Dragoon set traits, F2P/low-spender pick strategy, and final PvP/PvE builds.
+Gear Swap Guide
+Scroll swap costs, sources, and best timing — plus series swap conditions, cooldown, and what carries over.
+Godforge Guide
+Upgrade conditions, set-specific material sources, and the weapon-first priority strategy for Godforge.
+Etched Rune Guide
+Unlock conditions, rune types, build-specific combinations, and where to obtain etched runes.
+Shackled Jungle Guide
+Rune Enchantment Stone content — boss mechanics, avoiding skip loss, recommended active skills and rune builds.
+Magic Plant Defense Guide
+Pet egg content — how it works, solo vs party differences, egg grade rates per stage, and recommended runes, skills, and characters.Calculators9
+Stat Calculator
+Calculate ATK/HP and set effects by artifact star level.
+Arrow Ability Calculator
+Compare expected damage and change rates by front/diagonal arrow ability combos.
+Character Shard Calculator
+Select character rarity and target star to calculate shard farming days.
+Gem Income Calculator
+Pick your Arena rank, Seal Battle group, and owned passes to estimate monthly gem income on a 4-week basis.
+Aeon Core Calculator
+Enter pity count, event days, target cores and find the optimal purchase plan.
+Rune Simulator
+Expected results per pull count and target rune achievement calculator.
+Rune Upgrade Calculator
+Pick the Epic+ runes you own to see how many more Epic runes you need for your target grade.
+Damage Efficiency
+Enter your current stat totals to see which stat gives the best damage efficiency to raise next.
+Vibrant Voyage Core Calculator
+Calculates the draws and cost to reach your core or relic shard goal, by luck percentile.LabNEW4
+Lightwing Arrow Test
+Lightwing Arrow proc rate and Lucky Cracker / Band-Aid synergy verified across 1,000 shots.
+Sprite Damage TestNEW
+How sprites inherit ATK, how sprite damage % stacks, and what the Assault rune adds, verified in-game.
+Damage FormulaNEW
+How one hit is calculated, which stats add and which multiply, and what changes per mode, verified in-game.
+Swift Arrow Test
+Verified in-game: Swift Arrow cuts damage by 20% and shrinks Energy Ring hit count.Characters4
+Character Catalog
+Hero abilities, star-breakthrough effects, and skin effects at a glance.
+Character Tier List
+Recommended character tiers for PvP and PvE modes.
+Character Resonance
+Recommended character resonance compositions for PvP and PvE.
+Shard Requirements
+View shard requirements per star level for Rare, Epic and Legendary characters.Artifacts2
+Artifact Codex
+Browse every artifact set bonus and individual effect on a single page.
+Artifact Shards
+View shard requirements per star level for Legendary and Mythic artifacts.Gear5
+Gear Tier List
+Recommended gear set combinations for PvP and PvE modes.
+Gear Effects
+Gear options by grade from Common to Chaotic, plus Godforge.
+Godforge
+Materials and effects needed to Godforge one gear from 0★ to 5★.
+Gear Fusion
+Fusion path and total materials from S Epic to S Chaotic.
+Gear Upgrade Cost
+Calculate gold and scrolls needed for gear upgrades.Runes6
+Rune Tier List
+Recommended rune tiers for PvP and PvE modes.
+Rune Effects
+Rune options and enchantments by grade, Common to Mythic.
+Rune Builds
+Recommended rune combinations and enchantments by equipment.
+Rune Enchantment Tier
+View enchantment options and tiers for each rune.
+Rune Fusion
+Base runes required to craft 1 Mythic rune with step-by-step fusion recipes.
+Twinborn Runes
+Twinborn Workshop unlock condition, 15 fusion groups across Enhancement, Ability & Blessing runes, Runic Remnant & Twinborn Core costs, and rune dismantle yield — all at a glance.Builds3
+Build Editor
+Compose a character, gear, and runes; share via link.
+Build Ranking
+Browse popular builds sorted by views.
+Tier List
+Rank characters, gear, and runes from S to D and share.Mystlings2
+Mystling Shard Cost
+Check the standard shard cost and cumulative total for Mystling 0 to 25 stars.
+Mystling Calculator
+Calculate event tickets and package plans for your target Mystling stars.View allSkill2
+Skill Catalog
+Browse every in-game skill with stats and effects.
+Skill Tier List
+Recommended skill tiers at a glance.GuildNEW6
+Guild Merchant
+Check bargain prices and recommendations for guild merchant items.
+Guild Research
+Effects and coin costs for all 27 guild research entries across combat, growth, and events.
+Guild RaidNEW
+Difficulty tiers, node layout, boss HP, settlement rewards and Frenzy Challenge.
+Guild BanquetNEW
+Festivity thresholds for 6 banquet tiers, red packet odds and expected value, cheer mechanics.
+Guild Boss
+Check the daily guild boss schedule and stats.
+Guild Boss Rewards
+View reward box contents for each damage milestone.Umbral Tempest4
+Universal Talent
+Calculate Umbral Tempest universal talent levels and total Virtus Dust cost.
+Class Talent
+Umbral Tempest class talent trees with recommended builds.
+Class Guide
+Umbral Tempest class tier list and recommendations — Ranger, Alchemist, Druid, Diviner.
+What to Buy (F2P)
+Recommended purchase order and item prices for the Abyssal Crystal & Gloom Shard shop.Achievements3
+Chapter Rewards
+Key rewards granted for clearing chapters 1–210.
+Hard Chapter Rewards
+Key rewards for clearing Hard difficulty chapters.
+Sky Tower Rewards
+Key rewards for reaching Sky Tower floors.View allMore1
+Sacred Hall
+Costs and unlock rewards for each Sacred Hall phase (LV1–LV24).
+Home
+Guide
+Event
+Tools
+All

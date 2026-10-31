@@ -1,0 +1,246 @@
+Archero 2 Godforge Guide — Set Pick & Upgrade Order
+Archero 2 HubSupport
+Home
+Guides
+Godforge Guide
+Godforge Guide
+Published: 2026-04-30Updated: 2026-05-11
+Requirements
+1
+Mythic+3 or higher only
+The gear must be Mythic+3 or higher before it can be Godforged.
+Allowed
+Mythic+3
+Mythic+4
+Chaos
+Not allowed
+Mythic
+Mythic+1
+Mythic+2
+2
+The slot being dismantled must be in Chaos state
+Upgrade materials are obtained by dismantling S gear from the same set. The S gear must be in the "Chaos" state to be dismantled.
+Chaos→
+AllowedDragon Rider armor in Chaos → armor dismantled
+Chaos→
+✕
+Not allowedDragon Rider weapon in Chaos → armor cannot be dismantled
+3
+Set materials can only be used for that set
+Each set has its own dismantle materials, and those materials can only be used to upgrade gear within the same set. Oracle materials cannot be used to upgrade Griffin Godforge gear.
+↓
+Oracle
+Oracle only
+↓
+Griffin
+Griffin only
+↓
+Dragon
+Dragon only
+Upgrade Materials
+Levels 1–4: Gear Essence + set-specific upgrade materials (obtain Gear Essence by dismantling regular gear)
+Level 5: Gear Essence + Godforge Core
+Oracle
+Griffin
+Dragon Rider
+Upgrade Priority
+Upgrade your weapon to level 5 first. Without weapon level 5, the Descent Effect on every other slot will not activate.
+The Descent Effects on necklaces and rings only apply when you are wearing gear from the same set. For example, if you equip a Dragon Rider weapon but wear a Griffin necklace and ring, those Griffin accessories will not benefit from their Descent Effects.
+Using the S-Tier Gear Swap
+The "S-tier gear swap" (available once per month) lets you transfer a Godforge-upgraded piece to a different slot. Upgrade the target piece first, then use the swap to move it to the slot you need.
+Efficient Upgrade Strategy
+If you are short on S gear, bringing all 6 slots to level 3 is the most efficient path. Each level-3 upgrade grants ATK +20% and HP +10%, so all 6 slots at level 3 costs 15 S gear and yields ATK +120% and HP +60%.
+Pushing all 6 slots to level 4 requires 24 S gear and grants ATK +20% × 6 and HP +20% × 6 (ATK +120%, HP +120%). However, since ATK matters more than HP in most content, getting all slots to level 3 first is generally recommended.
+For a detailed breakdown of materials required at each upgrade level, visit the Godforge page.
+S Gear Cost Summary
+ | Upgrade Target
+ | S Gear
+ | ATK
+ | HP
+ | All slots to level 3
+ | 
+×15
+ | ATK +120%
+ | HP +60%
+ | All slots to level 4
+ | 
+×24
+ | ATK +120%
+ | HP +120%
+How to Obtain Godforge Cores
+1
+Guild Expedition Shop— 1 free purchase available per week
+2
+Island Shop (3 Island Tickets)— Buy 2 cores using Dice Event points
+3
+Package Purchase— Fastest way to stock up
+FAQ
+QCan I dismantle S gear that is not in Chaos state?
+No. Only S gear in the Chaos state can be dismantled for upgrade materials. Extra non-Chaos S gear is not dismantleable.QWhat happens if I upgrade another slot to level 5 before the weapon?
+Descent Effects do not activate. They require weapon Godforge level 5 as a prerequisite, so upgrading other slots first does not grant their Descent Effects. Push the weapon to level 5 first.QCan I get Godforge Cores for free?
+Yes. The Guild Expedition Shop sells 1 free Core per week, and 3 Island Tickets from Dice Events buy 2 Cores in the Island Shop. At ~200,000 points/month, accumulating enough Cores for all 6 slots to level 5 takes about 4 months.QWhat is the S-tier gear swap?
+A once-per-month feature that transfers an already Godforge-upgraded piece to a different equipment slot. For example, upgrade the weapon to level 5 and then move the result into the armor slot.
+H
+By Hotteok · Playing since Feb 2025 · 450 days
+Every number and recommendation on this page is verified in-game by the author and kept up to date.
+Published 2026-04-30Updated 2026-05-11How we verifyReport an error
+Related Pages
+Godforge
+Gear Tier List
+Shop Buying Guide
+Tier List
+About·Privacy Policy·Copyright/DMCA·Terms of Service·Contact·Support·Report Issue
+Archero 2 is a trademark of Habby Pte. Ltd. Game data, names, images, and assets are © Habby Pte. Ltd. Archero2 Hub is an unofficial fan-run community resource and is not affiliated with, endorsed, or sponsored by Habby.
+Archero 2 HubSupport
+Event10
+Fishing Event Guide
+Gauge timing by fish grade and fishing mini-game guide.
+Fishing Shop Guide
+Shop purchase priority based on your etching unlock status.
+Twin Core Efficiency
+Twin Cores per fishing weight (kg) and cores per 1,000 kg, in one chart.
+Vibrant Voyage Core Efficiency
+A table of cumulative milestone rewards and badge/core efficiency per draw.
+Dice Guide
+Reach 100,000 points with the optimal dice multiplier strategy.
+Island Treasure Planner
+Calculate the dice you need for any target score and how short you are.
+Contract Mystling Guide
+Probabilities, milestones, and the fund breakdown for the Mystling Fool.
+Summon Event Guide
+9-stage milestone rewards, recommended route to reach the 400-pull pity in 3 months, cumulative Summon Points distribution, and single-pull reward probabilities.
+Event Missions
+Check resources required for each event mission.
+Redeem Codes
+Check the latest Archero 2 redeem codes and enter them right away.Guides12
+Twinborn Rune Guide
+Fuse two same-series runes (Enhancement, Ability, or Blessing) into a single slot. Rules, unlocks, and materials at a glance.
+Tracking Eye Guide
+How to maximize your odds of rolling Tracking — Rabbit Foot, Seraph, Symphony / Echo Scythe, Intelligence enchant, and ability picks.
+Best Spending Plan
+Buying priorities by monthly budget — get the most value for free, light, medium, and heavy spenders.
+Beginner's Roadmap
+Step-by-step progression guide from chapter 1 — what to prioritize, what to avoid, and how to clear early walls fast.
+Gem Spending Guide
+Where to spend (and not spend) your diamonds — Mythstone chests, Rune Ruins, and common F2P mistakes.
+Shop Buying Guide
+Purchase priority for Guild, Expedition, Island, Arena, and Event shops — by engraving unlock stage.
+Gear Sets Guide
+Compare Griffin, Oracle, and Dragoon set traits, F2P/low-spender pick strategy, and final PvP/PvE builds.
+Gear Swap Guide
+Scroll swap costs, sources, and best timing — plus series swap conditions, cooldown, and what carries over.
+Godforge Guide
+Upgrade conditions, set-specific material sources, and the weapon-first priority strategy for Godforge.
+Etched Rune Guide
+Unlock conditions, rune types, build-specific combinations, and where to obtain etched runes.
+Shackled Jungle Guide
+Rune Enchantment Stone content — boss mechanics, avoiding skip loss, recommended active skills and rune builds.
+Magic Plant Defense Guide
+Pet egg content — how it works, solo vs party differences, egg grade rates per stage, and recommended runes, skills, and characters.Calculators9
+Stat Calculator
+Calculate ATK/HP and set effects by artifact star level.
+Arrow Ability Calculator
+Compare expected damage and change rates by front/diagonal arrow ability combos.
+Character Shard Calculator
+Select character rarity and target star to calculate shard farming days.
+Gem Income Calculator
+Pick your Arena rank, Seal Battle group, and owned passes to estimate monthly gem income on a 4-week basis.
+Aeon Core Calculator
+Enter pity count, event days, target cores and find the optimal purchase plan.
+Rune Simulator
+Expected results per pull count and target rune achievement calculator.
+Rune Upgrade Calculator
+Pick the Epic+ runes you own to see how many more Epic runes you need for your target grade.
+Damage Efficiency
+Enter your current stat totals to see which stat gives the best damage efficiency to raise next.
+Vibrant Voyage Core Calculator
+Calculates the draws and cost to reach your core or relic shard goal, by luck percentile.LabNEW4
+Lightwing Arrow Test
+Lightwing Arrow proc rate and Lucky Cracker / Band-Aid synergy verified across 1,000 shots.
+Sprite Damage TestNEW
+How sprites inherit ATK, how sprite damage % stacks, and what the Assault rune adds, verified in-game.
+Damage FormulaNEW
+How one hit is calculated, which stats add and which multiply, and what changes per mode, verified in-game.
+Swift Arrow Test
+Verified in-game: Swift Arrow cuts damage by 20% and shrinks Energy Ring hit count.Characters4
+Character Catalog
+Hero abilities, star-breakthrough effects, and skin effects at a glance.
+Character Tier List
+Recommended character tiers for PvP and PvE modes.
+Character Resonance
+Recommended character resonance compositions for PvP and PvE.
+Shard Requirements
+View shard requirements per star level for Rare, Epic and Legendary characters.Artifacts2
+Artifact Codex
+Browse every artifact set bonus and individual effect on a single page.
+Artifact Shards
+View shard requirements per star level for Legendary and Mythic artifacts.Gear5
+Gear Tier List
+Recommended gear set combinations for PvP and PvE modes.
+Gear Effects
+Gear options by grade from Common to Chaotic, plus Godforge.
+Godforge
+Materials and effects needed to Godforge one gear from 0★ to 5★.
+Gear Fusion
+Fusion path and total materials from S Epic to S Chaotic.
+Gear Upgrade Cost
+Calculate gold and scrolls needed for gear upgrades.Runes6
+Rune Tier List
+Recommended rune tiers for PvP and PvE modes.
+Rune Effects
+Rune options and enchantments by grade, Common to Mythic.
+Rune Builds
+Recommended rune combinations and enchantments by equipment.
+Rune Enchantment Tier
+View enchantment options and tiers for each rune.
+Rune Fusion
+Base runes required to craft 1 Mythic rune with step-by-step fusion recipes.
+Twinborn Runes
+Twinborn Workshop unlock condition, 15 fusion groups across Enhancement, Ability & Blessing runes, Runic Remnant & Twinborn Core costs, and rune dismantle yield — all at a glance.Builds3
+Build Editor
+Compose a character, gear, and runes; share via link.
+Build Ranking
+Browse popular builds sorted by views.
+Tier List
+Rank characters, gear, and runes from S to D and share.Mystlings2
+Mystling Shard Cost
+Check the standard shard cost and cumulative total for Mystling 0 to 25 stars.
+Mystling Calculator
+Calculate event tickets and package plans for your target Mystling stars.View allSkill2
+Skill Catalog
+Browse every in-game skill with stats and effects.
+Skill Tier List
+Recommended skill tiers at a glance.GuildNEW6
+Guild Merchant
+Check bargain prices and recommendations for guild merchant items.
+Guild Research
+Effects and coin costs for all 27 guild research entries across combat, growth, and events.
+Guild RaidNEW
+Difficulty tiers, node layout, boss HP, settlement rewards and Frenzy Challenge.
+Guild BanquetNEW
+Festivity thresholds for 6 banquet tiers, red packet odds and expected value, cheer mechanics.
+Guild Boss
+Check the daily guild boss schedule and stats.
+Guild Boss Rewards
+View reward box contents for each damage milestone.Umbral Tempest4
+Universal Talent
+Calculate Umbral Tempest universal talent levels and total Virtus Dust cost.
+Class Talent
+Umbral Tempest class talent trees with recommended builds.
+Class Guide
+Umbral Tempest class tier list and recommendations — Ranger, Alchemist, Druid, Diviner.
+What to Buy (F2P)
+Recommended purchase order and item prices for the Abyssal Crystal & Gloom Shard shop.Achievements3
+Chapter Rewards
+Key rewards granted for clearing chapters 1–210.
+Hard Chapter Rewards
+Key rewards for clearing Hard difficulty chapters.
+Sky Tower Rewards
+Key rewards for reaching Sky Tower floors.View allMore1
+Sacred Hall
+Costs and unlock rewards for each Sacred Hall phase (LV1–LV24).
+Home
+Guide
+Event
+Tools
+All

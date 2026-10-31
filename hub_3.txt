@@ -1,0 +1,289 @@
+Shards Per Star: Archero 2 Artifact Breakthrough Cost Table
+Archero 2 HubSupport
+Home
+Artifacts
+Artifact Shards
+Artifact Shard Requirements
+View the number of shards required for each star breakthrough by artifact grade.
+Artifact Codex →Stat Calculator →
+Quick Lookup
+Current Star
+Target Star
+Legendary
+2,410
+Mythic
+240
+Shards per Breakthrough
+ | Breakthrough
+ | Legendary
+ | Mythic
+ | 
+ | Required
+ | Cumulative
+ | Required
+ | Cumulative
+ | Not owned → 0 Star
+ | 10
+ | 10
+ | 10
+ | 10
+ | 0 Star → 1 Star
+ | 20
+ | 30
+ | 10
+ | 20
+ | 1 Star → 2 Star
+ | 40
+ | 70
+ | 10
+ | 30
+ | 2 Star → 3 Star
+ | 60
+ | 130
+ | 10
+ | 40
+ | 3 Star → 4 Star
+ | 80
+ | 210
+ | 10
+ | 50
+ | 4 Star → 5 Star
+ | 100
+ | 310
+ | 10
+ | 60
+ | 5 Star → 6 Star
+ | 120
+ | 430
+ | 10
+ | 70
+ | 6 Star → 7 Star
+ | 140
+ | 570
+ | 10
+ | 80
+ | 7 Star → 8 Star
+ | 160
+ | 730
+ | 10
+ | 90
+ | 8 Star → 9 Star
+ | 180
+ | 910
+ | 20
+ | 110
+ | 9 Star → 10 Star
+ | 200
+ | 1,110
+ | 20
+ | 130
+ | 10 Star → 11 Star
+ | 220
+ | 1,330
+ | 20
+ | 150
+ | 11 Star → 12 Star
+ | 240
+ | 1,570
+ | 20
+ | 170
+ | 12 Star → 13 Star
+ | 260
+ | 1,830
+ | 20
+ | 190
+ | 13 Star → 14 Star
+ | 280
+ | 2,110
+ | 20
+ | 210
+ | 14 Star → 15 Star
+ | 300
+ | 2,410
+ | 30
+ | 240
+ | Total
+ | 2,410
+ | 
+ | 240
+ | 
+Artifact shard sourcesBased on v9, 2026-09-17
+Vibrant Voyage (bingo) badge shop: 1 of 14 artifact shards for 2,400 badges (180 buys), a legendary artifact for 1,800 badges (24 buys), 2 universal epic artifact shards for 120 badges.
+Starfall Disc Ingot shop: 1 of 12 artifact shards for 3,000 Ingots (180 buys), 1 of 4 legendary artifacts for 2,250 Ingots (24 buys), universal epic artifact shards for 75 Ingots.
+Both events give 10 universal legendary artifact shards at the 200-draw milestone and a choice of 1 of 14 artifact shards at 400 and 500.
+Regular bingo tiles also drop rare and epic artifact shards. Most are rare and epics are uncommon, so treat this as a secondary source.
+Artifact Shard Usage Guide
+Artifacts are a separate permanent stat axis from characters — a long-term investment whose effects apply to your stats regardless of which character you bring. Artifact shards are spent on artifact star breakthroughs, and higher tiers grant proportionally larger bonus effects. This page summarizes the per-step shard requirements and cumulative totals for legendary and mythic artifacts.
+Artifact breakthroughs require fewer shards per single step than character breakthroughs, but legendary artifacts accumulate cost quickly, so it is important to plan which artifact to breakthrough first. Use the quick lookup at the top of the table to pick your current and target tiers and instantly see the shards required for that range.Read more
+Unlike characters, artifacts share their effect across all characters simultaneously — they are a long-term investment that carries over even when you switch your main. For early- and mid-game progression, where main characters change frequently, allocating resources to artifact breakthroughs results in less wasted investment overall.
+Legendary and mythic artifacts differ in both per-step shard cost and effect magnitude. Mythic artifacts are more valuable but their cumulative cost is also high, so it is generally most efficient to breakthrough 1-2 core mythic artifacts first while filling the rest with legendaries.
+Frequently Asked Questions
+QAre artifact shards the same resource as character shards?
+No. Artifact shards are a separate resource from character shards, with different sources. Because character breakthroughs and artifact breakthroughs do not compete for the same resources, you can progress both at the same time.QWhich artifact should I level first?
+Prioritize activating and star-breakthrough'ing artifacts so that their set bonus is enabled. Some artifacts are strong even without a set bonus, but this varies by meta — in most cases targeting the set bonus first is the more stable choice.QIs one mythic artifact or several legendary artifacts more efficient?
+For the average player, mythic artifacts are much harder to obtain than legendaries. Set mythic artifacts as your top priority, but use your legendary shards to also strengthen the necessary legendary artifacts to fill the gaps in your build.QDo artifacts have key thresholds like characters do at ★1/★4/★7?
+Artifacts strengthen their set bonus at every multiple of 3 (0, 3, 6, 9, 12, 15), so the key thresholds differ from characters. For mythic artifacts, costs increase sharply at the 8 → 9 and 14 → 15 ranges — keep that in mind when planning.
+H
+By Hotteok · Playing since Feb 2025 · 450 days
+Every number and recommendation on this page is verified in-game by the author and kept up to date.
+Published 2026-04-19Updated 2026-06-25How we verifyReport an error
+Related Pages
+Artifact Codex
+Stat Calculator
+Shard Requirements
+Character Tier List
+About·Privacy Policy·Copyright/DMCA·Terms of Service·Contact·Support·Report Issue
+Archero 2 is a trademark of Habby Pte. Ltd. Game data, names, images, and assets are © Habby Pte. Ltd. Archero2 Hub is an unofficial fan-run community resource and is not affiliated with, endorsed, or sponsored by Habby.
+Archero 2 HubSupport
+Event10
+Fishing Event Guide
+Gauge timing by fish grade and fishing mini-game guide.
+Fishing Shop Guide
+Shop purchase priority based on your etching unlock status.
+Twin Core Efficiency
+Twin Cores per fishing weight (kg) and cores per 1,000 kg, in one chart.
+Vibrant Voyage Core Efficiency
+A table of cumulative milestone rewards and badge/core efficiency per draw.
+Dice Guide
+Reach 100,000 points with the optimal dice multiplier strategy.
+Island Treasure Planner
+Calculate the dice you need for any target score and how short you are.
+Contract Mystling Guide
+Probabilities, milestones, and the fund breakdown for the Mystling Fool.
+Summon Event Guide
+9-stage milestone rewards, recommended route to reach the 400-pull pity in 3 months, cumulative Summon Points distribution, and single-pull reward probabilities.
+Event Missions
+Check resources required for each event mission.
+Redeem Codes
+Check the latest Archero 2 redeem codes and enter them right away.Guides12
+Twinborn Rune Guide
+Fuse two same-series runes (Enhancement, Ability, or Blessing) into a single slot. Rules, unlocks, and materials at a glance.
+Tracking Eye Guide
+How to maximize your odds of rolling Tracking — Rabbit Foot, Seraph, Symphony / Echo Scythe, Intelligence enchant, and ability picks.
+Best Spending Plan
+Buying priorities by monthly budget — get the most value for free, light, medium, and heavy spenders.
+Beginner's Roadmap
+Step-by-step progression guide from chapter 1 — what to prioritize, what to avoid, and how to clear early walls fast.
+Gem Spending Guide
+Where to spend (and not spend) your diamonds — Mythstone chests, Rune Ruins, and common F2P mistakes.
+Shop Buying Guide
+Purchase priority for Guild, Expedition, Island, Arena, and Event shops — by engraving unlock stage.
+Gear Sets Guide
+Compare Griffin, Oracle, and Dragoon set traits, F2P/low-spender pick strategy, and final PvP/PvE builds.
+Gear Swap Guide
+Scroll swap costs, sources, and best timing — plus series swap conditions, cooldown, and what carries over.
+Godforge Guide
+Upgrade conditions, set-specific material sources, and the weapon-first priority strategy for Godforge.
+Etched Rune Guide
+Unlock conditions, rune types, build-specific combinations, and where to obtain etched runes.
+Shackled Jungle Guide
+Rune Enchantment Stone content — boss mechanics, avoiding skip loss, recommended active skills and rune builds.
+Magic Plant Defense Guide
+Pet egg content — how it works, solo vs party differences, egg grade rates per stage, and recommended runes, skills, and characters.Calculators9
+Stat Calculator
+Calculate ATK/HP and set effects by artifact star level.
+Arrow Ability Calculator
+Compare expected damage and change rates by front/diagonal arrow ability combos.
+Character Shard Calculator
+Select character rarity and target star to calculate shard farming days.
+Gem Income Calculator
+Pick your Arena rank, Seal Battle group, and owned passes to estimate monthly gem income on a 4-week basis.
+Aeon Core Calculator
+Enter pity count, event days, target cores and find the optimal purchase plan.
+Rune Simulator
+Expected results per pull count and target rune achievement calculator.
+Rune Upgrade Calculator
+Pick the Epic+ runes you own to see how many more Epic runes you need for your target grade.
+Damage Efficiency
+Enter your current stat totals to see which stat gives the best damage efficiency to raise next.
+Vibrant Voyage Core Calculator
+Calculates the draws and cost to reach your core or relic shard goal, by luck percentile.LabNEW4
+Lightwing Arrow Test
+Lightwing Arrow proc rate and Lucky Cracker / Band-Aid synergy verified across 1,000 shots.
+Sprite Damage TestNEW
+How sprites inherit ATK, how sprite damage % stacks, and what the Assault rune adds, verified in-game.
+Damage FormulaNEW
+How one hit is calculated, which stats add and which multiply, and what changes per mode, verified in-game.
+Swift Arrow Test
+Verified in-game: Swift Arrow cuts damage by 20% and shrinks Energy Ring hit count.Characters4
+Character Catalog
+Hero abilities, star-breakthrough effects, and skin effects at a glance.
+Character Tier List
+Recommended character tiers for PvP and PvE modes.
+Character Resonance
+Recommended character resonance compositions for PvP and PvE.
+Shard Requirements
+View shard requirements per star level for Rare, Epic and Legendary characters.Artifacts2
+Artifact Codex
+Browse every artifact set bonus and individual effect on a single page.
+Artifact Shards
+View shard requirements per star level for Legendary and Mythic artifacts.Gear5
+Gear Tier List
+Recommended gear set combinations for PvP and PvE modes.
+Gear Effects
+Gear options by grade from Common to Chaotic, plus Godforge.
+Godforge
+Materials and effects needed to Godforge one gear from 0★ to 5★.
+Gear Fusion
+Fusion path and total materials from S Epic to S Chaotic.
+Gear Upgrade Cost
+Calculate gold and scrolls needed for gear upgrades.Runes6
+Rune Tier List
+Recommended rune tiers for PvP and PvE modes.
+Rune Effects
+Rune options and enchantments by grade, Common to Mythic.
+Rune Builds
+Recommended rune combinations and enchantments by equipment.
+Rune Enchantment Tier
+View enchantment options and tiers for each rune.
+Rune Fusion
+Base runes required to craft 1 Mythic rune with step-by-step fusion recipes.
+Twinborn Runes
+Twinborn Workshop unlock condition, 15 fusion groups across Enhancement, Ability & Blessing runes, Runic Remnant & Twinborn Core costs, and rune dismantle yield — all at a glance.Builds3
+Build Editor
+Compose a character, gear, and runes; share via link.
+Build Ranking
+Browse popular builds sorted by views.
+Tier List
+Rank characters, gear, and runes from S to D and share.Mystlings2
+Mystling Shard Cost
+Check the standard shard cost and cumulative total for Mystling 0 to 25 stars.
+Mystling Calculator
+Calculate event tickets and package plans for your target Mystling stars.View allSkill2
+Skill Catalog
+Browse every in-game skill with stats and effects.
+Skill Tier List
+Recommended skill tiers at a glance.GuildNEW6
+Guild Merchant
+Check bargain prices and recommendations for guild merchant items.
+Guild Research
+Effects and coin costs for all 27 guild research entries across combat, growth, and events.
+Guild RaidNEW
+Difficulty tiers, node layout, boss HP, settlement rewards and Frenzy Challenge.
+Guild BanquetNEW
+Festivity thresholds for 6 banquet tiers, red packet odds and expected value, cheer mechanics.
+Guild Boss
+Check the daily guild boss schedule and stats.
+Guild Boss Rewards
+View reward box contents for each damage milestone.Umbral Tempest4
+Universal Talent
+Calculate Umbral Tempest universal talent levels and total Virtus Dust cost.
+Class Talent
+Umbral Tempest class talent trees with recommended builds.
+Class Guide
+Umbral Tempest class tier list and recommendations — Ranger, Alchemist, Druid, Diviner.
+What to Buy (F2P)
+Recommended purchase order and item prices for the Abyssal Crystal & Gloom Shard shop.Achievements3
+Chapter Rewards
+Key rewards granted for clearing chapters 1–210.
+Hard Chapter Rewards
+Key rewards for clearing Hard difficulty chapters.
+Sky Tower Rewards
+Key rewards for reaching Sky Tower floors.View allMore1
+Sacred Hall
+Costs and unlock rewards for each Sacred Hall phase (LV1–LV24).
+Home
+Guide
+Event
+Tools
+All

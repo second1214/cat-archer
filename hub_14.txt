@@ -1,0 +1,223 @@
+Umbral Tempest Universal Talent · Archero 2
+Archero 2 HubSupport
+Home
+Umbral Tempest
+Universal Talent
+Universal Talent
+Calculate universal talent levels and total upgrade cost.
+Virtus Dust750Reset
+Auto-Fill
+OffensiveDefensiveBalanced
+Fill
+10
+MaxLv
+8
+8/10
+3
+3/10
+10
+MaxLv
+10
+MaxLv
+0/10
+3
+3/10
+10
+MaxLv
+3
+3/10
+6
+6/10
+3
+MaxLv
+2
+MaxLv
+5
+MaxLv
+5
+MaxLv
+0/5
+1
+1/3
+1
+1/3
+1
+1/15
+0/15
+Universal Talent Guide
+Universal Talents are a separate stat system that applies only inside Umbral Tempest. Character stats, relics, gear, and rune effects from chapters and bosses are all ignored — every player starts from the same base stats and levels up using Virtus Dust. That makes how you invest your Universal Talents your only stat-based edge for the season.
+This page offers three auto-allocation options (Offensive, Defensive, Balanced) along with a tool that lets you set levels manually and check the total Virtus Dust cost. The most efficient flow is to apply an auto-allocation first, then manually adjust a few talents to match the content you focus on.Read more
+Through the "Resonance Legacy" talent in the Universal Talents, you can place 2 characters in resonance slots inside Umbral Tempest just like the regular resonance system. You can progressively inherit not only the Slot 1 and Slot 2 effects, but also each slot's Skin 1 and Skin 2 effects — so place characters that synergize with your main class to leverage during the season.
+Recommendations by content: if your goal is clearing Ebonrot, a Balanced or Defensive build that emphasizes survivability is more stable; if you're aiming at the Speed/Damage rankings in Solitary Trial, an Offensive build is the better fit. Decide which content you'll spend more time on first, then choose your allocation.
+Universal Talents reset at the end of the season, and you have to gather Virtus Dust again next season to redistribute. Rather than forcing investments to max out late in the season because you have leftover resources, the common approach is to allocate just enough to clear the content you actually intend to play.
+Frequently Asked Questions
+QDo Universal Talents stack with my regular character stats?
+No. Universal Talents are exclusive to Umbral Tempest and don't apply to regular content like chapters and bosses. Conversely, inside Umbral Tempest your character stats, relics, gear, and rune effects are ignored and only Universal Talent stats work — so plan your allocation treating the two systems as separate.QWhich is better — Offensive, Defensive, or Balanced?
+It depends on the content you focus on. For content like Ebonrot where you have to survive a long time to clear, Balanced or Defensive is more stable; for the Speed/Damage rankings in Solitary Trial, Offensive is stronger. You can re-apply the auto-allocation every time you switch content.QHow do I farm Virtus Dust?
+Virtus Dust drops only from Umbral Tempest seasonal content (Solitary Trial, Doomsday, Ebonrot). It is not granted from season missions or store rewards, so you need to clear every available piece of content each week through the season to accumulate enough.QCan I reset my allocation if I make a mistake?
+Players without a pass can reset Universal Talents once per day, and pass holders can reset freely with no daily limit. You can change your allocation as you switch content, so feel free to try the auto-allocation options and then tune them to your playstyle.QDoes my Universal Talent allocation reset when the season ends?
+Yes — at the end of the season, Universal Talents and Virtus Dust spending records are reset. You'll need to gather Virtus Dust again next season, so it's better to spend everything within the season for results than to hoard resources at the very end.
+H
+By Hotteok · Playing since Feb 2025 · 450 days
+Every number and recommendation on this page is verified in-game by the author and kept up to date.
+Published 2026-04-21Updated 2026-05-10How we verifyReport an error
+Related Pages
+Class Talent
+Class Guide
+What to Buy (F2P)
+Tier List
+About·Privacy Policy·Copyright/DMCA·Terms of Service·Contact·Support·Report Issue
+Archero 2 is a trademark of Habby Pte. Ltd. Game data, names, images, and assets are © Habby Pte. Ltd. Archero2 Hub is an unofficial fan-run community resource and is not affiliated with, endorsed, or sponsored by Habby.
+Archero 2 HubSupport
+Event10
+Fishing Event Guide
+Gauge timing by fish grade and fishing mini-game guide.
+Fishing Shop Guide
+Shop purchase priority based on your etching unlock status.
+Twin Core Efficiency
+Twin Cores per fishing weight (kg) and cores per 1,000 kg, in one chart.
+Vibrant Voyage Core Efficiency
+A table of cumulative milestone rewards and badge/core efficiency per draw.
+Dice Guide
+Reach 100,000 points with the optimal dice multiplier strategy.
+Island Treasure Planner
+Calculate the dice you need for any target score and how short you are.
+Contract Mystling Guide
+Probabilities, milestones, and the fund breakdown for the Mystling Fool.
+Summon Event Guide
+9-stage milestone rewards, recommended route to reach the 400-pull pity in 3 months, cumulative Summon Points distribution, and single-pull reward probabilities.
+Event Missions
+Check resources required for each event mission.
+Redeem Codes
+Check the latest Archero 2 redeem codes and enter them right away.Guides12
+Twinborn Rune Guide
+Fuse two same-series runes (Enhancement, Ability, or Blessing) into a single slot. Rules, unlocks, and materials at a glance.
+Tracking Eye Guide
+How to maximize your odds of rolling Tracking — Rabbit Foot, Seraph, Symphony / Echo Scythe, Intelligence enchant, and ability picks.
+Best Spending Plan
+Buying priorities by monthly budget — get the most value for free, light, medium, and heavy spenders.
+Beginner's Roadmap
+Step-by-step progression guide from chapter 1 — what to prioritize, what to avoid, and how to clear early walls fast.
+Gem Spending Guide
+Where to spend (and not spend) your diamonds — Mythstone chests, Rune Ruins, and common F2P mistakes.
+Shop Buying Guide
+Purchase priority for Guild, Expedition, Island, Arena, and Event shops — by engraving unlock stage.
+Gear Sets Guide
+Compare Griffin, Oracle, and Dragoon set traits, F2P/low-spender pick strategy, and final PvP/PvE builds.
+Gear Swap Guide
+Scroll swap costs, sources, and best timing — plus series swap conditions, cooldown, and what carries over.
+Godforge Guide
+Upgrade conditions, set-specific material sources, and the weapon-first priority strategy for Godforge.
+Etched Rune Guide
+Unlock conditions, rune types, build-specific combinations, and where to obtain etched runes.
+Shackled Jungle Guide
+Rune Enchantment Stone content — boss mechanics, avoiding skip loss, recommended active skills and rune builds.
+Magic Plant Defense Guide
+Pet egg content — how it works, solo vs party differences, egg grade rates per stage, and recommended runes, skills, and characters.Calculators9
+Stat Calculator
+Calculate ATK/HP and set effects by artifact star level.
+Arrow Ability Calculator
+Compare expected damage and change rates by front/diagonal arrow ability combos.
+Character Shard Calculator
+Select character rarity and target star to calculate shard farming days.
+Gem Income Calculator
+Pick your Arena rank, Seal Battle group, and owned passes to estimate monthly gem income on a 4-week basis.
+Aeon Core Calculator
+Enter pity count, event days, target cores and find the optimal purchase plan.
+Rune Simulator
+Expected results per pull count and target rune achievement calculator.
+Rune Upgrade Calculator
+Pick the Epic+ runes you own to see how many more Epic runes you need for your target grade.
+Damage Efficiency
+Enter your current stat totals to see which stat gives the best damage efficiency to raise next.
+Vibrant Voyage Core Calculator
+Calculates the draws and cost to reach your core or relic shard goal, by luck percentile.LabNEW4
+Lightwing Arrow Test
+Lightwing Arrow proc rate and Lucky Cracker / Band-Aid synergy verified across 1,000 shots.
+Sprite Damage TestNEW
+How sprites inherit ATK, how sprite damage % stacks, and what the Assault rune adds, verified in-game.
+Damage FormulaNEW
+How one hit is calculated, which stats add and which multiply, and what changes per mode, verified in-game.
+Swift Arrow Test
+Verified in-game: Swift Arrow cuts damage by 20% and shrinks Energy Ring hit count.Characters4
+Character Catalog
+Hero abilities, star-breakthrough effects, and skin effects at a glance.
+Character Tier List
+Recommended character tiers for PvP and PvE modes.
+Character Resonance
+Recommended character resonance compositions for PvP and PvE.
+Shard Requirements
+View shard requirements per star level for Rare, Epic and Legendary characters.Artifacts2
+Artifact Codex
+Browse every artifact set bonus and individual effect on a single page.
+Artifact Shards
+View shard requirements per star level for Legendary and Mythic artifacts.Gear5
+Gear Tier List
+Recommended gear set combinations for PvP and PvE modes.
+Gear Effects
+Gear options by grade from Common to Chaotic, plus Godforge.
+Godforge
+Materials and effects needed to Godforge one gear from 0★ to 5★.
+Gear Fusion
+Fusion path and total materials from S Epic to S Chaotic.
+Gear Upgrade Cost
+Calculate gold and scrolls needed for gear upgrades.Runes6
+Rune Tier List
+Recommended rune tiers for PvP and PvE modes.
+Rune Effects
+Rune options and enchantments by grade, Common to Mythic.
+Rune Builds
+Recommended rune combinations and enchantments by equipment.
+Rune Enchantment Tier
+View enchantment options and tiers for each rune.
+Rune Fusion
+Base runes required to craft 1 Mythic rune with step-by-step fusion recipes.
+Twinborn Runes
+Twinborn Workshop unlock condition, 15 fusion groups across Enhancement, Ability & Blessing runes, Runic Remnant & Twinborn Core costs, and rune dismantle yield — all at a glance.Builds3
+Build Editor
+Compose a character, gear, and runes; share via link.
+Build Ranking
+Browse popular builds sorted by views.
+Tier List
+Rank characters, gear, and runes from S to D and share.Mystlings2
+Mystling Shard Cost
+Check the standard shard cost and cumulative total for Mystling 0 to 25 stars.
+Mystling Calculator
+Calculate event tickets and package plans for your target Mystling stars.View allSkill2
+Skill Catalog
+Browse every in-game skill with stats and effects.
+Skill Tier List
+Recommended skill tiers at a glance.GuildNEW6
+Guild Merchant
+Check bargain prices and recommendations for guild merchant items.
+Guild Research
+Effects and coin costs for all 27 guild research entries across combat, growth, and events.
+Guild RaidNEW
+Difficulty tiers, node layout, boss HP, settlement rewards and Frenzy Challenge.
+Guild BanquetNEW
+Festivity thresholds for 6 banquet tiers, red packet odds and expected value, cheer mechanics.
+Guild Boss
+Check the daily guild boss schedule and stats.
+Guild Boss Rewards
+View reward box contents for each damage milestone.Umbral Tempest4
+Universal Talent
+Calculate Umbral Tempest universal talent levels and total Virtus Dust cost.
+Class Talent
+Umbral Tempest class talent trees with recommended builds.
+Class Guide
+Umbral Tempest class tier list and recommendations — Ranger, Alchemist, Druid, Diviner.
+What to Buy (F2P)
+Recommended purchase order and item prices for the Abyssal Crystal & Gloom Shard shop.Achievements3
+Chapter Rewards
+Key rewards granted for clearing chapters 1–210.
+Hard Chapter Rewards
+Key rewards for clearing Hard difficulty chapters.
+Sky Tower Rewards
+Key rewards for reaching Sky Tower floors.View allMore1
+Sacred Hall
+Costs and unlock rewards for each Sacred Hall phase (LV1–LV24).
+Home
+Guide
+Event
+Tools
+All

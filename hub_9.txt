@@ -1,0 +1,277 @@
+Mystling Plant Defense Guide · Archero 2
+Archero 2 HubSupport
+Home
+Guides
+Magic Plant Defense Guide
+Magic Plant Defense Guide
+Content for earning eggs that hatch into pets — boss mechanics, solo vs party play, egg drop rates per stage, and recommended builds.
+Published: 2026-05-04Updated: 2026-05-04
+What is Magic Plant Defense?
+Magic Plant Defense is the content where you earn eggs that hatch into pets. Like Shackled Jungle, three bosses appear at fixed intervals, and you must protect the "plant" from each boss and the surrounding mobs.
+Defeating the final (third) boss clears the run. Character Resonance, gear, runes, and Rune Enchantment all apply, so your full spec is directly reflected in performance.
+What Applies
+Unlike Shackled Jungle, every upgrade applies in Magic Plant Defense.
+Character Resonance
+Gear
+Runes
+Rune Enchantment
+Tickets · Weekly Rewards
+×3
+Weekly Grant
+Granted every Monday. If you already hold 3 or more tickets, no grant is given. If you hold 1 or 2, your count is topped up to 3 — not added on top.
+×1
+Daily Mission
+You can earn 1 ticket per day from the daily missions.
+Full Weekly Rewards (20 plays total)
+×10Solo Play
++
+×10Play With Others=
+×20Weekly Total
+Solo Play×10
++
+Play With Others×10
+=
+Weekly Total×20
+To collect every weekly reward, you must run up to 10 solo challenges plus another 10 party plays.
+Entry Modes — Solo vs Party
+Magic Plant Defense can be done solo or in a 2-player party.
+Difficulty and ticket consumption depend on which you choose.
+Solo Challenge
+Run alone. With enough spec, you can clear at your own pace and stay stable.
+Consumes 1 of your tickets
+Need enough firepower to handle mobs from all four directions
+Recommended for stages you can clear yourself when no party is available
+Party Challenge
+Run with a 2-player party. Mob HP is multiplied by 1.5x, but a strong partner makes the clear stable.
+Monster HP x1.5
+If you invite, your ticket is consumed
+If you're invited, the inviter's ticket is consumed
+Egg Drops by Ticket Source
+×3 ~ 5
+Your Ticket Used
+Solo run · party you invited
+×2 ~ 3
+Other Player's Ticket
+When invited to another player's party
+On clear. The number of eggs dropped depends on whose ticket was consumed.
+Gameplay Strategy
+Clear out every mob rushing toward the plant. If the plant dies, the stage fails — and you get no eggs.
+Bomb monsters charge in fast, so use freeze effects or strong burst damage to take them out quickly.
+Drops on Monster Kill
+Level-Up Star
+A white star drops near the plant whenever you kill a monster. Picking it up speeds up the next boss spawn so you can clear faster.
+Tip
+If you don't have the firepower to take down a boss, skipping the stars and focusing on leveling up first is also a valid approach.
+Warning
+If you fail to the final (third) boss, you don't earn any eggs. You can, however, still get a partial Spirit Pact Seed reward.
+Rewards — Egg Grade Rates
+Rewards are rolled by stage-specific rates. You can randomly receive Spirit Pact Seeds and eggs (Rare / Epic / Legendary).
+The higher the stage you clear, the higher your chance of pulling a higher-grade egg.
+Spirit Pact Seed
+Material used for pet Hall promotion. Earned together with eggs on clear.
+Egg Grade Rates by Stage
+181 ~ 190
+Rare Egg73%
+Epic Egg22%
+Legendary Egg5%
+191 ~ 200
+Rare Egg70%
+Epic Egg24%
+Legendary Egg6%
+Push as far as possible — clearing higher stages gives a meaningfully better chance at higher-grade eggs.
+Recommended Characters
+Cleo
+Strong burst damage
+Seraph (8★)
+Boosts Valkyrie and skill proc rates
+Thor
+Can attack while moving
+Recommended Skills
+These are the priority active skills to pick when bosses go down.
+Outside of these, just take whatever you usually pick for PvE.
+Tracking Eye
+Energy Ring
+Energy Beam
+Recommended Runes · Enchantments
+Rune setup focused on clearing rushing mobs quickly.
+For full rune combinations see Rune Builds →
+Enhancement Runes
+Sharp Arrow
+Main weapon Bounce +4
+Lets you sweep waves of monsters quickly with AoE.
+Dragonflight Sword
+Cannon Dragonflight enchant
+For boosting boss firepower. Strongly recommended if you have it.
+Etched Runes
+Orbital Orb
+Steady AoE damage that stacks up over time.
+Frequently Asked Questions
+QI didn't get my weekly tickets.
+If you already hold 3 or more tickets when Monday's grant runs, no additional tickets are given. If you hold 1 or 2, your total is topped up to 3 — not added on top. Use up your tickets before grant day each week to make sure you collect every grant.QWhich is more efficient — solo or party?
+To collect the full weekly rewards you need to do both (10 each, 20 total). If your spec is strong enough, run solo for stable clears. If not, get a strong partner and ride along in party mode for an efficient bus.QAre there any rewards if I fail at the final boss?
+You don't earn any eggs, but you can still get a partial Spirit Pact Seed drop. If you feel your boss damage is short, it's safer for total egg accumulation to stick with a stage you can reliably clear and farm the egg-grade rates there.QWhat is the white star that drops when I kill monsters?
+It's a level-up / boss-spawn acceleration item. Picking it up speeds up the boss spawn timing. When you don't have the firepower to take down the boss, deliberately skipping the stars and focusing on clearing regular mobs to level up is also a solid play.
+H
+By Hotteok · Playing since Feb 2025 · 450 days
+Every number and recommendation on this page is verified in-game by the author and kept up to date.
+Published 2026-05-04Updated 2026-05-04How we verifyReport an error
+Related Pages
+Mystling Shard Cost
+Shackled Jungle Guide
+Character Tier List
+Rune Builds
+About·Privacy Policy·Copyright/DMCA·Terms of Service·Contact·Support·Report Issue
+Archero 2 is a trademark of Habby Pte. Ltd. Game data, names, images, and assets are © Habby Pte. Ltd. Archero2 Hub is an unofficial fan-run community resource and is not affiliated with, endorsed, or sponsored by Habby.
+Archero 2 HubSupport
+Event10
+Fishing Event Guide
+Gauge timing by fish grade and fishing mini-game guide.
+Fishing Shop Guide
+Shop purchase priority based on your etching unlock status.
+Twin Core Efficiency
+Twin Cores per fishing weight (kg) and cores per 1,000 kg, in one chart.
+Vibrant Voyage Core Efficiency
+A table of cumulative milestone rewards and badge/core efficiency per draw.
+Dice Guide
+Reach 100,000 points with the optimal dice multiplier strategy.
+Island Treasure Planner
+Calculate the dice you need for any target score and how short you are.
+Contract Mystling Guide
+Probabilities, milestones, and the fund breakdown for the Mystling Fool.
+Summon Event Guide
+9-stage milestone rewards, recommended route to reach the 400-pull pity in 3 months, cumulative Summon Points distribution, and single-pull reward probabilities.
+Event Missions
+Check resources required for each event mission.
+Redeem Codes
+Check the latest Archero 2 redeem codes and enter them right away.Guides12
+Twinborn Rune Guide
+Fuse two same-series runes (Enhancement, Ability, or Blessing) into a single slot. Rules, unlocks, and materials at a glance.
+Tracking Eye Guide
+How to maximize your odds of rolling Tracking — Rabbit Foot, Seraph, Symphony / Echo Scythe, Intelligence enchant, and ability picks.
+Best Spending Plan
+Buying priorities by monthly budget — get the most value for free, light, medium, and heavy spenders.
+Beginner's Roadmap
+Step-by-step progression guide from chapter 1 — what to prioritize, what to avoid, and how to clear early walls fast.
+Gem Spending Guide
+Where to spend (and not spend) your diamonds — Mythstone chests, Rune Ruins, and common F2P mistakes.
+Shop Buying Guide
+Purchase priority for Guild, Expedition, Island, Arena, and Event shops — by engraving unlock stage.
+Gear Sets Guide
+Compare Griffin, Oracle, and Dragoon set traits, F2P/low-spender pick strategy, and final PvP/PvE builds.
+Gear Swap Guide
+Scroll swap costs, sources, and best timing — plus series swap conditions, cooldown, and what carries over.
+Godforge Guide
+Upgrade conditions, set-specific material sources, and the weapon-first priority strategy for Godforge.
+Etched Rune Guide
+Unlock conditions, rune types, build-specific combinations, and where to obtain etched runes.
+Shackled Jungle Guide
+Rune Enchantment Stone content — boss mechanics, avoiding skip loss, recommended active skills and rune builds.
+Magic Plant Defense Guide
+Pet egg content — how it works, solo vs party differences, egg grade rates per stage, and recommended runes, skills, and characters.Calculators9
+Stat Calculator
+Calculate ATK/HP and set effects by artifact star level.
+Arrow Ability Calculator
+Compare expected damage and change rates by front/diagonal arrow ability combos.
+Character Shard Calculator
+Select character rarity and target star to calculate shard farming days.
+Gem Income Calculator
+Pick your Arena rank, Seal Battle group, and owned passes to estimate monthly gem income on a 4-week basis.
+Aeon Core Calculator
+Enter pity count, event days, target cores and find the optimal purchase plan.
+Rune Simulator
+Expected results per pull count and target rune achievement calculator.
+Rune Upgrade Calculator
+Pick the Epic+ runes you own to see how many more Epic runes you need for your target grade.
+Damage Efficiency
+Enter your current stat totals to see which stat gives the best damage efficiency to raise next.
+Vibrant Voyage Core Calculator
+Calculates the draws and cost to reach your core or relic shard goal, by luck percentile.LabNEW4
+Lightwing Arrow Test
+Lightwing Arrow proc rate and Lucky Cracker / Band-Aid synergy verified across 1,000 shots.
+Sprite Damage TestNEW
+How sprites inherit ATK, how sprite damage % stacks, and what the Assault rune adds, verified in-game.
+Damage FormulaNEW
+How one hit is calculated, which stats add and which multiply, and what changes per mode, verified in-game.
+Swift Arrow Test
+Verified in-game: Swift Arrow cuts damage by 20% and shrinks Energy Ring hit count.Characters4
+Character Catalog
+Hero abilities, star-breakthrough effects, and skin effects at a glance.
+Character Tier List
+Recommended character tiers for PvP and PvE modes.
+Character Resonance
+Recommended character resonance compositions for PvP and PvE.
+Shard Requirements
+View shard requirements per star level for Rare, Epic and Legendary characters.Artifacts2
+Artifact Codex
+Browse every artifact set bonus and individual effect on a single page.
+Artifact Shards
+View shard requirements per star level for Legendary and Mythic artifacts.Gear5
+Gear Tier List
+Recommended gear set combinations for PvP and PvE modes.
+Gear Effects
+Gear options by grade from Common to Chaotic, plus Godforge.
+Godforge
+Materials and effects needed to Godforge one gear from 0★ to 5★.
+Gear Fusion
+Fusion path and total materials from S Epic to S Chaotic.
+Gear Upgrade Cost
+Calculate gold and scrolls needed for gear upgrades.Runes6
+Rune Tier List
+Recommended rune tiers for PvP and PvE modes.
+Rune Effects
+Rune options and enchantments by grade, Common to Mythic.
+Rune Builds
+Recommended rune combinations and enchantments by equipment.
+Rune Enchantment Tier
+View enchantment options and tiers for each rune.
+Rune Fusion
+Base runes required to craft 1 Mythic rune with step-by-step fusion recipes.
+Twinborn Runes
+Twinborn Workshop unlock condition, 15 fusion groups across Enhancement, Ability & Blessing runes, Runic Remnant & Twinborn Core costs, and rune dismantle yield — all at a glance.Builds3
+Build Editor
+Compose a character, gear, and runes; share via link.
+Build Ranking
+Browse popular builds sorted by views.
+Tier List
+Rank characters, gear, and runes from S to D and share.Mystlings2
+Mystling Shard Cost
+Check the standard shard cost and cumulative total for Mystling 0 to 25 stars.
+Mystling Calculator
+Calculate event tickets and package plans for your target Mystling stars.View allSkill2
+Skill Catalog
+Browse every in-game skill with stats and effects.
+Skill Tier List
+Recommended skill tiers at a glance.GuildNEW6
+Guild Merchant
+Check bargain prices and recommendations for guild merchant items.
+Guild Research
+Effects and coin costs for all 27 guild research entries across combat, growth, and events.
+Guild RaidNEW
+Difficulty tiers, node layout, boss HP, settlement rewards and Frenzy Challenge.
+Guild BanquetNEW
+Festivity thresholds for 6 banquet tiers, red packet odds and expected value, cheer mechanics.
+Guild Boss
+Check the daily guild boss schedule and stats.
+Guild Boss Rewards
+View reward box contents for each damage milestone.Umbral Tempest4
+Universal Talent
+Calculate Umbral Tempest universal talent levels and total Virtus Dust cost.
+Class Talent
+Umbral Tempest class talent trees with recommended builds.
+Class Guide
+Umbral Tempest class tier list and recommendations — Ranger, Alchemist, Druid, Diviner.
+What to Buy (F2P)
+Recommended purchase order and item prices for the Abyssal Crystal & Gloom Shard shop.Achievements3
+Chapter Rewards
+Key rewards granted for clearing chapters 1–210.
+Hard Chapter Rewards
+Key rewards for clearing Hard difficulty chapters.
+Sky Tower Rewards
+Key rewards for reaching Sky Tower floors.View allMore1
+Sacred Hall
+Costs and unlock rewards for each Sacred Hall phase (LV1–LV24).
+Home
+Guide
+Event
+Tools
+All

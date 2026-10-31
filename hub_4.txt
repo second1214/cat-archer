@@ -1,0 +1,342 @@
+Is the Contract Mystling Fund Worth It? Archero 2 Event Guide
+Archero 2 HubSupport
+Home
+Event
+Contract Mystling Guide
+Contract Mystling Guide
+Probabilities, milestones, and the fund breakdown for unlocking the limited Mystling Fool.
+Limited Mystling Fool
+Recommended path
+Buy the fund — claim the Mystling Fool
+Mission rewards + free package + free fund + paid fund stack to a median of 180 hearts — enough to claim the 180-heart Mystling Fool.
+Heart sources129draws
+Mission clear
++65draws
+Free package
++7draws
+Free fund
++7draws
+Paid Aurora fund
++50draws
+1,499
+Aurora→
+180
+median hearts→
+Mystling Fool
+×1
+1
+OVERVIEW
+At a Glance
+Avg Hearts / Draw
+1.21
+excl. ≥10× procs
+Critical Proc
+15%
+≥2× combined
+Reach 120 Hearts
+~88
+draws (median)
+Max Mystling Fools
+×80
+across 4,920 hearts
+2
+Probability Simulation
+Heart Distribution Across the Recommended Run
+Monte Carlo over 10,000 runs of 129 draws. The average alone hides the swing from rare crits — these percentiles show the realistic spread.
+Top 1%
+273hearts
+60120180
+Reaches 180
+Top 10%
+224hearts
+60120180
+Reaches 180
+Top 25%
+201hearts
+60120180
+Reaches 180
+Top 50%
+180hearts
+60120180
+Reaches 180
+Top 75%
+165hearts
+60120180
+Reaches 120
+Top 99%
+146hearts
+60120180
+Reaches 120
+3
+Heart Milestones
+Cumulative Reward Track
+Median draws to milestone: ~46 for 60 hearts, ~88 for 120 hearts.
+Fund vs no fundmedian hearts
+Free only(79 draws)108
++ Aurora fund(129 draws)180
+060120180240
+60
+Epic Mystling Egg ×4
+120
+Legendary Mystling Egg ×2
+180
+1× Mystling Fool
+Repeats every 60 hearts after 180
+From 180 to 4,920 hearts, every 60-heart step grants one Mystling Fool (80 total).
+4
+Critical Multiplier
+Multiplier Roll Per Draw
+Each draw rolls a critical multiplier. The result multiplies only the hearts banked toward milestones — the reward itself is not multiplied. Example: 1 draw (300 coin) + 5× crit → 5 hearts banked + 300 coin.
+1×85%
+2×8.3%
+3×4.0%
+5×1.5%
+<1%10×0.6%
+<1%20×0.3%
+<1%30×0.2%
+<1%50×0.1%
+Raw average is 1.44, but the rare ≥10× procs (each <1%) may not appear at all in 100 draws. Excluding them gives a conservative average of 1.21 — the figure used everywhere else on this page.
+5
+Single Draw
+Per-Draw Reward Pool
+Probability of each reward when you send a single heart gift. A critical proc does not multiply this reward itself.
+Contract Coin×1,000
+1.0%
+Contract Coin×600
+3.0%
+Contract Coin×300
+6.0%
+Wish Coin×1
+10%
+Premium Shovel×1
+10%
+Random Rare Shard×1
+10%
+Contract Coin×200
+15%
+Gold×2,000
+10%
+Equip Scroll×5
+10%
+Contract Coin×100
+25%
+6
+Fund
+Contract Mystling Fund (1499 Aurora)
+A one-time fund that grants daily draws over 7 days. Days 4–7 increase the paid daily draws.
+Contract Mystling Fund
+1,499·one-time purchase
+Free
+7
+Fund
++50
+Total Draws
+57
+ | Day
+ | Free
+ | Fund
+ | Total
+ | Day 1
+ | 1
+ | +6
+ | 7
+ | Day 2
+ | 1
+ | +6
+ | 7
+ | Day 3
+ | 1
+ | +6
+ | 7
+ | Day 4
+ | 1
+ | +8
+ | 9
+ | Day 5
+ | 1
+ | +8
+ | 9
+ | Day 6
+ | 1
+ | +8
+ | 9
+ | Day 7
+ | 1
+ | +8
+ | 9
+Buying the fund yields 50 draws → ~61 hearts on average (varies with critical procs).
+Contract Mystling Event Guide
+The Contract Mystling event is a limited event built around the limited mystling "Joker." You earn milestone rewards from cumulative hearts and secure Joker at the final milestone (120 hearts). Because Joker is a limited mystling that will not return for some time after the event ends, a full clear is strongly recommended even for free-to-play and light-spending players.
+This page consolidates the single-draw reward distribution, the cumulative-heart milestones, and the 1499 Aurora fund composition into one view. The recommended route combines mission hearts, free packages, and both free and paid funds — this puts you on track to reach the 120-heart milestone reliably at the median outcome.Read more
+A critical multiplier triggers on draws at a fixed probability, which significantly widens the variance of cumulative hearts. Planning around the average alone risks missing the milestone in unlucky scenarios. The "Probability distribution simulation" on this page is the result of 10,000 simulated runs of the recommended route, so you can preview milestone-achievement rates across upper and lower scenarios.
+The fund alone may fall slightly short of an average 120 hearts, so the key is to claim every daily free draw and every in-game heart reward. The most efficient flow is to log in daily for the free draw, claim all mission heart rewards, then top up with fund or package purchases for whatever is missing.
+Frequently Asked Questions
+QDo I really need to secure Joker?
+Joker is a limited mystling and will not be obtainable again for some time after the event ends. The thinner your mystling roster, the more value securing Joker brings — so even free-to-play and light-spending players should follow the recommended route on this page and aim for a full clear.QDo I have to buy the 1499 Aurora fund?
+The recommended route assumes you buy the 1499 fund. Reaching the 120-heart milestone with free rewards alone is difficult. That said, if your spending budget is tight, daily free draws and mission hearts will still get you some of the milestones — make the call based on what your resources allow.QIs the average heart count enough to plan around?
+No — because the critical multiplier triggers probabilistically on each draw, cumulative hearts spread widely around the mean. In unlucky scenarios you may end up one milestone tier below the average. Check the upper-75% and lower-25% bands on this page's distribution simulation as well.QWhere do I get mission hearts?
+Hearts are awarded for clearing missions on the in-game event mission screen. Use the Event Missions page on this site to compare mission progress and currency requirements alongside other events.
+H
+By Hotteok · Playing since Feb 2025 · 450 days
+Every number and recommendation on this page is verified in-game by the author and kept up to date.
+Published 2026-04-25Updated 2026-05-24How we verifyReport an error
+Related Pages
+Dice Guide
+Event Missions
+Aeon Core Calculator
+Redeem Codes
+About·Privacy Policy·Copyright/DMCA·Terms of Service·Contact·Support·Report Issue
+Archero 2 is a trademark of Habby Pte. Ltd. Game data, names, images, and assets are © Habby Pte. Ltd. Archero2 Hub is an unofficial fan-run community resource and is not affiliated with, endorsed, or sponsored by Habby.
+Archero 2 HubSupport
+Event10
+Fishing Event Guide
+Gauge timing by fish grade and fishing mini-game guide.
+Fishing Shop Guide
+Shop purchase priority based on your etching unlock status.
+Twin Core Efficiency
+Twin Cores per fishing weight (kg) and cores per 1,000 kg, in one chart.
+Vibrant Voyage Core Efficiency
+A table of cumulative milestone rewards and badge/core efficiency per draw.
+Dice Guide
+Reach 100,000 points with the optimal dice multiplier strategy.
+Island Treasure Planner
+Calculate the dice you need for any target score and how short you are.
+Contract Mystling Guide
+Probabilities, milestones, and the fund breakdown for the Mystling Fool.
+Summon Event Guide
+9-stage milestone rewards, recommended route to reach the 400-pull pity in 3 months, cumulative Summon Points distribution, and single-pull reward probabilities.
+Event Missions
+Check resources required for each event mission.
+Redeem Codes
+Check the latest Archero 2 redeem codes and enter them right away.Guides12
+Twinborn Rune Guide
+Fuse two same-series runes (Enhancement, Ability, or Blessing) into a single slot. Rules, unlocks, and materials at a glance.
+Tracking Eye Guide
+How to maximize your odds of rolling Tracking — Rabbit Foot, Seraph, Symphony / Echo Scythe, Intelligence enchant, and ability picks.
+Best Spending Plan
+Buying priorities by monthly budget — get the most value for free, light, medium, and heavy spenders.
+Beginner's Roadmap
+Step-by-step progression guide from chapter 1 — what to prioritize, what to avoid, and how to clear early walls fast.
+Gem Spending Guide
+Where to spend (and not spend) your diamonds — Mythstone chests, Rune Ruins, and common F2P mistakes.
+Shop Buying Guide
+Purchase priority for Guild, Expedition, Island, Arena, and Event shops — by engraving unlock stage.
+Gear Sets Guide
+Compare Griffin, Oracle, and Dragoon set traits, F2P/low-spender pick strategy, and final PvP/PvE builds.
+Gear Swap Guide
+Scroll swap costs, sources, and best timing — plus series swap conditions, cooldown, and what carries over.
+Godforge Guide
+Upgrade conditions, set-specific material sources, and the weapon-first priority strategy for Godforge.
+Etched Rune Guide
+Unlock conditions, rune types, build-specific combinations, and where to obtain etched runes.
+Shackled Jungle Guide
+Rune Enchantment Stone content — boss mechanics, avoiding skip loss, recommended active skills and rune builds.
+Magic Plant Defense Guide
+Pet egg content — how it works, solo vs party differences, egg grade rates per stage, and recommended runes, skills, and characters.Calculators9
+Stat Calculator
+Calculate ATK/HP and set effects by artifact star level.
+Arrow Ability Calculator
+Compare expected damage and change rates by front/diagonal arrow ability combos.
+Character Shard Calculator
+Select character rarity and target star to calculate shard farming days.
+Gem Income Calculator
+Pick your Arena rank, Seal Battle group, and owned passes to estimate monthly gem income on a 4-week basis.
+Aeon Core Calculator
+Enter pity count, event days, target cores and find the optimal purchase plan.
+Rune Simulator
+Expected results per pull count and target rune achievement calculator.
+Rune Upgrade Calculator
+Pick the Epic+ runes you own to see how many more Epic runes you need for your target grade.
+Damage Efficiency
+Enter your current stat totals to see which stat gives the best damage efficiency to raise next.
+Vibrant Voyage Core Calculator
+Calculates the draws and cost to reach your core or relic shard goal, by luck percentile.LabNEW4
+Lightwing Arrow Test
+Lightwing Arrow proc rate and Lucky Cracker / Band-Aid synergy verified across 1,000 shots.
+Sprite Damage TestNEW
+How sprites inherit ATK, how sprite damage % stacks, and what the Assault rune adds, verified in-game.
+Damage FormulaNEW
+How one hit is calculated, which stats add and which multiply, and what changes per mode, verified in-game.
+Swift Arrow Test
+Verified in-game: Swift Arrow cuts damage by 20% and shrinks Energy Ring hit count.Characters4
+Character Catalog
+Hero abilities, star-breakthrough effects, and skin effects at a glance.
+Character Tier List
+Recommended character tiers for PvP and PvE modes.
+Character Resonance
+Recommended character resonance compositions for PvP and PvE.
+Shard Requirements
+View shard requirements per star level for Rare, Epic and Legendary characters.Artifacts2
+Artifact Codex
+Browse every artifact set bonus and individual effect on a single page.
+Artifact Shards
+View shard requirements per star level for Legendary and Mythic artifacts.Gear5
+Gear Tier List
+Recommended gear set combinations for PvP and PvE modes.
+Gear Effects
+Gear options by grade from Common to Chaotic, plus Godforge.
+Godforge
+Materials and effects needed to Godforge one gear from 0★ to 5★.
+Gear Fusion
+Fusion path and total materials from S Epic to S Chaotic.
+Gear Upgrade Cost
+Calculate gold and scrolls needed for gear upgrades.Runes6
+Rune Tier List
+Recommended rune tiers for PvP and PvE modes.
+Rune Effects
+Rune options and enchantments by grade, Common to Mythic.
+Rune Builds
+Recommended rune combinations and enchantments by equipment.
+Rune Enchantment Tier
+View enchantment options and tiers for each rune.
+Rune Fusion
+Base runes required to craft 1 Mythic rune with step-by-step fusion recipes.
+Twinborn Runes
+Twinborn Workshop unlock condition, 15 fusion groups across Enhancement, Ability & Blessing runes, Runic Remnant & Twinborn Core costs, and rune dismantle yield — all at a glance.Builds3
+Build Editor
+Compose a character, gear, and runes; share via link.
+Build Ranking
+Browse popular builds sorted by views.
+Tier List
+Rank characters, gear, and runes from S to D and share.Mystlings2
+Mystling Shard Cost
+Check the standard shard cost and cumulative total for Mystling 0 to 25 stars.
+Mystling Calculator
+Calculate event tickets and package plans for your target Mystling stars.View allSkill2
+Skill Catalog
+Browse every in-game skill with stats and effects.
+Skill Tier List
+Recommended skill tiers at a glance.GuildNEW6
+Guild Merchant
+Check bargain prices and recommendations for guild merchant items.
+Guild Research
+Effects and coin costs for all 27 guild research entries across combat, growth, and events.
+Guild RaidNEW
+Difficulty tiers, node layout, boss HP, settlement rewards and Frenzy Challenge.
+Guild BanquetNEW
+Festivity thresholds for 6 banquet tiers, red packet odds and expected value, cheer mechanics.
+Guild Boss
+Check the daily guild boss schedule and stats.
+Guild Boss Rewards
+View reward box contents for each damage milestone.Umbral Tempest4
+Universal Talent
+Calculate Umbral Tempest universal talent levels and total Virtus Dust cost.
+Class Talent
+Umbral Tempest class talent trees with recommended builds.
+Class Guide
+Umbral Tempest class tier list and recommendations — Ranger, Alchemist, Druid, Diviner.
+What to Buy (F2P)
+Recommended purchase order and item prices for the Abyssal Crystal & Gloom Shard shop.Achievements3
+Chapter Rewards
+Key rewards granted for clearing chapters 1–210.
+Hard Chapter Rewards
+Key rewards for clearing Hard difficulty chapters.
+Sky Tower Rewards
+Key rewards for reaching Sky Tower floors.View allMore1
+Sacred Hall
+Costs and unlock rewards for each Sacred Hall phase (LV1–LV24).
+Home
+Guide
+Event
+Tools
+All
