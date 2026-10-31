@@ -53,7 +53,7 @@ export interface Enemy {
   mode: number;               // 行動の段階（突進の ため・突進 など）
   dx: number; dy: number;     // 突進の向き
   slow: number;
-  burn: number; burnDps: number;
+  burn: number; burnDps: number; boomT: number;
   poison: number;
   dotAcc: number; dotT: number;
   flash: number;
@@ -152,15 +152,17 @@ export class World implements StrikeHost {
   n(id: SkillId): number { return this.skills[id] ?? 0; }
   get atk(): number { return this.lo.atk * (1 + 0.25 * this.n("atk")) * (this.revived ? 1 + this.rune.revive.atkAfter : 1); }
   get interval(): number { return Math.max(0.16, BASE_INTERVAL / ((1 + this.lo.stats.aspd) * (1 + 0.2 * this.n("aspd")))); }
-  get critRate(): number { return Math.min(0.8, 0.05 + this.lo.stats.crit + 0.1 * this.n("crit")); }
-  get critMul(): number { return 2 + 0.4 * this.n("crit"); }
+  get critRate(): number { return Math.min(0.8, 0.05 + this.lo.stats.crit + this.rune.critRate + 0.1 * this.n("crit")); }
+  get critMul(): number { return 2 + 0.4 * this.n("crit") + this.rune.critDmg; }
+  /** 系統の 会心率（付与） */
+  private critOf(f: "main" | "orbit"): number { return Math.min(0.9, this.critRate + this.rune.famCrit[f]); }
   get dodge(): number { return Math.min(0.6, this.lo.stats.dodge + this.rune.dodge + 0.08 * this.n("dodge")); }
   get guard(): number { return Math.min(0.6, this.lo.stats.guard + this.rune.guard); }
   /** のら猫ボスの 取り引きで へる 体力の上限（祝福「のら猫のなかま」で へる） */
   get devilCost(): number { return DEVIL_COST * this.rune.pactCostMul; }
   get pierce(): boolean { return this.lo.pierce || this.n("pierce") > 0; }
   get bounce(): number { return this.lo.bounce + 2 * this.n("bounce"); }
-  get orbs(): number { return 2 * this.n("orbit") + this.lo.orbs; }
+  get orbs(): number { const n = 2 * this.n("orbit") + this.lo.orbs; return n ? n + this.rune.orbitExtra : 0; }
   get strikePct(): number { return this.lo.stats.strikePct; }
   /** 攻撃が レーザー（武器 か スキル） */
   get laser(): boolean { return this.lo.laser || this.n("laser") > 0; }
@@ -221,7 +223,7 @@ export class World implements StrikeHost {
     return {
       id: this.nextId++, def, x, y, vx: 0, vy: 0, hp, maxHp: hp, dmg: def.dmg * this.dmgMul, shot: def.shot * this.dmgMul,
       t: 1 + this.rng() * 1.5, t2: 2 + this.rng(), mode: 0, dx: 0, dy: 0,
-      slow: 0, burn: 0, burnDps: 0, poison: 0, dotAcc: 0, dotT: 0, flash: 0, facing: -1, dead: false,
+      slow: 0, burn: 0, burnDps: 0, boomT: 1, poison: 0, dotAcc: 0, dotT: 0, flash: 0, facing: -1, dead: false,
     };
   }
 
@@ -389,7 +391,7 @@ export class World implements StrikeHost {
     h.shootAnim = 0.2;
     const laser = this.laser;
     // スキルで レーザーにしたときは 1発 -20%（武器のレーザーは 攻撃力で 調整ずみ）
-    const dmg = this.atk * (1 - 0.1 * this.n("multi")) * (1 - 0.15 * this.n("front")) * (this.pierce && !laser ? 0.75 : 1) * (laser && !this.lo.laser ? 0.8 : 1) * (laser ? 1 + this.lo.stats.laserPct : 1);
+    const dmg = (this.atk + this.rune.mainFlat + (laser ? this.rune.laserFlat : 0)) * (1 + this.rune.mainPct) * (laser ? 1 + this.rune.laserPct : 1) * (1 - 0.1 * this.n("multi")) * (1 - 0.15 * this.n("front")) * (this.pierce && !laser ? 0.75 : 1) * (laser && !this.lo.laser ? 0.8 : 1) * (laser ? 1 + this.lo.stats.laserPct : 1);
     const angles: number[] = [a];
     const d = this.n("diag"), s = this.n("side"), b = this.n("back");
     if (d >= 1) angles.push(a + Math.PI / 4, a - Math.PI / 4);
@@ -412,12 +414,12 @@ export class World implements StrikeHost {
 
   /** レーザー: 壁か 物まで まっすぐ。とちゅうの敵 ぜんぶに当たる */
   private fireBeam(x: number, y: number, a: number, dmg: number): void {
-    const crit = this.rng() < this.critRate;
+    const crit = this.rng() < this.critOf("main");
     const v = crit ? dmg * this.critMul : dmg;
     const STEP = 0.1;
     const homing = this.n("homing") > 0;
     let px = x, py = y - 0.35, cx = Math.cos(a), cy = Math.sin(a);
-    let bounce = this.bounce;
+    let bounce = this.bounce + this.rune.laserBounce;
     const pts: [number, number][] = [[px, py]];
     const hit = new Set<number>();
     const hits: Enemy[] = [];
@@ -460,7 +462,7 @@ export class World implements StrikeHost {
   }
 
   private addShot(x: number, y: number, a: number, dmg: number): void {
-    const crit = this.rng() < this.critRate;
+    const crit = this.rng() < this.critOf("main");
     this.shots.push({
       x, y: y - 0.35, vx: Math.cos(a) * SHOT_SPEED, vy: Math.sin(a) * SHOT_SPEED,
       dmg: crit ? dmg * this.critMul : dmg, crit,
@@ -535,22 +537,24 @@ export class World implements StrikeHost {
     this.damage(e, dmg, crit ? "crit" : "dmg");
     if (!direct || e.dead) return;
     const atk = this.atk;
-    if (this.n("fire")) { e.burn = 2; e.burnDps = Math.max(e.burnDps, atk * 0.18 * this.n("fire")); }
+    const ru = this.rune, el = 1 + ru.elemPct;
+    if (this.n("fire")) { e.burn = 2; e.burnDps = Math.max(e.burnDps, (atk * 0.18 * this.n("fire") + ru.fireFlat) * (el + ru.firePct)); }
     if (this.n("ice")) e.slow = 1.5;
-    if (this.n("poison")) e.poison = Math.max(e.poison, atk * 0.1 * this.n("poison"));
+    if (this.n("poison")) e.poison = Math.max(e.poison, (atk * 0.1 * this.n("poison") + ru.poisonFlat) * (el + ru.poisonPct));
     if (this.n("bolt")) {
       const skip = new Set([e.id]);
       for (let i = 0; i < 2; i++) {
         const o = this.nearest(e.x, e.y, skip, 3.2);
         if (!o) break;
         skip.add(o.id);
-        this.damage(o, atk * 0.35 * this.n("bolt"), "dmg");
+        this.damage(o, atk * 0.35 * this.n("bolt") * el, "dmg");
       }
     }
   }
 
   private damage(e: Enemy, v: number, kind: FxKind): void {
     if (e.dead) return;
+    v *= 1 + (e.def.boss ? this.rune.bossPct : this.rune.minionPct);
     e.hp -= v;
     e.flash = 0.12;
     if (kind !== "dot") this.fx.push({ kind, x: e.x + (this.rng() - 0.5) * 0.4, y: e.y - e.def.r * 2 - 0.4, v: Math.round(v), t: 0 });
@@ -629,6 +633,16 @@ export class World implements StrikeHost {
         e.dotAcc += dot; e.dotT += dt;
         this.damage(e, dot, "dot");
         if (e.dotT >= 0.5 && !e.dead) { this.fx.push({ kind: "dot", x: e.x, y: e.y - e.def.r * 2 - 0.4, v: Math.round(e.dotAcc), t: 0 }); e.dotAcc = 0; e.dotT = 0; }
+      }
+      // ひなたの熱（ミシック）: 炎と毒の 両方が ついた敵は 1秒ごとに 爆発
+      if (this.rune.explode && e.burn > 0 && e.poison > 0) {
+        e.boomT -= dt;
+        if (e.boomT <= 0) {
+          e.boomT = 1;
+          const v = this.atk * 0.6 * (1 + this.rune.elemPct);
+          this.fx.push({ kind: "die", x: e.x, y: e.y, v: 1.2, t: 0 });
+          for (const o of this.enemies) if (!o.dead && Math.hypot(o.x - e.x, o.y - e.y) < 1.2 + o.def.r) this.damage(o, v, "dmg");
+        }
       }
       if (e.dead) continue;
       this.think(e, dt * (e.slow > 0 ? 0.6 : 1));
@@ -800,7 +814,7 @@ export class World implements StrikeHost {
   orbPositions(): [number, number][] {
     const n = this.orbs, h = this.hero;
     return Array.from({ length: n }, (_, i) => {
-      const a = this.time * 3.2 + (i / n) * Math.PI * 2;
+      const a = this.time * 3.2 * (1 + this.rune.orbitSpeed) + (i / n) * Math.PI * 2;
       return [h.x + Math.cos(a) * ORBIT_R, h.y - 0.35 + Math.sin(a) * ORBIT_R] as [number, number];
     });
   }
@@ -813,7 +827,9 @@ export class World implements StrikeHost {
         if (e.dead || (this.orbCd.get(e.id) ?? 0) > 0) continue;
         if (Math.hypot(e.x - ox, e.y - 0.3 - oy) < e.def.r + 0.25) {
           this.orbCd.set(e.id, 0.45);
-          this.damage(e, this.atk * 0.5 * (1 + this.lo.stats.orbitPct), "dmg");
+          const crit = this.rng() < this.critOf("orbit");
+          const v = (this.atk * 0.5 + this.rune.orbitFlat) * (1 + this.lo.stats.orbitPct + this.rune.orbitPct);
+          this.damage(e, crit ? v * this.critMul : v, crit ? "crit" : "dmg");
         }
       }
     }

@@ -238,8 +238,8 @@ export class Strikes {
   }
 
   private dmgTo(s: Strike, e: StrikeEnemy): [number, boolean] {
-    const crit = this.w.rng() < this.w.critRate;
-    let v = s.dmg * (crit ? this.w.critMul : 1);
+    const crit = this.w.rng() < Math.min(0.9, this.w.critRate + this.w.rune.famCrit.strike);
+    let v = s.dmg * (crit ? this.w.critMul : 1) * (1 + this.w.rune.strikePct);
     if (e.hp < e.maxHp * 0.5) v *= 1 + this.w.rune.lowHpBonus;
     return [v, crit];
   }

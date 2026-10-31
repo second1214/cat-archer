@@ -286,3 +286,19 @@ button:disabled { cursor: default; }
 .item-head.r6, .item-head.r7, .item-head.r8, .item-head.r9 { --rc: var(--r6); } .item-head.r10 { --rc: var(--r10); }
 .eq-mat.r6, .eq-mat.r7, .eq-mat.r8, .eq-mat.r9 { --rc: var(--r6); } .eq-mat.r10 { --rc: var(--r10); }
 .gc-rar.r6, .gc-rar.r7, .gc-rar.r8, .gc-rar.r9 { --rc: var(--r6); } .gc-rar.r10 { --rc: var(--r10); }
+
+/* ルーンの 付与・資源・おみくじ */
+.rn-res { display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: center; margin: 6px 0; }
+.rcard { position: relative; }
+.rcard-en { position: absolute; left: 3px; bottom: 1px; font-size: 11px; color: #b06cff; text-shadow: 0 0 3px #fff; }
+.rn-en { margin: 8px 0; padding: 8px; border-radius: 10px; background: rgba(150, 110, 220, .1); }
+.rn-en-h { margin-bottom: 4px; }
+.rn-en-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 4px 0; font-size: 13px; }
+.rn-en-row.off { color: #999; }
+.enq.q0 { color: #888; } .enq.q1 { color: #3a9a4a; } .enq.q2 { color: #2f7fd6; } .enq.q3 { color: #9a4fd6; } .enq.q4 { color: #e08a10; } .enq.q5 { color: #e0344a; font-weight: bold; }
+.rn-en-cmp { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 10px 0; }
+.rn-en-pick { display: flex; flex-direction: column; gap: 4px; padding: 10px; border-radius: 12px; border: 2px solid #ddd; background: #fff; font: inherit; text-align: left; }
+.rn-en-pick:active { border-color: #e9a23b; }
+.gc-hero.omi { background: linear-gradient(135deg, #c8343a, #f0a050); margin-top: 18px; }
+.rn-en-row button { white-space: nowrap; flex-shrink: 0; }
+.gc-hero.omi .gc-title, .gc-hero.omi .gc-sub { color: #fff; }

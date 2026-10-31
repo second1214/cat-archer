@@ -1,6 +1,6 @@
 // セーブ（ブラウザの localStorage）。読みこむときに 形をととのえる（古い・こわれたデータでも動くように）。
 import { CAT_IDS } from "./cats";
-import { G, minGrade, MAX_GRADE, RUNE_MAP, RUNE_SLOTS, RUNE_TYPES, runeEffects, type Rune, type RuneEffects, type RuneType } from "./runes";
+import { enchantOpts, ENCHANT_Q_NAMES, G, minGrade, MAX_GRADE, RUNE_MAP, RUNE_SLOTS, RUNE_TYPES, runeEffects, type Rune, type RuneEffects, type RuneType } from "./runes";
 import { activeTraits, addStats, emptyStats, ITEM_MAP, itemStats, MAX_LEVEL, MAX_RARITY, setBonuses, SLOTS, type Item, type Rarity, type Slot, type Stats } from "./equip";
 import type { SkillId } from "./skills";
 import { emptyTalents, TALENT_MAX, TALENTS, talentValue, type TalentId } from "./talents";
@@ -39,6 +39,12 @@ export interface SaveData {
   gachaPity: number;
   /** 1日1回の チュールを もらった日（YYYY-MM-DD） */
   lastDaily: string;
+  /** ルーンの 合成素材（品質ごと。ルーンを 分解すると ふえる） */
+  runeMats: number[];
+  /** 爪とぎ石（ルーンの 付与に使う） */
+  stones: number;
+  /** おみくじで エピック以上が 出ていない回数（天井） */
+  runePity: number;
   /** ねこ修行（タレント）の レベル */
   talents: Record<TalentId, number>;
   seed: number;
@@ -64,6 +70,9 @@ export function newSave(): SaveData {
     churu: START_CHURU,
     gachaPity: 0,
     lastDaily: "",
+    runeMats: Array(MAX_GRADE + 1).fill(0),
+    stones: 0,
+    runePity: 0,
     talents: emptyTalents(),
     seed: Math.floor(Math.random() * 2 ** 31),
   };
@@ -95,7 +104,12 @@ export function normalize(raw: unknown): SaveData {
   const unlocked = Math.max(1, Math.min(CHAPTERS, Math.floor(num(r.unlocked, 1))));
   const runes: Rune[] = Array.isArray(r.runes)
     ? r.runes.filter((x): x is Rune => !!x && typeof x === "object" && typeof x.uid === "number" && typeof x.id === "string" && x.id in RUNE_MAP)
-      .map((x) => ({ uid: x.uid, id: x.id, g: Math.max(minGrade(RUNE_MAP[x.id].type), Math.min(MAX_GRADE, Math.floor(num(x.g, 0)))) }))
+      .map((x) => {
+        const ru: Rune = { uid: x.uid, id: x.id, g: Math.max(minGrade(RUNE_MAP[x.id].type), Math.min(MAX_GRADE, Math.floor(num(x.g, 0)))) };
+        if (Array.isArray(x.en)) ru.en = x.en.slice(0, 2).map((en) => en && typeof en === "object" && enchantOpts(ru.id).includes(en.opt)
+          ? { opt: en.opt, q: Math.max(0, Math.min(ENCHANT_Q_NAMES.length - 1, Math.floor(num(en.q, 0)))) } : null);
+        return ru;
+      })
     : [];
   const runeSlots = emptyRuneSlots();
   const used = new Set<number>();
@@ -126,6 +140,9 @@ export function normalize(raw: unknown): SaveData {
     churu: Math.max(0, Math.floor(num(r.churu, START_CHURU))),
     gachaPity: Math.max(0, Math.floor(num(r.gachaPity, 0))),
     lastDaily: typeof r.lastDaily === "string" ? r.lastDaily : "",
+    runeMats: Array.from({ length: MAX_GRADE + 1 }, (_, i) => Math.max(0, Math.floor(num(r.runeMats?.[i], 0)))),
+    stones: Math.max(0, Math.floor(num(r.stones, 0))),
+    runePity: Math.max(0, Math.floor(num(r.runePity, 0))),
     talents: Object.fromEntries(TALENTS.map((t) => [t.id, Math.max(0, Math.min(TALENT_MAX, Math.floor(num(r.talents?.[t.id], 0))))])) as Record<TalentId, number>,
     seed: Math.floor(num(r.seed, base.seed)),
   };
@@ -205,6 +222,7 @@ export function loadoutOf(save: SaveData): Loadout {
   // ねこ修行
   const tl = save.talents;
   st.crit += talentValue("crit", tl.crit);
+  st.hpPct += rune.hpPct;
   regen += talentValue("regen", tl.regen);
   return {
     stats: st,

@@ -129,6 +129,7 @@ function play(chapter: number): void {
     if (rw.unlocked) toast(`第${rw.unlocked}章「${CHAPTER_NAMES[rw.unlocked - 1]}」へ行けるようになった！`);
     else if (rw.newBest) toast("最高記録こうしん！");
     if (rw.churu) setTimeout(() => toast(`🍥 チュール +${rw.churu}`), rw.unlocked || rw.newBest ? 1900 : 0);
+    if (rw.stones) setTimeout(() => toast(`🪨 爪とぎ石 +${rw.stones}`), 3800);
   });
 }
 

@@ -1,7 +1,7 @@
 // プレイの結果をセーブへ入れる・宝箱・合成・強化（画面から呼ぶ。テストもここを使う）。
 import { fodderRarity, ITEM_MAP, MAX_RARITY, mergePartners, MYTHIC, rollItem, upgradeCost, type Item, type Rarity } from "./equip";
 import { weighted, type Rng } from "./rng";
-import { MAX_GRADE, RUNE_MAP, RUNE_MERGE_COUNT, RUNE_UNLOCK_CHAPTER, RUNE_TYPES, rollRune, type Rune } from "./runes";
+import { ENCHANT_COST, enchantSlots, G, MAX_GRADE, minGrade, rollEnchant, RUNE_MAP, RUNE_MERGE_COUNT, RUNE_UNLOCK_CHAPTER, RUNE_TYPES, RUNES, rollRune, type Enchant, type Rune } from "./runes";
 import { CHAPTERS, equippedSet, etchedSlotsOpen, type SaveData } from "./save";
 import { STAGES_PER_CHAPTER } from "./stages";
 
@@ -32,7 +32,13 @@ export function claimDaily(save: SaveData, today: string): number {
   return CHURU_DAILY;
 }
 
-export interface RunReward { coins: number; churu: number; items: Item[]; runes: Rune[]; newBest: boolean; unlocked: number | null }
+export interface RunReward { coins: number; churu: number; stones: number; items: Item[]; runes: Rune[]; newBest: boolean; unlocked: number | null }
+
+/** 爪とぎ石（ルーンの付与）: 5面を こえると 1、章クリアで 2 + 章/5（ルーンが 解放されてから） */
+export function stonesFor(chapter: number, stage: number, won: boolean): number {
+  if (chapter < RUNE_UNLOCK_CHAPTER) return 0;
+  return (stage > 5 || won ? 1 : 0) + (won ? 2 + Math.floor(chapter / 5) : 0);
+}
 
 export function finishRun(save: SaveData, r: RunResult): RunReward {
   const coins = Math.round(r.coins);
@@ -44,6 +50,8 @@ export function finishRun(save: SaveData, r: RunResult): RunReward {
   const firstClear = r.won && (save.best[r.chapter] ?? 0) < STAGES_PER_CHAPTER;
   const churu = (r.churu ?? 0) + (firstClear ? CHURU_FIRST_CLEAR : 0);
   save.churu += churu;
+  const stones = stonesFor(r.chapter, r.stage, r.won);
+  save.stones += stones;
   const reached = r.won ? STAGES_PER_CHAPTER : Math.max(0, r.stage - 1);
   const newBest = reached > (save.best[r.chapter] ?? 0);
   if (newBest) save.best[r.chapter] = reached;
@@ -53,7 +61,7 @@ export function finishRun(save: SaveData, r: RunResult): RunReward {
     save.chapter = save.unlocked;
     unlocked = save.unlocked;
   }
-  return { coins, churu, items, runes, newBest, unlocked };
+  return { coins, churu, stones, items, runes, newBest, unlocked };
 }
 
 export const CHEST_COST = 300;
@@ -171,32 +179,82 @@ export function unequipRune(save: SaveData, uid: number): void {
   for (const t of RUNE_TYPES) save.runeSlots[t] = save.runeSlots[t].map((v) => (v === uid ? null : v));
 }
 
-/** 合成の相手（同じルーン・同じ品質で 付けていないもの）。足りなければ null */
-export function runePartners(save: SaveData, base: Rune): Rune[] | null {
+/** 合成の相手（同じルーン・同じ品質で 付けていない・付与のないもの。足りない分は 同じ品質の ルーン素材）。できなければ null */
+export function runePartners(save: SaveData, base: Rune, useMats = true): { mates: Rune[]; mats: number } | null {
   if (base.g >= MAX_GRADE) return null;
   const eq = runeEquipped(save);
-  const mates = save.runes.filter((x) => x.uid !== base.uid && x.id === base.id && x.g === base.g && !eq.has(x.uid)).slice(0, RUNE_MERGE_COUNT - 1);
-  return mates.length === RUNE_MERGE_COUNT - 1 ? mates : null;
+  const mates = save.runes.filter((x) => x.uid !== base.uid && x.id === base.id && x.g === base.g && !eq.has(x.uid) && !x.en?.some(Boolean)).slice(0, RUNE_MERGE_COUNT - 1);
+  const mats = RUNE_MERGE_COUNT - 1 - mates.length;
+  return mats === 0 || (useMats && (save.runeMats[base.g] ?? 0) >= mats) ? { mates, mats } : null;
 }
 
-export function mergeRune(save: SaveData, uid: number): Rune | null {
+export function mergeRune(save: SaveData, uid: number, useMats = true): Rune | null {
   const base = save.runes.find((x) => x.uid === uid);
   if (!base) return null;
-  const mates = runePartners(save, base);
-  if (!mates) return null;
-  const ids = new Set(mates.map((m) => m.uid));
+  const p = runePartners(save, base, useMats);
+  if (!p) return null;
+  const ids = new Set(p.mates.map((m) => m.uid));
   save.runes = save.runes.filter((x) => !ids.has(x.uid));
+  save.runeMats[base.g] -= p.mats;
   base.g++;
   return base;
 }
 
-/** まとめて合成（付けているものを 先に土台にする） */
+/** まとめて合成（ルーンどうしだけ。付けているものを 先に土台にする） */
 export function mergeAllRunes(save: SaveData): Rune[] {
   const made: Rune[] = [];
   for (;;) {
     const eq = runeEquipped(save);
-    const base = [...save.runes].sort((a, b) => Number(eq.has(b.uid)) - Number(eq.has(a.uid)) || a.g - b.g).find((x) => runePartners(save, x));
+    const base = [...save.runes].sort((a, b) => Number(eq.has(b.uid)) - Number(eq.has(a.uid)) || a.g - b.g).find((x) => runePartners(save, x, false));
     if (!base) return made;
-    made.push(mergeRune(save, base.uid)!);
+    made.push(mergeRune(save, base.uid, false)!);
   }
+}
+
+/** ルーンを 分解: 同じ品質の ルーン素材 1つ（どのルーンの 合成にも使える）。付けている・付与したものは できない */
+export function dismantleRune(save: SaveData, uid: number): boolean {
+  const ru = save.runes.find((x) => x.uid === uid);
+  if (!ru || runeEquipped(save).has(uid) || ru.en?.some(Boolean)) return false;
+  save.runes = save.runes.filter((x) => x.uid !== uid);
+  save.runeMats[ru.g]++;
+  return true;
+}
+
+/** 付与: 爪とぎ石 ENCHANT_COST で 新しい付与を 引く（まだ 入れない。keepEnchant / takeEnchant で決める） */
+export function rollRuneEnchant(save: SaveData, uid: number, slot: number, rng: Rng): Enchant | null {
+  const ru = save.runes.find((x) => x.uid === uid);
+  if (!ru || slot >= enchantSlots(ru.g) || save.stones < ENCHANT_COST) return null;
+  save.stones -= ENCHANT_COST;
+  return rollEnchant(rng, ru.id);
+}
+export function setRuneEnchant(save: SaveData, uid: number, slot: number, en: Enchant): void {
+  const ru = save.runes.find((x) => x.uid === uid);
+  if (!ru || slot >= enchantSlots(ru.g)) return;
+  ru.en = [ru.en?.[0] ?? null, ru.en?.[1] ?? null];
+  ru.en[slot] = en;
+}
+
+/** おみくじ（ルーンの ガチャ）: チュールで ルーンを引く。30回 エピックが出なければ 次は エピック */
+export const OMIKUJI_COST = 10;
+export const OMIKUJI10_COST = 90;
+export const OMIKUJI_PITY = 30;
+export const OMIKUJI_RATES: readonly (readonly [number, number])[] = [[G.common, 50], [G.great, 30], [G.rare, 15.5], [G.epic, 4], [G.legend, 0.5]];
+export function pullOmikuji(save: SaveData, rng: Rng, count: 1 | 10): Rune[] | null {
+  const cost = count === 10 ? OMIKUJI10_COST : OMIKUJI_COST;
+  if (save.unlocked < RUNE_UNLOCK_CHAPTER || save.churu < cost) return null;
+  save.churu -= cost;
+  const out: Rune[] = [];
+  for (let i = 0; i < count; i++) {
+    const roll = rng();
+    const type = roll < 0.02 ? "etched" : roll < 0.1 ? "blessing" : null;
+    const pool = RUNES.filter((r) => (type ? r.type === type : r.type === "ability" || r.type === "enhancement"));
+    const d = pool[Math.floor(rng() * pool.length)];
+    let g = Math.max(minGrade(d.type), weighted(rng, OMIKUJI_RATES));
+    if (save.runePity + 1 >= OMIKUJI_PITY && g < G.epic) g = G.epic;
+    save.runePity = g >= G.epic ? 0 : save.runePity + 1;
+    const ru: Rune = { uid: save.nextUid++, id: d.id, g };
+    save.runes.push(ru);
+    out.push(ru);
+  }
+  return out;
 }
