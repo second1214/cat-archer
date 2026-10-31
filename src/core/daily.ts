@@ -18,7 +18,7 @@ export const DAILY_LEVELS = 24;
 /** レベルの 強さ（どの章くらいの 敵か） */
 export const levelChapter = (lv: number) => 1 + 2 * lv;
 
-export interface DailyReward { coins: number; stones: number; mats: { g: number; n: number } | null }
+export interface DailyReward { coins: number; stones: number; mats: { g: number; n: number } | null; cores?: number }
 
 /** もらえる物（cleared: クリアした面の数 0〜5） */
 export function dailyReward(id: DailyId, lv: number, cleared: number): DailyReward {
@@ -31,6 +31,8 @@ export function dailyReward(id: DailyId, lv: number, cleared: number): DailyRewa
     coins: 0,
     stones: cleared * (1 + Math.floor(lv / 4)) + (full ? 3 : 0),
     mats: full ? { g: Math.min(G.epic1, Math.floor((lv - 1) / 4)), n: 2 + Math.floor(lv / 6) } : null,
+    // レベル13から 神鍛の核
+    cores: full && lv >= 13 ? 1 : 0,
   };
 }
 
@@ -53,6 +55,7 @@ function give(save: SaveData, r: DailyReward): void {
   save.coins += r.coins;
   save.stones += r.stones;
   if (r.mats) save.runeMats[r.mats.g] += r.mats.n;
+  save.cores += r.cores ?? 0;
 }
 
 /** 挑戦の 結果を 入れる（回数を 1つ使う）。もらった物。できなければ null */

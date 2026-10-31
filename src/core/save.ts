@@ -6,6 +6,8 @@ import type { SkillId } from "./skills";
 import { emptyMissions, MISSIONS, type MissionId, type MissionState } from "./missions";
 import { ENEMIES, type EnemyKind } from "./stages";
 import { ART_MAP, ART_MAX_STAR, artifactEffects, type OwnedArt } from "./artifacts";
+import { descentOf, gfStats, type Descent } from "./godforge";
+import type { SeriesId } from "./equip";
 import { DAILIES, DAILY_LEVELS, emptyDaily, type DailyId, type DailyState } from "./daily";
 import { emptyTalents, TALENT_MAX, TALENTS, talentValue, type TalentId } from "./talents";
 
@@ -68,6 +70,10 @@ export interface SaveData {
   artifacts: Record<string, OwnedArt>;
   wishBells: number;
   wishPity: number;
+  /** 神鍛の 材料: 装備エッセンス・シリーズの 結晶・神鍛の核 */
+  essence: number;
+  crystals: Partial<Record<SeriesId, number>>;
+  cores: number;
   /** ねこ修行（タレント）の レベル */
   talents: Record<TalentId, number>;
   seed: number;
@@ -107,6 +113,9 @@ export function newSave(): SaveData {
     artifacts: {},
     wishBells: 10,
     wishPity: 0,
+    essence: 0,
+    crystals: {},
+    cores: 0,
     talents: emptyTalents(),
     seed: Math.floor(Math.random() * 2 ** 31),
   };
@@ -135,7 +144,8 @@ export function normalize(raw: unknown): SaveData {
       .map((x) => {
         const raw = Math.max(0, Math.floor(num(x.r, 0)));
         const rar = (old ? V1_RARITY[Math.min(3, raw)] : Math.min(MAX_RARITY, raw)) as Rarity;
-        return { uid: x.uid, id: x.id, r: rar, lv: Math.max(1, Math.min(MAX_LEVEL[rar], Math.floor(num(x.lv, 1)))), ...(x.locked ? { locked: true } : {}) };
+        const gf = Math.max(0, Math.min(5, Math.floor(num(x.gf, 0))));
+        return { uid: x.uid, id: x.id, r: rar, lv: Math.max(1, Math.min(MAX_LEVEL[rar], Math.floor(num(x.lv, 1)))), ...(x.locked ? { locked: true } : {}), ...(gf ? { gf } : {}) };
       })
     : base.items;
   const equipped: Partial<Record<Slot, number>> = {};
@@ -200,9 +210,18 @@ export function normalize(raw: unknown): SaveData {
     bestiaryClaimed: kindMap(r.bestiaryClaimed),
     artifacts: Object.fromEntries(Object.entries(r.artifacts && typeof r.artifacts === "object" ? r.artifacts : {})
       .filter(([id, o]) => ART_MAP[id] && o && typeof o === "object")
-      .map(([id, o]) => [id, { star: Math.max(0, Math.min(ART_MAX_STAR, Math.floor(num((o as OwnedArt).star, 0)))), shards: Math.max(0, Math.floor(num((o as OwnedArt).shards, 0))) }])),
+      .map(([id, x]) => {
+        const o = x as Partial<OwnedArt>;
+        // 前の形（owned なし・★1から）も 読む
+        const owned = typeof o.owned === "boolean" ? o.owned : num(o.star, 0) >= 1;
+        const star = typeof o.owned === "boolean" ? num(o.star, 0) : num(o.star, 0) - 1;
+        return [id, { owned, star: owned ? Math.max(0, Math.min(ART_MAX_STAR, Math.floor(star))) : 0, shards: Math.max(0, Math.floor(num(o.shards, 0))) }];
+      })),
     wishBells: Math.max(0, Math.floor(num(r.wishBells, 10))),
     wishPity: Math.max(0, Math.floor(num(r.wishPity, 0))),
+    essence: Math.max(0, Math.floor(num(r.essence, 0))),
+    crystals: Object.fromEntries((["halloween", "newyear", "christmas"] as const).map((k) => [k, Math.max(0, Math.floor(num(r.crystals?.[k], 0)))])),
+    cores: Math.max(0, Math.floor(num(r.cores, 0))),
     achievements: Array.isArray(r.achievements) ? r.achievements.filter((x): x is string => typeof x === "string") : [],
     missions: {
       day: typeof r.missions?.day === "string" ? r.missions.day : "",
@@ -249,6 +268,8 @@ export interface Loadout {
   startSkills: SkillId[];
   /** まわる玉 + */
   orbs: number;
+  /** 神鍛の 降臨（武器が ★5） */
+  descent: Descent | null;
 }
 
 export const equippedRunes = (save: SaveData): Rune[] =>
@@ -274,7 +295,7 @@ export function loadoutOf(save: SaveData): Loadout {
   const rune = runeEffects(runes);
   const worn = equippedItems(save);
   const traits = worn.flatMap(activeTraits).concat(setBonuses(worn).flatMap((b) => b.traits));
-  for (const it of worn) st = addStats(st, itemStats(it));
+  for (const it of worn) { st = addStats(st, itemStats(it)); const g = gfStats(it); st.atkPct += g.atkPct; st.hpPct += g.hpPct; }
   for (const t of traits) {
     if (!worn.some((it) => ITEM_MAP[it.id].traits.includes(t)) && t.stats) st = addStats(st, t.stats); // セット効果の 数値
     bounce += t.bounce ?? 0;
@@ -300,7 +321,7 @@ export function loadoutOf(save: SaveData): Loadout {
     stats: st,
     atk: (BASE_ATK + st.atk + rune.atk + talentValue("atk", tl.atk)) * (1 + st.atkPct + rune.sturdy.atkPct),
     hp: Math.round((BASE_HP + st.hp + rune.hp + talentValue("hp", tl.hp)) * (1 + st.hpPct + rune.sturdy.hpPct)),
-    bounce, pierce, laser, regen, rune, startSkills, orbs,
+    bounce, pierce, laser, regen, rune, startSkills, orbs, descent: descentOf(worn),
   };
 }
 

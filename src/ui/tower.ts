@@ -9,8 +9,8 @@ import { startBattle } from "./battle";
 import { fmt, h, overlay, toast } from "./dom";
 import { sfx } from "./sfx";
 
-const text = (r: Pick<TowerReward, "coins" | "churu" | "stones" | "epicMats" | "bells">) =>
-  [r.bells ? `🔔${r.bells}` : "", r.coins ? `🐟${fmt(r.coins)}` : "", r.churu ? `🍥${r.churu}` : "", r.stones ? `🪨${r.stones}` : "", r.epicMats ? `エピックのルーン素材 ×${r.epicMats}` : ""].filter(Boolean).join("・");
+const text = (r: Pick<TowerReward, "coins" | "churu" | "stones" | "epicMats" | "bells"> & { cores?: number }) =>
+  [r.bells ? `🔔${r.bells}` : "", r.cores ? `🔆${r.cores}` : "", r.coins ? `🐟${fmt(r.coins)}` : "", r.churu ? `🍥${r.churu}` : "", r.stones ? `🪨${r.stones}` : "", r.epicMats ? `エピックのルーン素材 ×${r.epicMats}` : ""].filter(Boolean).join("・");
 
 export function openTower(save: SaveData, rerender: () => void, shell: HTMLElement): void {
   if (save.unlocked < TOWER_UNLOCK) { toast(`キャットタワーは 第${TOWER_UNLOCK}章で 解放`); return; }
@@ -26,7 +26,7 @@ export function openTower(save: SaveData, rerender: () => void, shell: HTMLEleme
     h("div", { class: "small" }, `こんどは ${a}〜${b}階（第${towerChapter(a)}章くらい）`),
     h("div", { class: "tw-next small" },
       h("div", null, `${b}階まで のぼると: `, text(sum), rune ? "・エピックのルーン" : ""),
-      h("div", { class: "muted" }, `${nextBig}階: 大きな ごほうび（🔔5・🍥50・🪨10・エピックのルーン素材×2・エピックのルーン）`)),
+      h("div", { class: "muted" }, `${nextBig}階: 大きな ごほうび（🔔5・🔆神鍛の核4・🍥50・🪨10・エピックのルーン素材×2・エピックのルーン）`)),
     h("button", { class: "btn btn-gold btn-wide", onclick: () => {
       m.close(); sfx("tap");
       shell.style.display = "none";

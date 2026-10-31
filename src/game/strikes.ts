@@ -45,6 +45,9 @@ export interface StrikeHost {
   nearest(x: number, y: number, skip?: Set<number>, maxD?: number): StrikeEnemy | null;
   /** 当てる（elements: 炎・氷・毒・雷を のせる） */
   hitEnemy(e: StrikeEnemy, dmg: number, crit: boolean, elements: boolean): void;
+  /** 神鍛の 降臨 */
+  famMul(f: "strike"): number;
+  descentHit(f: "strike"): void;
   addBeam(pts: [number, number][], crit: boolean): void;
 }
 
@@ -239,7 +242,8 @@ export class Strikes {
 
   private dmgTo(s: Strike, e: StrikeEnemy): [number, boolean] {
     const crit = this.w.rng() < Math.min(0.9, this.w.critRate + this.w.rune.famCrit.strike);
-    let v = s.dmg * (crit ? this.w.critMul : 1) * (1 + this.w.rune.strikePct);
+    let v = s.dmg * (crit ? this.w.critMul : 1) * (1 + this.w.rune.strikePct) * this.w.famMul("strike");
+    this.w.descentHit("strike");
     if (e.hp < e.maxHp * 0.5) v *= 1 + this.w.rune.lowHpBonus;
     return [v, crit];
   }

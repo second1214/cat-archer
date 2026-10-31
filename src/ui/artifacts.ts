@@ -1,5 +1,5 @@
 // 装備メニューの「宝物」タブ: 願い（ガチャ）・持っている宝物・星上げ・セット。
-import { ART_MAP, ART_MAX_STAR, ART_RARITY_NAMES, ART_SETS, ARTIFACTS, artStats, DUP_SHARDS, setLevel, starCost, starUp, wish, WISH_PITY } from "../core/artifacts";
+import { ART_MAP, ART_MAX_STAR, ART_RARITY_NAMES, ART_SETS, ARTIFACTS, artStats, nextCost, SHARD_PULL, setLevel, starUp, UNLOCK_SHARDS, wish, WISH_PITY } from "../core/artifacts";
 import { mulberry32 } from "../core/rng";
 import { writeSave, type SaveData } from "../core/save";
 import { fmt, h, overlay, toast } from "./dom";
@@ -44,19 +44,19 @@ export function renderArtifacts(save: SaveData, rerender: () => void): HTMLEleme
     h("h3", { class: "art-h" }, "宝物"),
     h("div", { class: "eq-grid" }, [...ARTIFACTS].sort((a, b) => b.r - a.r).map((d) => {
       const o = save.artifacts[d.id];
-      const have = !!o && o.star > 0, c = have ? starCost(o.star) : null;
+      const have = !!o?.owned, c = nextCost(d.id, o);
       return h("button", { class: `art-card ar${d.r} ${have ? "" : "off"}`, onclick: () => openArt(save, d.id, rerender) },
         h("div", { class: "art-ico" }, have ? d.icon : "？"),
-        have ? h("div", { class: "art-star" }, `★${o.star}`) : null,
-        have && c !== null && o.shards >= c ? h("div", { class: "icard-mg" }, "★UP") : null);
+        have ? h("div", { class: "art-star" }, `★${o.star}`) : o?.shards ? h("div", { class: "art-star" }, `${o.shards}/${UNLOCK_SHARDS}`) : null,
+        c !== null && (o?.shards ?? 0) >= c ? h("div", { class: "icard-mg" }, have ? "★UP" : "解放") : null);
     })),
-    h("p", { class: "muted small" }, `確率（本家と同じ）: ミシック 0.1%・レジェンド 1%・エピック 9%・レア 18%・エピックのかけら 24%・レアのかけら 47.9%。同じ宝物は かけら${DUP_SHARDS}個に。★n→★n+1 は かけら n個。★1つで 基本の力 +50%（★${ART_MAX_STAR}まで）。ねがいの鈴は キャットタワー・毎日のミッション・実績で。`));
+    h("p", { class: "muted small" }, `確率（本家と同じ）: ミシック 0.1%・レジェンド 1%・エピック 9%・レア 18%・エピックのかけら 24%・レアのかけら 47.9%（かけらは ${SHARD_PULL}個）。同じ宝物が また出たら かけら${UNLOCK_SHARDS}個。かけら${UNLOCK_SHARDS}個で 解放、★1つで 基本の力 +50%（★${ART_MAX_STAR}まで）。ねがいの鈴は キャットタワー・毎日のミッション・実績で。`));
 }
 
 function openArt(save: SaveData, id: string, rerender: () => void): void {
   const d = ART_MAP[id], o = save.artifacts[id];
-  const have = !!o && o.star > 0;
-  const st = artStats(id, have ? o.star : 1), c = have ? starCost(o.star) : null;
+  const have = !!o?.owned;
+  const st = artStats(id, have ? o.star : 0), c = nextCost(id, o);
   const m = overlay(h("div", { class: "item" },
     h("div", { class: `item-head art-head ar${d.r}` }, h("div", { class: "item-ico" }, d.icon),
       h("div", null, h("div", { class: "item-n" }, d.name), h("div", { class: "item-r" }, `${ART_RARITY_NAMES[d.r]}${have ? `・★${o.star}` : "・まだ 持っていない"}`))),
@@ -65,8 +65,8 @@ function openArt(save: SaveData, id: string, rerender: () => void): void {
       h("div", { class: "st-line" }, h("span", null, "攻撃力"), h("b", null, `+${fmt(Math.round(st.atk))}`)),
       h("div", { class: "st-line" }, h("span", null, "最大体力"), h("b", null, `+${fmt(Math.round(st.hp))}`)),
       d.special ? h("div", { class: "st-line" }, h("span", null, "特別"), h("b", null, d.special.desc)) : null),
-    have ? h("button", { class: `btn ${c !== null && o.shards >= c ? "btn-gold" : "btn-gray"} btn-wide`, disabled: c === null || o.shards < c, onclick: () => {
-      if (starUp(save, id)) { writeSave(save); sfx("levelup"); toast(`${d.name} ★${o.star}`); m.close(); rerender(); openArt(save, id, rerender); }
-    } }, c === null ? "★最大" : `★${o.star + 1}へ（かけら ${o.shards} / ${c}）`) : h("p", { class: "small" }, `かけら ${o?.shards ?? 0}（手に入れると 使える）`),
+    h("button", { class: `btn ${c !== null && (o?.shards ?? 0) >= c ? "btn-gold" : "btn-gray"} btn-wide`, disabled: c === null || (o?.shards ?? 0) < c, onclick: () => {
+      if (starUp(save, id)) { writeSave(save); sfx("levelup"); toast(`${d.name} ★${save.artifacts[id].star}`); m.close(); rerender(); openArt(save, id, rerender); }
+    } }, c === null ? "★最大" : `${have ? `★${o.star + 1}へ` : "解放"}（かけら ${o?.shards ?? 0} / ${c}）`),
     h("button", { class: "btn btn-gray btn-wide", onclick: () => m.close() }, "とじる")), "", () => m.close());
 }
