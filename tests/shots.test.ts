@@ -69,10 +69,39 @@ describe("撃ち方", () => {
     expect(run(false)).toBeCloseTo(0, 5);
     expect(run(true)).toBeGreaterThan(1);
   });
-  it("攻撃が レーザーのときは 毛玉だけのスキル（つらぬく・はねる・とびうつる・ゆうどう）は 出ない", () => {
+  it("レーザーにも ゆうどうが効く: 横にずれた敵へ 曲がって当たる", () => {
+    const run = (homing: boolean) => {
+      const s = newSave(); s.items.push({ uid: 9, id: "laser", r: 0, lv: 1 }); s.equipped.weapon = 9;
+      const w = new World(loadoutOf(s), 1, mulberry32(1));
+      if (homing) w.skills.homing = 1;
+      const [a, b, c] = w.enemies;
+      a.x = w.hero.x; a.y = w.hero.y - 2; b.x = w.hero.x + 1.6; b.y = w.hero.y - 7; c.x = 0.5; c.y = 0.5;
+      for (const e of w.enemies) { e.def = { ...e.def, ai: "turret", speed: 0 }; e.t = 99; e.hp = e.maxHp = 1e6; }
+      w.hero.atkCd = 0;
+      w.step(1 / 60, { mx: 0, my: 0 });
+      return b.hp < 1e6;
+    };
+    expect(run(false)).toBe(false);
+    expect(run(true)).toBe(true);
+  });
+  it("レーザーにも かべではねるが効く: 壁で 折れ曲がる", () => {
+    const s = newSave(); s.items.push({ uid: 9, id: "laser", r: 0, lv: 1 }); s.equipped.weapon = 9;
+    const w = new World(loadoutOf(s), 1, mulberry32(1));
+    w.skills.bounce = 1;
+    const [a, b, c] = w.enemies;
+    a.x = w.hero.x + 2; a.y = w.hero.y - 2; b.x = 0.5; b.y = 0.5; c.x = 0.6; c.y = 0.6;
+    for (const e of w.enemies) { e.def = { ...e.def, ai: "turret", speed: 0 }; e.t = 99; e.hp = e.maxHp = 1e6; }
+    w.hero.atkCd = 0;
+    w.step(1 / 60, { mx: 0, my: 0 });
+    expect(w.beams[0].pts.length).toBeGreaterThanOrEqual(4); // 出発・はね2回・おわり
+  });
+  it("攻撃が レーザーのときは つらぬく・とびうつる・レーザーは 出ない（ゆうどう・はねるは 出る）", () => {
     for (let i = 0; i < 200; i++) {
       const r = rollSkills({}, mulberry32(i), 3, false, true);
       expect(r.some((x) => LASER_USELESS.includes(x))).toBe(false);
     }
+    const seen = new Set(Array.from({ length: 300 }, (_, i) => rollSkills({}, mulberry32(i), 3, false, true)).flat());
+    expect(seen.has("homing")).toBe(true);
+    expect(seen.has("bounce")).toBe(true);
   });
 });

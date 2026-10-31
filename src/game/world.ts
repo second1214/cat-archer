@@ -60,7 +60,7 @@ export interface Shot {
 }
 
 /** レーザー（当たりは 撃った瞬間に決まる。見た目のため 少し残す） */
-export interface Beam { x1: number; y1: number; x2: number; y2: number; t: number; crit: boolean }
+export interface Beam { pts: [number, number][]; t: number; crit: boolean }
 
 export interface EShot { x: number; y: number; vx: number; vy: number; r: number; dmg: number; life: number }
 
@@ -309,20 +309,48 @@ export class World {
   private fireBeam(x: number, y: number, a: number, dmg: number): void {
     const crit = this.rng() < this.critRate;
     const v = crit ? dmg * this.critMul : dmg;
-    const sx = x, sy = y - 0.35, cx = Math.cos(a), cy = Math.sin(a);
-    let len = 0;
-    for (; len < 30; len += 0.1) {
-      const px = sx + cx * len, py = sy + cy * len;
-      if (px < 0 || px > W || py < 0 || py > H || this.terrain.blocksShot(px, py + 0.3)) break;
+    const STEP = 0.1;
+    const homing = this.n("homing") > 0;
+    let px = x, py = y - 0.35, cx = Math.cos(a), cy = Math.sin(a);
+    let bounce = this.bounce;
+    const pts: [number, number][] = [[px, py]];
+    const hit = new Set<number>();
+    const hits: Enemy[] = [];
+    for (let len = 0; len < 40; len += STEP) {
+      // ゆうどう: 近くの まだ当たっていない敵へ 少しずつ 曲がる
+      if (homing) {
+        const tg = this.nearest(px, py + 0.3, hit, 5);
+        if (tg) {
+          const cur = Math.atan2(cy, cx);
+          let d = Math.atan2(tg.y - 0.3 - py, tg.x - px) - cur;
+          while (d > Math.PI) d -= Math.PI * 2;
+          while (d < -Math.PI) d += Math.PI * 2;
+          const na = cur + Math.max(-0.12, Math.min(0.12, d));
+          cx = Math.cos(na); cy = Math.sin(na);
+          pts.push([px, py]);
+        }
+      }
+      const nx = px + cx * STEP, ny = py + cy * STEP;
+      const out = nx < 0 || nx > W || ny < 0 || ny > H;
+      if (out || this.terrain.blocksShot(nx, ny + 0.3)) {
+        if (bounce <= 0) break;
+        // かべではねる（壁・物）
+        bounce--;
+        if (out) { if (nx < 0 || nx > W) cx = -cx; if (ny < 0 || ny > H) cy = -cy; }
+        else if (this.terrain.blocksShot(px, ny + 0.3)) cy = -cy; else cx = -cx;
+        pts.push([px, py]);
+        hit.clear();
+        continue;
+      }
+      px = nx; py = ny;
+      for (const e of this.enemies) {
+        if (e.dead || hit.has(e.id)) continue;
+        if (Math.hypot(e.x - px, e.y - 0.3 - py) < e.def.r + 0.12) { hit.add(e.id); hits.push(e); }
+      }
     }
-    for (const e of this.enemies) {
-      if (e.dead) continue;
-      const ex = e.x - sx, ey = e.y - 0.3 - sy;
-      const along = ex * cx + ey * cy;
-      if (along < 0 || along > len + e.def.r) continue;
-      if (Math.abs(ex * cy - ey * cx) < e.def.r + 0.12) this.hitEnemy(e, v, crit, true);
-    }
-    this.beams.push({ x1: sx, y1: sy, x2: sx + cx * len, y2: sy + cy * len, t: 0, crit });
+    pts.push([px, py]);
+    for (const e of hits) this.hitEnemy(e, v, crit, true);
+    this.beams.push({ pts: simplify(pts), t: 0, crit });
   }
 
   private addShot(x: number, y: number, a: number, dmg: number): void {
@@ -651,3 +679,15 @@ export class World {
 }
 
 const clamp = (v: number, a: number, b: number) => Math.max(a, Math.min(b, v));
+
+/** 曲がりの 細かい点を 間引く（描くとき 軽くするため） */
+function simplify(pts: [number, number][]): [number, number][] {
+  if (pts.length <= 2) return pts;
+  const out: [number, number][] = [pts[0]];
+  for (let i = 1; i < pts.length - 1; i++) {
+    const [x, y] = out[out.length - 1];
+    if (Math.hypot(pts[i][0] - x, pts[i][1] - y) > 0.25) out.push(pts[i]);
+  }
+  out.push(pts[pts.length - 1]);
+  return out;
+}

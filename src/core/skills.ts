@@ -25,9 +25,9 @@ export const SKILLS: readonly SkillDef[] = [
   { id: "side", name: "よこうち", icon: "↔️", desc: "左右にも1本ずつ撃つ", max: 2 },
   { id: "back", name: "うしろうち", icon: "↩️", desc: "うしろにも1本撃つ", max: 2 },
   { id: "laser", name: "レーザーポインター", icon: "🔴", desc: "攻撃が レーザーになる（敵をつらぬく・1発のダメージ -20%）", max: 1 },
-  { id: "homing", name: "ゆうどう", icon: "🧲", desc: "毛玉が 近くの敵へ 曲がっていく", max: 1 },
+  { id: "homing", name: "ゆうどう", icon: "🧲", desc: "毛玉・レーザーが 近くの敵へ 曲がっていく", max: 1 },
   { id: "pierce", name: "つらぬく", icon: "🗡️", desc: "毛玉が敵をつらぬく（ダメージ -25%）", max: 1 },
-  { id: "bounce", name: "かべではねる", icon: "🧱", desc: "毛玉が壁で2回はねかえる", max: 1 },
+  { id: "bounce", name: "かべではねる", icon: "🧱", desc: "毛玉・レーザーが 壁や物で 2回はねかえる", max: 1 },
   { id: "ricochet", name: "とびうつる", icon: "🪃", desc: "当たった毛玉が 近くの敵へ2回とびうつる", max: 1 },
   { id: "fire", name: "ほのお", icon: "🔥", desc: "当たると燃える（2秒 毎秒 攻撃力の18%）", max: 2 },
   { id: "ice", name: "こおり", icon: "❄️", desc: "当たると動きが遅くなる（1.5秒 -40%）", max: 1 },
@@ -45,7 +45,7 @@ export const SKILL_MAP = Object.fromEntries(SKILLS.map((s) => [s.id, s])) as Rec
 export type SkillCounts = Partial<Record<SkillId, number>>;
 
 /** 攻撃が レーザーのとき 意味のないスキル（レーザー自身も もう出さない） */
-export const LASER_USELESS: readonly SkillId[] = ["pierce", "bounce", "ricochet", "homing", "laser"];
+export const LASER_USELESS: readonly SkillId[] = ["pierce", "ricochet", "laser"];
 
 /** まだ取れるスキルから、ちがうものを n 個えらぶ（おやつは体力が減っているときだけ。laser なら 毛玉だけのスキルは出さない）。 */
 export function rollSkills(owned: SkillCounts, rng: Rng, n = 3, hurt = false, laser = false): SkillId[] {

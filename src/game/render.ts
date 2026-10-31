@@ -92,15 +92,17 @@ export class Renderer {
     // レーザー
     for (const b of w.beams) {
       const a = 1 - b.t / 0.14;
-      g.lineCap = "round";
+      const path = () => { g.beginPath(); b.pts.forEach(([x, y], i) => (i ? g.lineTo(this.X(x), this.Y(y)) : g.moveTo(this.X(x), this.Y(y)))); };
+      g.lineCap = "round"; g.lineJoin = "round";
       g.strokeStyle = `rgba(255,40,60,${0.35 * a})`;
       g.lineWidth = s * 0.3;
-      g.beginPath(); g.moveTo(this.X(b.x1), this.Y(b.y1)); g.lineTo(this.X(b.x2), this.Y(b.y2)); g.stroke();
+      path(); g.stroke();
       g.strokeStyle = b.crit ? `rgba(255,240,120,${a})` : `rgba(255,220,225,${a})`;
       g.lineWidth = s * 0.09;
-      g.beginPath(); g.moveTo(this.X(b.x1), this.Y(b.y1)); g.lineTo(this.X(b.x2), this.Y(b.y2)); g.stroke();
+      path(); g.stroke();
+      const [ex, ey] = b.pts[b.pts.length - 1];
       g.fillStyle = `rgba(255,80,90,${a})`;
-      g.beginPath(); g.arc(this.X(b.x2), this.Y(b.y2), s * 0.12, 0, Math.PI * 2); g.fill();
+      g.beginPath(); g.arc(this.X(ex), this.Y(ey), s * 0.12, 0, Math.PI * 2); g.fill();
     }
     // 毛玉
     for (const sh of w.shots) {
