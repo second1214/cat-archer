@@ -32,11 +32,20 @@ describe("撃ち方", () => {
     expect(a.hp).toBeLessThan(1e6);
     expect(b.hp).toBeLessThan(1e6);
   });
-  it("レーザーポインター（スキル）: 毛玉に くわえて レーザーも撃つ", () => {
+  it("レーザーポインター（スキル）: 攻撃が レーザーに置きかわる（ななめ・まえに2本も レーザーで）", () => {
     const { w, b } = setup({ skills: { laser: 1 } });
-    expect(w.shots.length).toBe(1);
-    expect(w.beams.filter((x) => x.extra).length).toBe(1);
+    expect(w.shots.length).toBe(0);
+    expect(w.beams.length).toBe(1);
     expect(b.hp).toBeLessThan(1e6);
+    const m = setup({ skills: { laser: 1, diag: 1, front: 1 } }).w;
+    expect(m.shots.length).toBe(0);
+    expect(m.beams.length).toBe(6);
+  });
+  it("レーザーポインター（スキル）は 1度とったら もう出ない。武器がレーザーなら はじめから出ない", () => {
+    for (let i = 0; i < 200; i++) {
+      expect(rollSkills({ laser: 1 }, mulberry32(i), 3, false, true)).not.toContain("laser");
+      expect(rollSkills({}, mulberry32(i), 3, false, true)).not.toContain("laser");
+    }
   });
   it("レーザーは 物で止まる", () => {
     const s = newSave(); s.items.push({ uid: 9, id: "laser", r: 0, lv: 1 }); s.equipped.weapon = 9;
@@ -60,7 +69,7 @@ describe("撃ち方", () => {
     expect(run(false)).toBeCloseTo(0, 5);
     expect(run(true)).toBeGreaterThan(1);
   });
-  it("レーザーの武器では 毛玉だけのスキル（つらぬく・はねる・とびうつる・ゆうどう）は 出ない", () => {
+  it("攻撃が レーザーのときは 毛玉だけのスキル（つらぬく・はねる・とびうつる・ゆうどう）は 出ない", () => {
     for (let i = 0; i < 200; i++) {
       const r = rollSkills({}, mulberry32(i), 3, false, true);
       expect(r.some((x) => LASER_USELESS.includes(x))).toBe(false);

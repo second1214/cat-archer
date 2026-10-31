@@ -60,7 +60,7 @@ export interface Shot {
 }
 
 /** レーザー（当たりは 撃った瞬間に決まる。見た目のため 少し残す） */
-export interface Beam { x1: number; y1: number; x2: number; y2: number; t: number; crit: boolean; extra: boolean }
+export interface Beam { x1: number; y1: number; x2: number; y2: number; t: number; crit: boolean }
 
 export interface EShot { x: number; y: number; vx: number; vy: number; r: number; dmg: number; life: number }
 
@@ -118,6 +118,8 @@ export class World {
   get pierce(): boolean { return this.lo.pierce || this.n("pierce") > 0; }
   get bounce(): number { return this.lo.bounce + 2 * this.n("bounce"); }
   get orbs(): number { return 2 * this.n("orbit"); }
+  /** 攻撃が レーザー（武器 か スキル） */
+  get laser(): boolean { return this.lo.laser || this.n("laser") > 0; }
   xpNeed(level = this.hero.level): number { return 6 + 4 * (level - 1); }
 
   // ---------- ステージ ----------
@@ -177,7 +179,7 @@ export class World {
 
   private offerLevel(): void {
     if (this.pendingLevels > 0 && !this.choices) {
-      this.choices = rollSkills(this.skills, this.rng, 3, this.hero.hp < this.hero.maxHp * 0.8, this.lo.laser);
+      this.choices = rollSkills(this.skills, this.rng, 3, this.hero.hp < this.hero.maxHp * 0.8, this.laser);
       if (this.choices.length === 0) { this.pendingLevels = 0; this.choices = null; }
     }
   }
@@ -280,8 +282,9 @@ export class World {
     const a = Math.atan2(target.y - h.y, target.x - h.x);
     h.facing = Math.cos(a) >= 0 ? 1 : -1;
     h.shootAnim = 0.2;
-    const laser = this.lo.laser;
-    const dmg = this.atk * (1 - 0.1 * this.n("multi")) * (1 - 0.15 * this.n("front")) * (this.pierce && !laser ? 0.75 : 1);
+    const laser = this.laser;
+    // スキルで レーザーにしたときは 1発 -20%（武器のレーザーは 攻撃力で 調整ずみ）
+    const dmg = this.atk * (1 - 0.1 * this.n("multi")) * (1 - 0.15 * this.n("front")) * (this.pierce && !laser ? 0.75 : 1) * (laser && !this.lo.laser ? 0.8 : 1);
     const angles: number[] = [a];
     const d = this.n("diag"), s = this.n("side"), b = this.n("back");
     if (d >= 1) angles.push(a + Math.PI / 4, a - Math.PI / 4);
@@ -296,15 +299,14 @@ export class World {
       for (let i = 0; i < n; i++) {
         const off = (i - (n - 1) / 2) * 0.28;
         const x = h.x - Math.sin(an) * off, y = h.y + Math.cos(an) * off;
-        if (laser) this.fireBeam(x, y, an, dmg, false); else this.addShot(x, y, an, dmg);
+        if (laser) this.fireBeam(x, y, an, dmg); else this.addShot(x, y, an, dmg);
       }
     }
-    if (this.n("laser")) this.fireBeam(h.x, h.y, a, this.atk * (0.6 + 0.4 * (this.n("laser") - 1)), true);
     this.sounds.push("shoot");
   }
 
   /** レーザー: 壁か 物まで まっすぐ。とちゅうの敵 ぜんぶに当たる */
-  private fireBeam(x: number, y: number, a: number, dmg: number, extra: boolean): void {
+  private fireBeam(x: number, y: number, a: number, dmg: number): void {
     const crit = this.rng() < this.critRate;
     const v = crit ? dmg * this.critMul : dmg;
     const sx = x, sy = y - 0.35, cx = Math.cos(a), cy = Math.sin(a);
@@ -320,7 +322,7 @@ export class World {
       if (along < 0 || along > len + e.def.r) continue;
       if (Math.abs(ex * cy - ey * cx) < e.def.r + 0.12) this.hitEnemy(e, v, crit, true);
     }
-    this.beams.push({ x1: sx, y1: sy, x2: sx + cx * len, y2: sy + cy * len, t: 0, crit, extra });
+    this.beams.push({ x1: sx, y1: sy, x2: sx + cx * len, y2: sy + cy * len, t: 0, crit });
   }
 
   private addShot(x: number, y: number, a: number, dmg: number): void {
