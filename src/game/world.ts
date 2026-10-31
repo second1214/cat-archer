@@ -67,6 +67,9 @@ export interface Enemy {
 /** ステージのあいだの できごと（飼い主のごほうび・のら猫ボスの 取り引き） */
 export interface StageEvent { kind: "angel" | "devil"; skills: SkillId[] }
 /** 飼い主のごほうびが 来るステージ（クリアしたあと） */
+/** ハードモード: 敵の 体力・攻撃の 倍率 */
+export const HARD_HP = 3;
+export const HARD_DMG = 2;
 export const ANGEL_STAGES: readonly number[] = [3, 7];
 /** のら猫ボスが 来るステージ（ボスを倒したあと） */
 export const DEVIL_STAGES: readonly number[] = [5];
@@ -120,6 +123,8 @@ export class World implements StrikeHost {
   /** 助っ人ねこ（ストライク） */
   readonly strikes: Strikes;
   kills = 0;
+  /** 虫の種類ごとの 倒した数（図鑑） */
+  killsBy: Partial<Record<EnemyKind, number>> = {};
   terrain: Terrain = Terrain.empty();
   /** 猫までの 歩ける距離（地面を歩く虫の 道さがし） */
   private field: number[] = [];
@@ -132,7 +137,7 @@ export class World implements StrikeHost {
 
   /** lastStage: この面を クリアしたら おしまい（毎日の挑戦は 5） */
   /** tower: キャットタワーの はじめの階（階 = ステージ。階ごとに 強くなり、終わりは ない） */
-  constructor(readonly lo: Loadout, readonly chapter: number, readonly rng: Rng, readonly heroCat = "chatora", readonly lastStage = STAGES_PER_CHAPTER, readonly tower = 0) {
+  constructor(readonly lo: Loadout, readonly chapter: number, readonly rng: Rng, readonly heroCat = "chatora", readonly lastStage = STAGES_PER_CHAPTER, readonly tower = 0, readonly hard = false) {
     this.hero = {
       x: W / 2, y: H - 1.5, r: 0.36, hp: lo.hp, maxHp: lo.hp, inv: 0, facing: 1, moving: false, dist: 0,
       atkCd: 0.3, shootAnim: 0, hurtAnim: 0, level: 1, xp: 0,
@@ -189,7 +194,7 @@ export class World implements StrikeHost {
     const info = this.infoAt(n);
     this.terrain = pickTerrain(this.localStage(n), info.boss, this.rng);
     this.fieldCell = -1;
-    this.hpMul = info.hpMul; this.dmgMul = info.dmgMul;
+    this.hpMul = info.hpMul * (this.hard ? HARD_HP : 1); this.dmgMul = info.dmgMul * (this.hard ? HARD_DMG : 1);
     this.enemies = [];
     const reach = this.terrain.flow(h.x, h.y);
     for (const k of info.enemies) this.enemies.push(this.spawn(k, reach));
@@ -371,7 +376,7 @@ export class World implements StrikeHost {
     if (this.lo.regen > 0) this.heal(this.hero.maxHp * this.lo.regen);
     this.churu += CHURU_STAGE + (this.stage >= this.lastStage ? CHURU_CHAPTER : 0);
     // 5章から ボスを倒すと ルーン
-    if (info.boss && this.chapter >= RUNE_UNLOCK_CHAPTER) this.runeDrops.push(rollRune(this.rng, 0, this.stage === STAGES_PER_CHAPTER));
+    if (info.boss && this.chapter >= RUNE_UNLOCK_CHAPTER) this.runeDrops.push(rollRune(this.rng, 0, this.hard || this.stage === STAGES_PER_CHAPTER));
     this.strikes.onStageClear();
     this.eshots = [];
     this.sounds.push("clear");
@@ -384,7 +389,7 @@ export class World implements StrikeHost {
     }
   }
 
-  private get coinMul(): number { return (1 + this.lo.stats.coinPct) * (1 + 0.3 * (this.chapter - 1)); }
+  private get coinMul(): number { return (1 + this.lo.stats.coinPct) * (1 + 0.3 * (this.chapter - 1)) * (this.hard ? 2 : 1); }
 
   private heal(v: number): void {
     const h = this.hero;
@@ -601,6 +606,7 @@ export class World implements StrikeHost {
   private kill(e: Enemy): void {
     e.dead = true;
     this.kills++;
+    this.killsBy[e.def.kind] = (this.killsBy[e.def.kind] ?? 0) + 1;
     this.fx.push({ kind: "die", x: e.x, y: e.y, v: e.def.r, t: 0 });
     this.sounds.push("kill");
     this.coins += e.def.coins * this.coinMul;

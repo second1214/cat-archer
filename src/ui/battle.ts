@@ -11,17 +11,17 @@ import { loadCatImages, Renderer, type Stick } from "../game/render";
 import { World } from "../game/world";
 import { fmt, h, overlay } from "./dom";
 import { runeCard } from "./runes";
-import { sfx } from "./sfx";
+import { bgm, sfx } from "./sfx";
 
-export interface BattleEnd { stage: number; won: boolean; coins: number; drops: Item[]; runeDrops: Rune[]; churu: number; kills: number }
+export interface BattleEnd { stage: number; won: boolean; coins: number; drops: Item[]; runeDrops: Rune[]; churu: number; kills: number; killsBy: World["killsBy"] }
 
 /** 毎日の挑戦などで 使う（面の数・見出し。拾った物は 出さない） */
 export interface BattleMode { stages: number; title: string; tower?: number }
 
-export function startBattle(save: SaveData, chapter: number, onEnd: (r: BattleEnd) => void, mode?: BattleMode): void {
+export function startBattle(save: SaveData, chapter: number, onEnd: (r: BattleEnd) => void, mode?: BattleMode, hard = false): void {
   void loadCatImages(save.cat);
   const lastSt = mode?.stages ?? STAGES_PER_CHAPTER;
-  const world = new World(loadoutOf(save), chapter, mulberry32((save.seed = (save.seed * 16807 + 11) % 2147483647)), save.cat, lastSt, mode?.tower ?? 0);
+  const world = new World(loadoutOf(save), chapter, mulberry32((save.seed = (save.seed * 16807 + 11) % 2147483647)), save.cat, lastSt, mode?.tower ?? 0, hard);
   const cv = h("canvas", { class: "bt-cv" });
   const stageEl = h("div", { class: "bt-stage" });
   const hpFill = h("div", { class: "bar-fill hp" });
@@ -38,6 +38,8 @@ export function startBattle(save: SaveData, chapter: number, onEnd: (r: BattleEn
       bossBar));
   document.getElementById("app")!.append(root);
 
+  const music = mode ? "tower" : "field";
+  bgm(music);
   const ren = new Renderer(cv);
   const onResize = () => ren.resize();
   window.addEventListener("resize", onResize);
@@ -163,7 +165,7 @@ export function startBattle(save: SaveData, chapter: number, onEnd: (r: BattleEn
     const drops = world.drops;
     modal = overlay(h("div", { class: "result" },
       h("img", { class: "result-cat", src: `cat/${save.cat}/${won ? "jump" : "sleep"}.png`, alt: "" }),
-      h("h2", null, won ? (mode ? `${mode.title} クリア！` : `第${chapter}章 クリア！`) : "やられちゃった…"),
+      h("h2", null, won ? (mode ? `${mode.title} クリア！` : `第${chapter}章${hard ? " ハード" : ""} クリア！`) : "やられちゃった…"),
       h("div", { class: "result-st" }, mode?.tower ? `${world.stage - 1}階まで クリア` : won ? `${lastSt} / ${lastSt}` : `ステージ ${world.stage} / ${lastSt} まで`),
       mode ? null : h("div", { class: "result-rw" }, h("span", null, "🐟 にぼし"), h("b", null, `+${fmt(world.coins)}`)),
       !mode && world.churu ? h("div", { class: "result-rw" }, h("span", null, "🍥 チュール"), h("b", null, `+${fmt(world.churu)}`)) : null,
@@ -176,20 +178,21 @@ export function startBattle(save: SaveData, chapter: number, onEnd: (r: BattleEn
   const finish = () => {
     modal?.close();
     cleanup();
-    onEnd({ stage: world.stage, won: world.state === "won", coins: world.coins, drops: world.drops, runeDrops: world.runeDrops, churu: world.churu, kills: world.kills });
+    onEnd({ stage: world.stage, won: world.state === "won", coins: world.coins, drops: world.drops, runeDrops: world.runeDrops, churu: world.churu, kills: world.kills, killsBy: world.killsBy });
   };
 
   // ---- ループ ----
   let raf = 0, last = performance.now(), acc = 0;
   const hudUpdate = () => {
     const hero = world.hero;
-    stageEl.textContent = `${mode ? mode.title : `第${chapter}章 ${CHAPTER_NAMES[chapter - 1]}`}　${mode?.tower ? `${world.stage}階` : `${world.stage} / ${lastSt}`}`;
+    stageEl.textContent = `${mode ? mode.title : `第${chapter}章${hard ? "★ハード" : ""} ${CHAPTER_NAMES[chapter - 1]}`}　${mode?.tower ? `${world.stage}階` : `${world.stage} / ${lastSt}`}`;
     hpFill.style.width = `${(hero.hp / hero.maxHp) * 100}%`;
     hpText.textContent = `${Math.ceil(hero.hp)} / ${hero.maxHp}`;
     xpFill.style.width = `${Math.min(1, hero.xp / world.xpNeed()) * 100}%`;
     lvEl.textContent = `Lv${hero.level}`;
     const boss = world.enemies.find((e) => e.def.boss);
     bossBar.style.display = boss ? "" : "none";
+    if (!ended) bgm(boss ? "boss" : music);
     if (boss) {
       (bossBar.firstChild as HTMLElement).textContent = boss.def.name;
       (bossBar.querySelector(".bar-fill") as HTMLElement).style.width = `${(boss.hp / boss.maxHp) * 100}%`;

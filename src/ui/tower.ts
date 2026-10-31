@@ -1,6 +1,7 @@
 // キャットタワーの 画面（ホームから）。
 import { finishTower, floorReward, TOWER_UNLOCK, towerChapter, towerStart, type TowerReward } from "../core/tower";
 import { track } from "../core/missions";
+import { addBestiary } from "../core/run";
 import { writeSave, type SaveData } from "../core/save";
 import { startBattle } from "./battle";
 import { fmt, h, overlay, toast } from "./dom";
@@ -23,7 +24,7 @@ export function openTower(save: SaveData, rerender: () => void, shell: HTMLEleme
       shell.style.display = "none";
       startBattle(save, towerChapter(start), (r) => {
         const got = finishTower(save, r.stage - 1);
-      track(save, "stages", r.stage - 1); track(save, "kills", r.kills);
+      track(save, "stages", r.stage - 1); addBestiary(save, r.killsBy); track(save, "kills", r.kills);
         writeSave(save);
         shell.style.display = "";
         rerender();

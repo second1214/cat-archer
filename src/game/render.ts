@@ -488,7 +488,7 @@ function yarn(g: CanvasRenderingContext2D, x: number, y: number, r: number, col:
 }
 
 /** 虫を描く（右向き・まん中が 0,0・R は 半径のピクセル）。 */
-function drawBug(g: CanvasRenderingContext2D, kind: string, R: number, t: number): void {
+export function drawBug(g: CanvasRenderingContext2D, kind: string, R: number, t: number): void {
   const leg = (n: number, len: number, col: string, phase = 0) => {
     g.strokeStyle = col; g.lineWidth = Math.max(1.5, R * 0.09); g.lineCap = "round";
     for (let i = 0; i < n; i++) {
