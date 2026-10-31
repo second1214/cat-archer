@@ -2,6 +2,7 @@
 import { ITEM_MAP, NORMAL_ITEMS, RARITY_NAMES, SERIES, SLOT_GROUP } from "../core/equip";
 import { canPull, GACHA10_COST, GACHA_COST, GACHA_PITY, NORMAL_RATES, pullGacha, SERIES_RARITY, SERIES_RATE } from "../core/gacha";
 import { mulberry32 } from "../core/rng";
+import { CHURU_BOSS, CHURU_CHAPTER, CHURU_DAILY, CHURU_FIRST_CLEAR, CHURU_PICKUP, CHURU_STAGE } from "../core/run";
 import { writeSave, type SaveData } from "../core/save";
 import { fmt, h, overlay } from "./dom";
 import { itemCard } from "./equip";
@@ -37,6 +38,9 @@ export function renderGacha(save: SaveData, rerender: () => void): HTMLElement {
       h("div", { class: "gc-sr-h" }, h("span", { class: "gc-sr-ico" }, sr.icon), h("b", null, `${sr.name}シリーズ`), h("span", { class: "gc-sr-f" }, `${sr.focus}に 特化`)),
       h("div", { class: "gc-sr-items" }, Object.values(ITEM_MAP).filter((d) => d.series === sr.id).map((d) => h("span", { title: d.name }, d.icon))),
       h("div", { class: "muted small" }, `2つ: ${sr.set2.desc}　4つ: ${sr.set4.desc}`)))),
+    h("div", { class: "gc-rates muted small" },
+      h("b", null, "チュールの もらい方"),
+      h("div", null, `1日1回 あそぶ +${CHURU_DAILY}・ステージ クリア +${CHURU_STAGE}・床に落ちている チュール +${CHURU_PICKUP}・ボス +${CHURU_BOSS}・章クリア +${CHURU_CHAPTER}・章を はじめてクリア +${CHURU_FIRST_CLEAR}`)),
     h("div", { class: "gc-rates muted small" },
       h("b", null, "出る物と確率"),
       h("div", null, `シリーズ衣装（${RARITY_NAMES[SERIES_RARITY]}・ガチャだけ）: ${Math.round(SERIES_RATE * 100)}%（${GACHA_PITY}回で かならず）`),

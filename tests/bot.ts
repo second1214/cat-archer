@@ -4,7 +4,7 @@ import type { Loadout } from "../src/core/save";
 import type { SkillId } from "../src/core/skills";
 import { W, World, type Input } from "../src/game/world";
 
-const PREF: SkillId[] = ["multi", "front", "atk", "aspd", "diag", "crit", "ricochet", "bolt", "fire", "hpup", "heal", "orbit"];
+export const PREF: SkillId[] = ["multi", "front", "atk", "aspd", "diag", "crit", "ricochet", "bolt", "fire", "hpup", "heal", "orbit"];
 
 export function botInput(w: World): Input {
   const h = w.hero;
@@ -28,7 +28,8 @@ export function botInput(w: World): Input {
   // いちばん近い敵が 物のかげなら、見える所まで 歩く
   let near = w.enemies[0], nd = Infinity;
   for (const e of w.enemies) { const d = Math.hypot(e.x - h.x, e.y - h.y); if (d < nd) { nd = d; near = e; } }
-  if (near && !t.clearShot(h.x, h.y - 0.35, near.x, near.y - 0.3)) return go(near.x, near.y);
+  // 弾の当たり判定は 足もと寄り（弾の高さ +0.3）で 物を見る
+  if (near && !t.clearShot(h.x, h.y - 0.05, near.x, near.y)) return go(near.x, near.y);
   return { mx: 0, my: 0 };
 }
 

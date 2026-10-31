@@ -380,6 +380,18 @@ export class Renderer {
   /** 助っ人ねこ（ストライク）と またたび */
   private drawHelpers(w: World): void {
     const g = this.g, s = this.s;
+    const cp = w.churuPickup;
+    if (cp) {
+      const x = this.X(cp.x), y = this.Y(cp.y) - Math.abs(Math.sin(cp.t * 3)) * s * 0.12;
+      g.fillStyle = "rgba(255,150,190,.35)";
+      g.beginPath(); g.arc(x, y - s * 0.2, s * 0.45, 0, Math.PI * 2); g.fill();
+      // チュールの 袋（細長い）
+      g.save(); g.translate(x, y - s * 0.2); g.rotate(-0.5);
+      g.fillStyle = "#ff8fb8"; g.fillRect(-s * 0.1, -s * 0.32, s * 0.2, s * 0.6);
+      g.fillStyle = "#fff"; g.fillRect(-s * 0.1, -s * 0.32, s * 0.2, s * 0.1);
+      g.fillStyle = "#c2185b"; g.fillRect(-s * 0.06, -s * 0.05, s * 0.12, s * 0.16);
+      g.restore();
+    }
     for (const p of w.strikes.pickups) {
       const x = this.X(p.x), y = this.Y(p.y) - Math.abs(Math.sin(p.t * 3)) * s * 0.12;
       g.fillStyle = "rgba(140,220,120,.35)";
@@ -449,11 +461,11 @@ export class Renderer {
         continue;
       }
       g.globalAlpha = Math.max(0, a);
-      const txt = f.kind === "dodge" ? "ひらり" : f.kind === "heal" ? `+${f.v}` : f.kind === "hurt" ? `-${f.v}` : String(f.v);
+      const txt = f.kind === "dodge" ? "ひらり" : f.kind === "heal" ? `+${f.v}` : f.kind === "hurt" ? `-${f.v}` : f.kind === "churu" ? `🍥+${f.v}` : String(f.v);
       const big = f.kind === "crit" ? 1.35 : f.kind === "dot" ? 0.8 : 1;
       g.font = `900 ${Math.round(s * 0.42 * big)}px system-ui, sans-serif`;
       g.lineWidth = 3; g.strokeStyle = "rgba(40,20,10,.85)";
-      g.fillStyle = f.kind === "crit" ? "#ffd84a" : f.kind === "heal" ? "#7ee08a" : f.kind === "hurt" ? "#ff6b6b" : f.kind === "dodge" ? "#bfe8ff" : f.kind === "dot" ? "#ffb27a" : "#fff";
+      g.fillStyle = f.kind === "crit" ? "#ffd84a" : f.kind === "heal" ? "#7ee08a" : f.kind === "hurt" ? "#ff6b6b" : f.kind === "dodge" ? "#bfe8ff" : f.kind === "dot" ? "#ffb27a" : f.kind === "churu" ? "#ff8fb8" : "#fff";
       g.strokeText(txt, x, y); g.fillText(txt, x, y);
       g.globalAlpha = 1;
     }

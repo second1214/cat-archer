@@ -15,9 +15,22 @@ export interface RunResult {
   churu?: number;
 }
 
-/** チュール: ボス 1体（開発中なので 多め）・章の はじめてのクリア */
-export const CHURU_BOSS = 10;
-export const CHURU_FIRST_CLEAR = 100;
+/** チュールの もらい方（気軽に ガチャを回せる くらい） */
+export const CHURU_STAGE = 1;        // ステージを1つクリア
+export const CHURU_BOSS = 10;        // ボスを倒す
+export const CHURU_PICKUP = 5;       // 床に落ちている チュール（ステージに ときどき）
+export const CHURU_CHAPTER = 20;     // 章をクリア（何回でも）
+export const CHURU_FIRST_CLEAR = 100; // 章を はじめてクリア
+export const CHURU_DAILY = 30;       // 1日1回 はじめて あそぶ
+export const CHURU_PICKUP_CHANCE = 0.2;
+
+/** 1日1回の チュール（もらえたら その数、もう もらっていれば 0） */
+export function claimDaily(save: SaveData, today: string): number {
+  if (save.lastDaily === today) return 0;
+  save.lastDaily = today;
+  save.churu += CHURU_DAILY;
+  return CHURU_DAILY;
+}
 
 export interface RunReward { coins: number; churu: number; items: Item[]; runes: Rune[]; newBest: boolean; unlocked: number | null }
 
