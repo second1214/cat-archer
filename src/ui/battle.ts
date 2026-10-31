@@ -3,7 +3,9 @@ import { ITEM_MAP, RARITY_NAMES, type Item } from "../core/equip";
 import type { Rune } from "../core/runes";
 import { mulberry32 } from "../core/rng";
 import { loadoutOf, type SaveData } from "../core/save";
-import { SKILL_MAP } from "../core/skills";
+import { SKILL_MAP, TIER_NAMES } from "../core/skills";
+import { REVIVE_COST } from "../core/run";
+import { writeSave } from "../core/save";
 import { CHAPTER_NAMES, STAGES_PER_CHAPTER } from "../core/stages";
 import { loadCatImages, Renderer, type Stick } from "../game/render";
 import { World } from "../game/world";
@@ -11,15 +13,15 @@ import { fmt, h, overlay } from "./dom";
 import { runeCard } from "./runes";
 import { sfx } from "./sfx";
 
-export interface BattleEnd { stage: number; won: boolean; coins: number; drops: Item[]; runeDrops: Rune[]; churu: number }
+export interface BattleEnd { stage: number; won: boolean; coins: number; drops: Item[]; runeDrops: Rune[]; churu: number; kills: number }
 
 /** 毎日の挑戦などで 使う（面の数・見出し。拾った物は 出さない） */
-export interface BattleMode { stages: number; title: string }
+export interface BattleMode { stages: number; title: string; tower?: number }
 
 export function startBattle(save: SaveData, chapter: number, onEnd: (r: BattleEnd) => void, mode?: BattleMode): void {
   void loadCatImages(save.cat);
   const lastSt = mode?.stages ?? STAGES_PER_CHAPTER;
-  const world = new World(loadoutOf(save), chapter, mulberry32((save.seed = (save.seed * 16807 + 11) % 2147483647)), save.cat, lastSt);
+  const world = new World(loadoutOf(save), chapter, mulberry32((save.seed = (save.seed * 16807 + 11) % 2147483647)), save.cat, lastSt, mode?.tower ?? 0);
   const cv = h("canvas", { class: "bt-cv" });
   const stageEl = h("div", { class: "bt-stage" });
   const hpFill = h("div", { class: "bar-fill hp" });
@@ -100,11 +102,15 @@ export function startBattle(save: SaveData, chapter: number, onEnd: (r: BattleEn
       h("div", { class: "lvup-sub" }, "スキルを1つえらんでね"),
       h("div", { class: "lvup-cards" }, ch.map((id) => {
         const d = SKILL_MAP[id], n = world.skills[id] ?? 0;
-        return h("button", { class: "lvup-card", onclick: () => { modal?.close(); modal = null; world.chooseSkill(id); } },
+        return h("button", { class: `lvup-card tier${d.tier ?? 0}`, onclick: () => { modal?.close(); modal = null; world.chooseSkill(id); } },
+          d.tier ? h("div", { class: "lvup-tier" }, TIER_NAMES[d.tier]) : null,
           h("div", { class: "lvup-ico" }, d.icon),
           h("div", { class: "lvup-n" }, d.name, n ? h("small", null, ` ${n + 1}つめ`) : null),
           h("div", { class: "lvup-d" }, d.desc));
-      }))), "ov-lvup");
+      })),
+      h("button", { class: `btn btn-small ${world.rerolls ? "btn-pink" : "btn-gray"} lvup-re`, disabled: !world.rerolls, onclick: () => {
+        if (world.reroll()) { modal?.close(); modal = null; showChoices(); }
+      } }, `🎲 引きなおす（のこり ${world.rerolls}）`)), "ov-lvup");
   };
 
   /** 飼い主のごほうび（回復か おもちゃ）・のら猫ボスの 取り引き（体力の上限と 引きかえに スキル） */
@@ -133,6 +139,23 @@ export function startBattle(save: SaveData, chapter: number, onEnd: (r: BattleEn
           h("button", { class: "btn btn-gray", onclick: pick("refuse") }, "ことわる"))), "ov-lvup ov-devil");
   };
 
+  /** やられたとき: チュールで 1回だけ 起き上がれる */
+  let askedRevive = false;
+  const showRevive = () => {
+    askedRevive = true;
+    const can = save.churu >= REVIVE_COST;
+    modal = overlay(h("div", { class: "result" },
+      h("img", { class: "result-cat", src: `cat/${save.cat}/sleep.png`, alt: "" }),
+      h("h2", null, "やられちゃった…"),
+      h("p", { class: "muted small" }, `チュールで 元気を出して 続ける？（1回だけ・🍥 のこり ${fmt(save.churu)}）`),
+      h("button", { class: `btn ${can ? "btn-gold" : "btn-gray"}`, disabled: !can, onclick: () => {
+        if (save.churu < REVIVE_COST || !world.continueRun()) return;
+        save.churu -= REVIVE_COST; writeSave(save);
+        sfx("levelup"); modal?.close(); modal = null; endTimer = 0; askedRevive = false;
+      } }, `🍥${REVIVE_COST} で 続ける`),
+      h("button", { class: "btn btn-gray", onclick: () => { modal?.close(); modal = null; showResult(); } }, "あきらめる")));
+  };
+
   const showResult = () => {
     ended = true;
     const won = world.state === "won";
@@ -141,7 +164,7 @@ export function startBattle(save: SaveData, chapter: number, onEnd: (r: BattleEn
     modal = overlay(h("div", { class: "result" },
       h("img", { class: "result-cat", src: `cat/${save.cat}/${won ? "jump" : "sleep"}.png`, alt: "" }),
       h("h2", null, won ? (mode ? `${mode.title} クリア！` : `第${chapter}章 クリア！`) : "やられちゃった…"),
-      h("div", { class: "result-st" }, won ? `${lastSt} / ${lastSt}` : `ステージ ${world.stage} / ${lastSt} まで`),
+      h("div", { class: "result-st" }, mode?.tower ? `${world.stage - 1}階まで クリア` : won ? `${lastSt} / ${lastSt}` : `ステージ ${world.stage} / ${lastSt} まで`),
       mode ? null : h("div", { class: "result-rw" }, h("span", null, "🐟 にぼし"), h("b", null, `+${fmt(world.coins)}`)),
       !mode && world.churu ? h("div", { class: "result-rw" }, h("span", null, "🍥 チュール"), h("b", null, `+${fmt(world.churu)}`)) : null,
       !mode && drops.length ? h("div", { class: "result-items" }, drops.map((d) => h("div", { class: `icard r${d.r}` },
@@ -153,14 +176,14 @@ export function startBattle(save: SaveData, chapter: number, onEnd: (r: BattleEn
   const finish = () => {
     modal?.close();
     cleanup();
-    onEnd({ stage: world.stage, won: world.state === "won", coins: world.coins, drops: world.drops, runeDrops: world.runeDrops, churu: world.churu });
+    onEnd({ stage: world.stage, won: world.state === "won", coins: world.coins, drops: world.drops, runeDrops: world.runeDrops, churu: world.churu, kills: world.kills });
   };
 
   // ---- ループ ----
   let raf = 0, last = performance.now(), acc = 0;
   const hudUpdate = () => {
     const hero = world.hero;
-    stageEl.textContent = `${mode ? mode.title : `第${chapter}章 ${CHAPTER_NAMES[chapter - 1]}`}　${world.stage} / ${lastSt}`;
+    stageEl.textContent = `${mode ? mode.title : `第${chapter}章 ${CHAPTER_NAMES[chapter - 1]}`}　${mode?.tower ? `${world.stage}階` : `${world.stage} / ${lastSt}`}`;
     hpFill.style.width = `${(hero.hp / hero.maxHp) * 100}%`;
     hpText.textContent = `${Math.ceil(hero.hp)} / ${hero.maxHp}`;
     xpFill.style.width = `${Math.min(1, hero.xp / world.xpNeed()) * 100}%`;
@@ -187,7 +210,9 @@ export function startBattle(save: SaveData, chapter: number, onEnd: (r: BattleEn
       }
       if (world.state === "dead" || world.state === "won") {
         endTimer += dt;
-        if (endTimer > (world.state === "won" ? 1.2 : 0.9)) showResult();
+        if (endTimer > (world.state === "won" ? 1.2 : 0.9)) {
+          if (world.state === "dead" && !world.paidRevive && !askedRevive) showRevive(); else showResult();
+        }
       }
     } else acc = 0;
     ren.draw(world, stick);

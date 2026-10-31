@@ -2,6 +2,7 @@
 import { fodderRarity, ITEM_MAP, MAX_RARITY, mergePartners, MYTHIC, rollItem, upgradeCost, type Item, type Rarity } from "./equip";
 import { weighted, type Rng } from "./rng";
 import { ENCHANT_COST, enchantSlots, G, MAX_GRADE, minGrade, rollEnchant, RUNE_MAP, RUNE_MERGE_COUNT, RUNE_UNLOCK_CHAPTER, RUNE_TYPES, RUNES, rollRune, type Enchant, type Rune } from "./runes";
+import { track } from "./missions";
 import { CHAPTERS, equippedSet, etchedSlotsOpen, type SaveData } from "./save";
 import { STAGES_PER_CHAPTER } from "./stages";
 
@@ -13,6 +14,7 @@ export interface RunResult {
   drops: Item[];       // uid はここで つけなおす
   runeDrops?: Rune[];  // uid はここで つけなおす
   churu?: number;
+  kills?: number;
 }
 
 /** チュールの もらい方（気軽に ガチャを回せる くらい） */
@@ -23,6 +25,8 @@ export const CHURU_CHAPTER = 20;     // 章をクリア（何回でも）
 export const CHURU_FIRST_CLEAR = 100; // 章を はじめてクリア
 export const CHURU_DAILY = 30;       // 1日1回 はじめて あそぶ
 export const CHURU_PICKUP_CHANCE = 0.2;
+/** やられたとき チュールで 復活（1プレイ 1回） */
+export const REVIVE_COST = 30;
 
 /** 1日1回の チュール（もらえたら その数、もう もらっていれば 0） */
 export function claimDaily(save: SaveData, today: string): number {
@@ -53,6 +57,8 @@ export function finishRun(save: SaveData, r: RunResult): RunReward {
   const stones = stonesFor(r.chapter, r.stage, r.won);
   save.stones += stones;
   const reached = r.won ? STAGES_PER_CHAPTER : Math.max(0, r.stage - 1);
+  track(save, "stages", reached);
+  track(save, "kills", r.kills ?? 0);
   const newBest = reached > (save.best[r.chapter] ?? 0);
   if (newBest) save.best[r.chapter] = reached;
   let unlocked: number | null = null;
@@ -88,6 +94,7 @@ export function upgradeItem(save: SaveData, uid: number): boolean {
   if (cost === null || save.coins < cost) return false;
   save.coins -= cost;
   it.lv++;
+  track(save, "grow");
   return true;
 }
 
@@ -101,6 +108,7 @@ export function mergeItem(save: SaveData, uid: number, useMaterials = true): Ite
   save.materials[fodderRarity(base.r)] -= p.mats;
   base.lv = Math.max(base.lv, ...p.mates.map((m) => m.lv));
   base.r = (base.r + 1) as Rarity;
+  track(save, "grow");
   save.items = save.items.filter((x) => !ids.has(x.uid));
   return base;
 }
@@ -197,6 +205,7 @@ export function mergeRune(save: SaveData, uid: number, useMats = true): Rune | n
   save.runes = save.runes.filter((x) => !ids.has(x.uid));
   save.runeMats[base.g] -= p.mats;
   base.g++;
+  track(save, "grow");
   return base;
 }
 

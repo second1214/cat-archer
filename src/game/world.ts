@@ -3,7 +3,8 @@
 import { rollItem, rollRarity, type Item } from "../core/equip";
 import type { Rng } from "../core/rng";
 import type { Loadout } from "../core/save";
-import { rollSkills, type SkillCounts, type SkillId } from "../core/skills";
+import { REROLLS, rollSkills, type SkillCounts, type SkillId } from "../core/skills";
+import { towerChapter } from "../core/tower";
 import { ENEMIES, stageInfo, STAGES_PER_CHAPTER, type EnemyDef, type EnemyKind } from "../core/stages";
 import { COLS, pickTerrain, ROWS, Terrain } from "../core/terrain";
 import { rollRune, RUNE_UNLOCK_CHAPTER, type Rune, type RuneEffects } from "../core/runes";
@@ -130,7 +131,8 @@ export class World implements StrikeHost {
   private orbCd = new Map<number, number>();
 
   /** lastStage: この面を クリアしたら おしまい（毎日の挑戦は 5） */
-  constructor(readonly lo: Loadout, readonly chapter: number, readonly rng: Rng, readonly heroCat = "chatora", readonly lastStage = STAGES_PER_CHAPTER) {
+  /** tower: キャットタワーの はじめの階（階 = ステージ。階ごとに 強くなり、終わりは ない） */
+  constructor(readonly lo: Loadout, readonly chapter: number, readonly rng: Rng, readonly heroCat = "chatora", readonly lastStage = STAGES_PER_CHAPTER, readonly tower = 0) {
     this.hero = {
       x: W / 2, y: H - 1.5, r: 0.36, hp: lo.hp, maxHp: lo.hp, inv: 0, facing: 1, moving: false, dist: 0,
       atkCd: 0.3, shootAnim: 0, hurtAnim: 0, level: 1, xp: 0,
@@ -138,8 +140,15 @@ export class World implements StrikeHost {
     this.strikes = new Strikes(this);
     // シリーズの セット効果: はじめから 持っているスキル
     for (const id of lo.startSkills) this.skills[id] = Math.max(this.skills[id] ?? 0, 1);
-    this.startStage(1);
+    this.startStage(tower || 1);
+    // タワーの 途中から はじめるときは 10階ごとに 3回 スキルを 選べる
+    if (tower > 1) { const k = Math.floor((tower - 1) / 10) * 3; this.hero.level += k; this.pendingLevels += k; this.offerLevel(); }
   }
+
+  /** その面の 章（タワーは 階で かわる）と 章の中の 面（1〜10） */
+  chapterAt(n: number): number { return this.tower ? towerChapter(n) : this.chapter; }
+  localStage(n: number): number { return this.tower ? ((n - 1) % STAGES_PER_CHAPTER) + 1 : n; }
+  private infoAt(n: number) { return stageInfo(this.chapterAt(n), this.localStage(n)); }
 
   // ---------- 助っ人ねこ（StrikeHost） ----------
   get rune(): RuneEffects { return this.lo.rune; }
@@ -177,15 +186,15 @@ export class World implements StrikeHost {
     this.event = null;
     const h = this.hero;
     h.x = W / 2; h.y = H - 1.5; h.inv = 1; h.atkCd = 0.4;
-    const info = stageInfo(this.chapter, n);
-    this.terrain = pickTerrain(n, info.boss, this.rng);
+    const info = this.infoAt(n);
+    this.terrain = pickTerrain(this.localStage(n), info.boss, this.rng);
     this.fieldCell = -1;
     this.hpMul = info.hpMul; this.dmgMul = info.dmgMul;
     this.enemies = [];
     const reach = this.terrain.flow(h.x, h.y);
     for (const k of info.enemies) this.enemies.push(this.spawn(k, reach));
     // 2章から ボスのいない後半のステージに ときどき 強い虫（中ボス）
-    if (!info.boss && n >= 4 && this.chapter >= 2 && this.rng() < Math.min(0.8, 0.35 + 0.03 * this.chapter)) {
+    if (!info.boss && this.localStage(n) >= 4 && this.chapterAt(n) >= 2 && this.rng() < Math.min(0.8, 0.35 + 0.03 * this.chapterAt(n))) {
       // 大きくなっても 物・水に かからない虫から えらぶ
       const ok = this.enemies.filter((e) => e.def.fly || !this.terrain.hits(e.x, e.y, e.def.r * 1.3));
       if (ok.length) this.makeElite(ok[Math.floor(this.rng() * ok.length)]);
@@ -261,12 +270,37 @@ export class World implements StrikeHost {
     this.offerLevel();
   }
 
+  /** 3択の 引きなおし（のこり回数） */
+  rerolls = REROLLS;
+  /** 3択を 引きなおす（今の3つは 出ない。足りなければ 出る） */
+  reroll(): boolean {
+    if (!this.choices || this.rerolls <= 0) return false;
+    this.rerolls--;
+    const next = this.rollChoices(this.choices);
+    this.choices = next.length >= this.choices.length ? next : [...next, ...this.rollChoices(next)].slice(0, 3);
+    return true;
+  }
+  private rollChoices(exclude: readonly SkillId[] = []): SkillId[] {
+    return rollSkills(this.skills, this.rng, 3, {
+      hurt: this.hero.hp < this.hero.maxHp * 0.8, laser: this.laser,
+      strikeSource: !!this.rune.timeSword || this.rune.potion.start, strikeWeight: this.rune.strikeSkillWeight,
+    }, exclude);
+  }
+  /** チュールでの 復活（1プレイ 1回。UI で チュールを 払ってから 呼ぶ） */
+  paidRevive = false;
+  continueRun(): boolean {
+    if (this.state !== "dead" || this.paidRevive) return false;
+    this.paidRevive = true;
+    const h = this.hero;
+    h.hp = h.maxHp; h.inv = 2.5;
+    this.eshots = [];
+    this.state = "fight";
+    return true;
+  }
+
   private offerLevel(): void {
     if (this.pendingLevels > 0 && !this.choices) {
-      this.choices = rollSkills(this.skills, this.rng, 3, {
-        hurt: this.hero.hp < this.hero.maxHp * 0.8, laser: this.laser,
-        strikeSource: !!this.rune.timeSword || this.rune.potion.start, strikeWeight: this.rune.strikeSkillWeight,
-      });
+      this.choices = this.rollChoices();
       if (this.choices.length === 0) { this.pendingLevels = 0; this.choices = null; }
     }
   }
@@ -331,7 +365,7 @@ export class World implements StrikeHost {
   }
 
   private clearStage(): void {
-    const info = stageInfo(this.chapter, this.stage);
+    const info = this.infoAt(this.stage);
     this.coins += 5 * this.stage * this.coinMul;
     if (info.boss || this.rng() < 0.15) this.drops.push(rollItem(this.rng, 0, rollRarity(this.rng, this.chapter, info.boss)));
     if (this.lo.regen > 0) this.heal(this.hero.maxHp * this.lo.regen);
@@ -344,8 +378,9 @@ export class World implements StrikeHost {
     this.state = this.stage >= this.lastStage ? "won" : "clear";
     if (this.state === "clear") {
       const opts = { laser: this.laser, strikeSource: !!this.rune.timeSword || this.rune.potion.start, strikeWeight: this.rune.strikeSkillWeight };
-      if (ANGEL_STAGES.includes(this.stage)) this.event = { kind: "angel", skills: rollSkills(this.skills, this.rng, 1, opts) };
-      else if (DEVIL_STAGES.includes(this.stage) || (this.rune.pactExtra && this.stage === 8)) this.event = { kind: "devil", skills: rollSkills(this.skills, this.rng, 2, opts) };
+      const ls = this.localStage(this.stage);
+      if (ANGEL_STAGES.includes(ls)) this.event = { kind: "angel", skills: rollSkills(this.skills, this.rng, 1, opts) };
+      else if (DEVIL_STAGES.includes(ls) || (this.rune.pactExtra && ls === 8)) this.event = { kind: "devil", skills: rollSkills(this.skills, this.rng, 2, opts) };
     }
   }
 

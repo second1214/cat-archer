@@ -311,3 +311,19 @@ button:disabled { cursor: default; }
 .dl-left.none { background: #ddd; color: #888; }
 .dl-lv { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .dl-lv .ch-arrow { width: 36px; height: 36px; }
+
+/* スキルのレア度・引きなおし */
+.lvup-card { position: relative; }
+.lvup-card.tier1 { border-color: #5aa0f0 !important; box-shadow: 0 0 0 2px rgba(90, 160, 240, .35); }
+.lvup-card.tier2 { border-color: #a65af0 !important; box-shadow: 0 0 0 2px rgba(166, 90, 240, .45); background: linear-gradient(180deg, #fbf5ff, #fff); }
+.lvup-tier { position: absolute; top: -8px; right: 8px; font-size: 10px; padding: 1px 6px; border-radius: 8px; color: #fff; background: #5aa0f0; }
+.lvup-card.tier2 .lvup-tier { background: #a65af0; }
+.lvup-re { margin-top: 10px; }
+.tw-best { font-size: 18px; margin: 6px 0; }
+.tw-next { margin: 6px 0 10px; padding: 6px 10px; border-radius: 10px; background: #fff7ea; text-align: left; }
+.hero-row { flex-wrap: wrap; }
+.pt-row { display: grid; grid-template-columns: 1fr auto; gap: 2px 8px; align-items: center; padding: 8px 12px; border-radius: 14px; background: #fff7ea; border: 2px solid #f0dcc0; text-align: left; }
+.pt-row > button { grid-row: 1 / span 2; grid-column: 2; }
+.ms-open { position: relative; }
+.ms-dot { position: absolute; top: -6px; right: -6px; width: 18px; height: 18px; border-radius: 50%; background: #e0344a; color: #fff; font-size: 12px; line-height: 18px; }
+.ms-bar { height: 6px; margin: 4px 0 2px; }

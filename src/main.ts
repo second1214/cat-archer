@@ -10,6 +10,9 @@ import { CHAPTER_NAMES, ENEMIES, newEnemiesIn, STAGES_PER_CHAPTER } from "./core
 import { loadCatImages } from "./game/render";
 import { startBattle } from "./ui/battle";
 import { openDaily } from "./ui/daily";
+import { openTower } from "./ui/tower";
+import { claimPatrol, patrolPending, PATROL_MAX_H } from "./core/patrol";
+import { claimBonus, claimMission, MISSION_BONUS, missionState, MISSIONS } from "./core/missions";
 import { todayStr } from "./core/daily";
 import { fmt, h, overlay, toast } from "./ui/dom";
 import { renderEquip } from "./ui/equip";
@@ -57,7 +60,8 @@ function renderHome(): HTMLElement {
         h("div", { class: "hero-pow" }, "戦力 ", h("b", null, fmt(powerOf(lo)))),
         h("button", { class: "btn btn-small hero-pick", onclick: pickCat }, "🐾 ", catName(save.cat)),
         h("button", { class: "btn btn-small hero-pick", onclick: openTraining }, "🏋️ 修行"),
-        h("button", { class: "btn btn-small hero-pick", onclick: () => { sfx("tap"); openDaily(save, render, shell); } }, "📅 毎日"))),
+        h("button", { class: "btn btn-small hero-pick", onclick: () => { sfx("tap"); openDaily(save, render, shell); } }, "📅 毎日"),
+        h("button", { class: "btn btn-small hero-pick", onclick: () => { sfx("tap"); openTower(save, render, shell); } }, "🗼 タワー"))),
     h("div", { class: "ch-card" },
       h("button", { class: "ch-arrow", disabled: ch <= 1, onclick: () => setCh(ch - 1) }, "◀"),
       h("div", { class: "ch-mid" },
@@ -67,9 +71,54 @@ function renderHome(): HTMLElement {
         newEnemiesIn(ch).length ? h("div", { class: "ch-new" }, "新しい虫: ", newEnemiesIn(ch).map((k) => ENEMIES[k].name).join("・")) : null),
       h("button", { class: "ch-arrow", disabled: ch >= save.unlocked, onclick: () => setCh(ch + 1) }, "▶")),
     h("button", { class: "btn btn-play", onclick: () => play(ch) }, "出発！"),
+    patrolRow(),
+    h("button", { class: `btn btn-small ${missionReady() ? "btn-pink" : "btn-gray"} ms-open`, onclick: openMissions }, "📋 毎日のミッション", missionReady() ? h("span", { class: "ms-dot" }, "!") : null),
     h("button", { class: `btn ${save.coins >= CHEST_COST ? "btn-pink" : "btn-gray"} chest`, disabled: save.coins < CHEST_COST, onclick: chest },
       "🎁 宝箱をあける ", h("small", null, `🐟${CHEST_COST}`)),
     h("p", { class: "muted small how" }, "指をすべらせて移動。止まると いちばん近い虫へ 自動で毛玉を撃ちます。"));
+}
+
+function patrolRow(): HTMLElement {
+  const p = patrolPending(save, Date.now());
+  const hh = Math.floor(p.hours), mm = Math.floor((p.hours - hh) * 60);
+  return h("div", { class: "pt-row" },
+    h("div", null, h("b", null, "🐾 パトロール"), h("small", { class: "muted" }, save.patrolAt ? ` ${hh}時間${mm}分（${PATROL_MAX_H}時間まで）` : " 近所の見回りを はじめる")),
+    h("div", { class: "small" }, [p.coins ? `🐟${fmt(p.coins)}` : "", p.churu ? `🍥${p.churu}` : "", p.stones ? `🪨${p.stones}` : ""].filter(Boolean).join(" ")),
+    h("button", { class: `btn btn-small ${!save.patrolAt || p.coins ? "btn-gold" : "btn-gray"}`, disabled: !!save.patrolAt && !p.coins, onclick: () => {
+      const r = claimPatrol(save, Date.now());
+      writeSave(save); sfx("coin");
+      toast(r.coins ? `パトロール: 🐟${fmt(r.coins)}${r.churu ? ` 🍥${r.churu}` : ""}${r.stones ? ` 🪨${r.stones}` : ""}` : "パトロールに 出かけた");
+      render();
+    } }, save.patrolAt ? "受け取る" : "はじめる"));
+}
+
+const missionReady = () => {
+  const m = missionState(save);
+  return MISSIONS.some((d) => m.prog[d.id] >= d.goal && !m.claimed.includes(d.id)) || (!m.bonus && m.claimed.length === MISSIONS.length);
+};
+
+function openMissions(): void {
+  sfx("tap");
+  const body = h("div", { class: "pick" });
+  const draw = () => {
+    const m = missionState(save);
+    body.replaceChildren(
+      h("h2", null, "毎日のミッション"),
+      h("div", { class: "tl-list" }, MISSIONS.map((d) => {
+        const v = Math.min(d.goal, m.prog[d.id]), got = m.claimed.includes(d.id);
+        return h("div", { class: "tl-row" },
+          h("div", { class: "tl-mid" }, h("b", null, d.name), h("div", { class: "bar ms-bar" }, h("div", { class: "bar-fill xp", style: `width:${(v / d.goal) * 100}%` })), h("small", null, `${v} / ${d.goal}`)),
+          h("button", { class: `btn btn-small ${!got && v >= d.goal ? "btn-gold" : "btn-gray"}`, disabled: got || v < d.goal, onclick: () => {
+            if (claimMission(save, d.id)) { writeSave(save); sfx("coin"); draw(); }
+          } }, got ? "済み" : `🍥${d.churu}`));
+      })),
+      h("button", { class: `btn ${!m.bonus && m.claimed.length === MISSIONS.length ? "btn-pink" : "btn-gray"} btn-wide`, disabled: m.bonus || m.claimed.length < MISSIONS.length, onclick: () => {
+        if (claimBonus(save)) { writeSave(save); sfx("levelup"); draw(); }
+      } }, m.bonus ? "ぜんぶ達成 済み" : `ぜんぶ達成で 🍥${MISSION_BONUS.churu}・🪨${MISSION_BONUS.stones}`),
+      h("button", { class: "btn btn-gray btn-wide", onclick: () => { mm.close(); render(); } }, "とじる"));
+  };
+  draw();
+  const mm = overlay(body, "", () => { mm.close(); render(); });
 }
 
 function openTraining(): void {
@@ -125,7 +174,7 @@ function play(chapter: number): void {
   sfx("tap");
   shell.style.display = "none";
   startBattle(save, chapter, (r) => {
-    const rw = finishRun(save, { chapter, stage: r.stage, won: r.won, coins: r.coins, drops: r.drops, runeDrops: r.runeDrops, churu: r.churu });
+    const rw = finishRun(save, { chapter, stage: r.stage, won: r.won, coins: r.coins, drops: r.drops, runeDrops: r.runeDrops, churu: r.churu, kills: r.kills });
     writeSave(save);
     shell.style.display = "";
     render();

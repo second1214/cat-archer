@@ -2,6 +2,7 @@
 // 5面（5面めは ボス）。やられても 進んだ分だけ もらえる。クリアすると 次のレベルが開き、クリアしたレベルは「掃討」で すぐ もらえる。
 import { G } from "./runes";
 import type { SaveData } from "./save";
+import { track } from "./missions";
 
 export type DailyId = "nibo" | "tsume";
 export interface DailyDef { id: DailyId; name: string; icon: string; desc: string; unlock: number }
@@ -58,6 +59,7 @@ function give(save: SaveData, r: DailyReward): void {
 export function finishDaily(save: SaveData, id: DailyId, lv: number, cleared: number, today: string): DailyReward | null {
   if (!dailyOpen(save, id) || triesLeft(save, id, today) <= 0 || lv < 1 || lv > maxLevel(save, id)) return null;
   save.daily.used[id]++;
+  track(save, "daily", 1, today);
   const r = dailyReward(id, lv, Math.max(0, Math.min(DAILY_STAGES, cleared)));
   give(save, r);
   if (cleared >= DAILY_STAGES) save.daily.best[id] = Math.max(save.daily.best[id], lv);
