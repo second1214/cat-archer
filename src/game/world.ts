@@ -5,10 +5,11 @@ import type { Rng } from "../core/rng";
 import type { Loadout } from "../core/save";
 import { rollSkills, type SkillCounts, type SkillId } from "../core/skills";
 import { ENEMIES, stageInfo, STAGES_PER_CHAPTER, type EnemyDef, type EnemyKind } from "../core/stages";
+import { COLS, pickTerrain, ROWS, Terrain } from "../core/terrain";
 
 /** 部屋の広さ（単位: マス） */
-export const W = 9;
-export const H = 15;
+export const W = COLS;
+export const H = ROWS;
 export const DOOR_W = 1.8;
 
 const SHOT_SPEED = 10;
@@ -84,6 +85,12 @@ export class World {
   coins = 0;
   drops: Item[] = [];
   kills = 0;
+  terrain: Terrain = Terrain.empty();
+  /** 猫までの 歩ける距離（地面を歩く虫の 道さがし） */
+  private field: number[] = [];
+  private fieldCell = -1;
+  private hpMul = 1;
+  private dmgMul = 1;
   private nextId = 1;
   private volleys: { t: number }[] = [];
   private orbCd = new Map<number, number>();
@@ -117,23 +124,36 @@ export class World {
     const h = this.hero;
     h.x = W / 2; h.y = H - 1.5; h.inv = 1; h.atkCd = 0.4;
     const info = stageInfo(this.chapter, n);
-    this.enemies = info.enemies.map((k) => this.spawn(k, info.hpMul, info.dmgMul));
+    this.terrain = pickTerrain(n, info.boss, this.rng);
+    this.fieldCell = -1;
+    this.hpMul = info.hpMul; this.dmgMul = info.dmgMul;
+    this.enemies = [];
+    const reach = this.terrain.flow(h.x, h.y);
+    for (const k of info.enemies) this.enemies.push(this.spawn(k, reach));
     if (info.boss) this.sounds.push("boss");
   }
 
-  private spawn(kind: EnemyKind, hpMul: number, dmgMul: number): Enemy {
+  /** 虫を置く（地面の虫は 猫まで歩いて行ける床に。at があれば その近く） */
+  private spawn(kind: EnemyKind, reach: number[], at?: [number, number]): Enemy {
     const def = ENEMIES[kind];
     let x = W / 2, y = 3;
-    if (!def.boss) {
-      for (let i = 0; i < 20; i++) {
+    if (at) {
+      for (let i = 0; i < 12; i++) {
+        x = at[0] + (this.rng() - 0.5) * 1.2; y = at[1] + (this.rng() - 0.5) * 1.2;
+        if (!this.terrain.hits(x, y, def.r, def.fly)) break;
+        x = at[0]; y = at[1];
+      }
+    } else if (!def.boss) {
+      for (let i = 0; i < 40; i++) {
         x = 1 + this.rng() * (W - 2);
         y = 1.2 + this.rng() * (H * 0.55);
-        if (Math.hypot(x - this.hero.x, y - this.hero.y) > 4.5 && this.enemies.every((e) => Math.hypot(e.x - x, e.y - y) > 1)) break;
+        const ok = !this.terrain.hits(x, y, def.r + 0.05) && (def.fly || reach[Math.floor(y) * COLS + Math.floor(x)] !== Infinity);
+        if (ok && Math.hypot(x - this.hero.x, y - this.hero.y) > 4.5 && this.enemies.every((e) => Math.hypot(e.x - x, e.y - y) > 1)) break;
       }
     }
-    const hp = Math.round(def.hp * hpMul);
+    const hp = Math.round(def.hp * this.hpMul);
     return {
-      id: this.nextId++, def, x, y, vx: 0, vy: 0, hp, maxHp: hp, dmg: def.dmg * dmgMul, shot: def.shot * dmgMul,
+      id: this.nextId++, def, x, y, vx: 0, vy: 0, hp, maxHp: hp, dmg: def.dmg * this.dmgMul, shot: def.shot * this.dmgMul,
       t: 1 + this.rng() * 1.5, t2: 2 + this.rng(), mode: 0, dx: 0, dy: 0,
       slow: 0, burn: 0, burnDps: 0, poison: 0, dotAcc: 0, dotT: 0, flash: 0, facing: -1, dead: false,
     };
@@ -192,8 +212,11 @@ export class World {
       if (Math.abs(input.mx) > 0.1) h.facing = input.mx > 0 ? 1 : -1;
       const doorOpen = this.state === "clear";
       const inDoor = doorOpen && Math.abs(nx - W / 2) < DOOR_W / 2 - h.r * 0.5;
-      h.x = clamp(nx, h.r, W - h.r);
-      h.y = clamp(ny, inDoor ? -1 : h.r, H - h.r);
+      // 横・縦 べつべつに動かし、ぶつかる向きだけ止める（物に そって すべる）
+      const x2 = clamp(nx, h.r, W - h.r);
+      if (!this.terrain.hits(x2, h.y, h.r * 0.8)) h.x = x2;
+      const y2 = clamp(ny, inDoor ? -1 : h.r, H - h.r);
+      if (y2 < 0.5 || !this.terrain.hits(h.x, y2, h.r * 0.8)) h.y = y2;
       if (doorOpen && h.y < 0.1) this.enterDoor();
     }
   }
@@ -293,6 +316,16 @@ export class World {
           s.hit.clear();
         } else s.life = 0;
       }
+      // 物（水は通る）
+      if (s.life > 0 && this.terrain.blocksShot(s.x, s.y + 0.3)) {
+        const px = s.x - s.vx * dt, py = s.y - s.vy * dt;
+        if (s.bounce > 0) {
+          s.bounce--;
+          if (this.terrain.blocksShot(px, s.y + 0.3)) s.vy = -s.vy; else s.vx = -s.vx;
+          s.x = px; s.y = py;
+          s.hit.clear();
+        } else s.life = 0;
+      }
       if (s.life <= 0) continue;
       for (const e of this.enemies) {
         if (e.dead || s.hit.has(e.id)) continue;
@@ -347,6 +380,10 @@ export class World {
     this.fx.push({ kind: "die", x: e.x, y: e.y, v: e.def.r, t: 0 });
     this.sounds.push("kill");
     this.coins += e.def.coins * this.coinMul;
+    if (e.def.split) {
+      const reach = this.terrain.flow(this.hero.x, this.hero.y);
+      for (let i = 0; i < 2; i++) this.enemies.push(this.spawn(e.def.split, reach, [e.x, e.y]));
+    }
     if (this.n("vamp")) this.heal(this.hero.maxHp * 0.02 * this.n("vamp"));
     const h = this.hero;
     h.xp += e.def.xp;
@@ -378,6 +415,8 @@ export class World {
 
   private moveEnemies(dt: number): void {
     const h = this.hero;
+    const cell = Math.floor(h.y) * COLS + Math.floor(h.x);
+    if (cell !== this.fieldCell) { this.field = this.terrain.flow(h.x, h.y); this.fieldCell = cell; }
     for (const e of this.enemies) {
       if (e.dead) continue;
       e.flash = Math.max(0, e.flash - dt);
@@ -405,12 +444,28 @@ export class World {
     const h = this.hero;
     const dx = h.x - e.x, dy = h.y - e.y, dist = Math.hypot(dx, dy) || 1;
     const sp = e.def.speed;
-    const go = (vx: number, vy: number) => { e.vx = vx; e.vy = vy; e.x += vx * dt; e.y += vy * dt; };
+    const fly = !!e.def.fly;
+    /** 動く。物・水に ぶつかったら その向きは止まる（ぶつかったら true） */
+    const go = (vx: number, vy: number): boolean => {
+      e.vx = vx; e.vy = vy;
+      let hit = false;
+      const nx = e.x + vx * dt, ny = e.y + vy * dt;
+      if (!this.terrain.hits(nx, e.y, e.def.r * 0.8, fly)) e.x = nx; else hit = true;
+      if (!this.terrain.hits(e.x, ny, e.def.r * 0.8, fly)) e.y = ny; else hit = true;
+      return hit;
+    };
+    /** 猫へ向かう向き（まっすぐ行けなければ 道をさがす） */
+    const toward = (): [number, number] => {
+      if (fly || this.terrain.clearShot(e.x, e.y, h.x, h.y) && !this.waterBetween(e.x, e.y, h.x, h.y)) return [dx / dist, dy / dist];
+      return this.terrain.stepDir(this.field, e.x, e.y) ?? [dx / dist, dy / dist];
+    };
     e.t -= dt; e.t2 -= dt;
     switch (e.def.ai) {
-      case "chase":
-        go((dx / dist) * sp, (dy / dist) * sp);
+      case "chase": {
+        const [ux, uy] = toward();
+        go(ux * sp, uy * sp);
         break;
+      }
       case "wander": {
         if (e.t <= 0) {
           const a = Math.atan2(dy, dx) + (this.rng() - 0.5) * 2.4;
@@ -419,11 +474,13 @@ export class World {
         if (e.x <= e.def.r + 0.01 || e.x >= W - e.def.r - 0.01) e.dx = -e.dx;
         if (e.y <= e.def.r + 0.01 || e.y >= H - e.def.r - 0.01) e.dy = -e.dy;
         go(e.dx * sp, e.dy * sp);
+        // 蚊は ときどき 針を飛ばす
+        if (e.def.shot > 0 && e.t2 <= 0) { this.aim(e, 1, 0); e.t2 = 2.4 + this.rng() * 0.8; }
         break;
       }
       case "turret":
         if (e.t2 <= 0) { const a = this.rng() * Math.PI * 2; e.dx = Math.cos(a); e.dy = Math.sin(a); e.t2 = 1.5 + this.rng(); }
-        go(e.dx * sp, e.dy * sp);
+        if (go(e.dx * sp, e.dy * sp)) e.t2 = 0;
         if (e.t <= 0) { this.aim(e, 1, 0); e.t = 2.2 + this.rng() * 0.6; }
         break;
       case "charge":
@@ -434,8 +491,8 @@ export class World {
           go(0, 0);
           if (e.t <= 0) { e.mode = 2; e.t = 0.55; }
         } else {
-          go(e.dx * sp, e.dy * sp);
-          if (e.t <= 0) { e.mode = 0; e.t = 1.2 + this.rng() * 0.6; }
+          // 物に ぶつかったら 突進おしまい
+          if (go(e.dx * sp, e.dy * sp) || e.t <= 0) { e.mode = 0; e.t = 1.2 + this.rng() * 0.6; }
         }
         break;
       case "kite": {
@@ -445,10 +502,26 @@ export class World {
         if (e.t <= 0) { this.aim(e, 3, 0.26); e.t = 2.6 + this.rng() * 0.5; }
         break;
       }
-      case "boss1":
-        go((dx / dist) * sp, (dy / dist) * sp);
+      case "boss1": {
+        const [ux, uy] = toward();
+        go(ux * sp, uy * sp);
         if (e.t <= 0) { this.ring(e, 12); e.t = 3.2; }
         if (e.t2 <= 0) { this.aim(e, 3, 0.3); e.t2 = 1.6; }
+        break;
+      }
+      case "boss3":
+        // カマキリ: 歩いて近づく → ため → すばやく切りこむ → 扇に 弾
+        if (e.mode === 0) {
+          const [ux, uy] = toward();
+          go(ux * sp, uy * sp);
+          if (e.t <= 0) { e.mode = 1; e.t = 0.55; e.dx = dx / dist; e.dy = dy / dist; }
+          if (e.t2 <= 0) { this.aim(e, 3, 0.35); e.t2 = 2; }
+        } else if (e.mode === 1) {
+          go(0, 0);
+          if (e.t <= 0) { e.mode = 2; e.t = 0.45; }
+        } else {
+          if (go(e.dx * 7, e.dy * 7) || e.t <= 0) { this.aim(e, 5, 0.3); e.mode = 0; e.t = 2.2 + this.rng(); }
+        }
         break;
       case "boss2":
         if (e.mode === 0) {
@@ -474,6 +547,13 @@ export class World {
     }
   }
 
+  /** 2点のあいだに 水たまりがあるか（歩いて まっすぐ行けるか） */
+  private waterBetween(x1: number, y1: number, x2: number, y2: number): boolean {
+    const n = Math.ceil(Math.hypot(x2 - x1, y2 - y1) / 0.3);
+    for (let i = 1; i < n; i++) if (this.terrain.hits(x1 + ((x2 - x1) * i) / n, y1 + ((y2 - y1) * i) / n, 0.25)) return true;
+    return false;
+  }
+
   /** 猫をねらって n 発（spread ラジアンずつ広げる） */
   private aim(e: Enemy, n: number, spread: number): void {
     const a = Math.atan2(this.hero.y - e.y, this.hero.x - e.x);
@@ -494,7 +574,7 @@ export class World {
     for (const s of this.eshots) {
       s.life -= dt;
       s.x += s.vx * dt; s.y += s.vy * dt;
-      if (s.x < 0 || s.x > W || s.y < 0 || s.y > H) s.life = 0;
+      if (s.x < 0 || s.x > W || s.y < 0 || s.y > H || this.terrain.blocksShot(s.x, s.y + 0.2)) s.life = 0;
       else if (Math.hypot(s.x - h.x, s.y - (h.y - 0.3)) < s.r + h.r * 0.8) { this.hurt(s.dmg); s.life = 0; }
     }
     this.eshots = this.eshots.filter((s) => s.life > 0);

@@ -1,5 +1,24 @@
 // 戦闘の絵（canvas）。猫は PNG、虫は コードで描く。
+import { BLOCK, COLS, WATER, type Terrain } from "../core/terrain";
 import { DOOR_W, H, W, type Enemy, type World } from "./world";
+
+/** 章ごとの 部屋の見た目 */
+type FloorKind = "plank" | "tile" | "carpet" | "grass" | "stone";
+type BlockKind = "box" | "shelf" | "bucket" | "toy" | "crate" | "plant" | "trunk" | "barrel" | "rock";
+interface Theme { floor: FloorKind; f1: string; f2: string; line: string; wall: string; wallTop: string; block: BlockKind; b1: string; b2: string; water: string }
+const THEMES: Theme[] = [
+  { floor: "plank", f1: "#e2bf8f", f2: "#ddb685", line: "rgba(120,80,40,.18)", wall: "#c9a27a", wallTop: "#a57b55", block: "box", b1: "#d9a866", b2: "#b98546", water: "#8fc8e8" },
+  { floor: "tile", f1: "#f3ede2", f2: "#e4dccd", line: "rgba(120,100,80,.18)", wall: "#d7c9b0", wallTop: "#b7a585", block: "shelf", b1: "#c08a5a", b2: "#9a6a40", water: "#9fd0ec" },
+  { floor: "tile", f1: "#d6ecf5", f2: "#c3e1ee", line: "rgba(60,110,140,.2)", wall: "#a9d0df", wallTop: "#7fb2c6", block: "bucket", b1: "#f2b84b", b2: "#d39222", water: "#6fb6e0" },
+  { floor: "carpet", f1: "#f4cdd6", f2: "#efc1cc", line: "rgba(160,80,100,.12)", wall: "#e8b3c0", wallTop: "#cf8fa1", block: "toy", b1: "#6fb0e0", b2: "#4a85b8", water: "#8fc8e8" },
+  { floor: "stone", f1: "#c9c4bb", f2: "#bdb7ad", line: "rgba(60,55,50,.2)", wall: "#9d968b", wallTop: "#7c766c", block: "crate", b1: "#c79a5e", b2: "#9c733e", water: "#7fb0c8" },
+  { floor: "grass", f1: "#9fd07a", f2: "#93c66d", line: "rgba(60,110,40,.18)", wall: "#c9b48a", wallTop: "#a8916a", block: "plant", b1: "#5fae4a", b2: "#c7744a", water: "#5fa8d8" },
+  { floor: "plank", f1: "#a9825c", f2: "#9f7a55", line: "rgba(50,30,15,.25)", wall: "#7d5c40", wallTop: "#5e432d", block: "trunk", b1: "#8a5a3a", b2: "#5e3a22", water: "#6f9cb8" },
+  { floor: "stone", f1: "#8e8f94", f2: "#84858a", line: "rgba(20,20,30,.25)", wall: "#5f6066", wallTop: "#45464c", block: "barrel", b1: "#9c6e45", b2: "#6e4a2a", water: "#4f7fa0" },
+  { floor: "plank", f1: "#d9a58c", f2: "#cf9a80", line: "rgba(110,50,30,.18)", wall: "#b98a76", wallTop: "#946652", block: "box", b1: "#e2b77a", b2: "#bf8f50", water: "#8fc8e8" },
+  { floor: "grass", f1: "#b5dc86", f2: "#a9d27c", line: "rgba(70,120,40,.16)", wall: "#d9c79c", wallTop: "#bba77a", block: "rock", b1: "#b3aea6", b2: "#8a857d", water: "#5fb0e0" },
+];
+export const themeOf = (chapter: number): Theme => THEMES[(chapter - 1) % THEMES.length];
 
 // 移動は 走りの4コマ（歩きの4コマは 足の動きが小さく、すべって見えるため）
 const CAT_FRAMES = ["walk1", "run1", "run2", "run3", "run4", "shoot", "hurt", "jump", "sit"] as const;
@@ -61,6 +80,13 @@ export class Renderer {
     // 奥から順に
     const items: { y: number; f: () => void }[] = [];
     for (const e of w.enemies) items.push({ y: e.y, f: () => this.drawEnemy(e, w.time) });
+    // 物は 下のふちの高さで 前後をきめる（猫が うしろに かくれる）
+    const th = themeOf(w.chapter);
+    w.terrain.tiles.forEach((t, i) => {
+      if (t !== BLOCK) return;
+      const c = i % COLS, r = (i - c) / COLS;
+      items.push({ y: r + 1, f: () => this.drawBlock(th, c, r, w.terrain) });
+    });
     items.push({ y: w.hero.y, f: () => this.drawHero(w) });
     items.sort((a, b) => a.y - b.y).forEach((it) => it.f());
     // 毛玉
@@ -90,8 +116,8 @@ export class Renderer {
 
   private drawRoom(w: World): void {
     const g = this.g, s = this.s;
-    const key = `${s}:${this.ox}:${this.oy}`;
-    if (!floorCache || floorCache.key !== key) floorCache = { key, cv: this.makeFloor() };
+    const key = `${s}:${this.ox}:${this.oy}:${w.chapter}:${w.stage}`;
+    if (!floorCache || floorCache.key !== key) floorCache = { key, cv: this.makeFloor(themeOf(w.chapter), w.terrain) };
     const dpr = this.cv.width / this.cv.getBoundingClientRect().width;
     g.drawImage(floorCache.cv, 0, 0, floorCache.cv.width / dpr, floorCache.cv.height / dpr);
     // 扉（上のまん中）
@@ -114,7 +140,7 @@ export class Renderer {
     }
   }
 
-  private makeFloor(): HTMLCanvasElement {
+  private makeFloor(th: Theme, terrain: Terrain): HTMLCanvasElement {
     const dpr = this.cv.width / this.cv.getBoundingClientRect().width;
     const cv = document.createElement("canvas");
     cv.width = this.cv.width; cv.height = this.cv.height;
@@ -122,25 +148,144 @@ export class Renderer {
     g.scale(dpr, dpr);
     const s = this.s, x0 = this.X(0), y0 = this.Y(0);
     // 壁
-    g.fillStyle = "#c9a27a";
+    g.fillStyle = th.wall;
     g.fillRect(x0 - WALL * s, y0 - WALL * s, (W + WALL * 2) * s, (H + WALL * 2) * s);
-    g.fillStyle = "#a57b55";
+    g.fillStyle = th.wallTop;
     g.fillRect(x0 - WALL * s, y0 - WALL * s, (W + WALL * 2) * s, WALL * s);
-    // 床（板）
-    const plank = 0.75;
-    for (let i = 0; i * plank < H; i++) {
-      g.fillStyle = i % 2 ? "#e2bf8f" : "#ddb685";
-      g.fillRect(x0, y0 + i * plank * s, W * s, plank * s);
-      g.fillStyle = "rgba(120,80,40,.18)";
-      g.fillRect(x0, y0 + i * plank * s, W * s, 1.2);
-      const off = (i * 2.3) % 3;
-      for (let k = off; k < W; k += 3) g.fillRect(x0 + k * s, y0 + i * plank * s, 1.2, plank * s);
+    // 床
+    let seed = 7;
+    const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+    switch (th.floor) {
+      case "plank": {
+        const plank = 0.75;
+        for (let i = 0; i * plank < H; i++) {
+          g.fillStyle = i % 2 ? th.f1 : th.f2;
+          g.fillRect(x0, y0 + i * plank * s, W * s, plank * s);
+          g.fillStyle = th.line;
+          g.fillRect(x0, y0 + i * plank * s, W * s, 1.2);
+          const off = (i * 2.3) % 3;
+          for (let k = off; k < W; k += 3) g.fillRect(x0 + k * s, y0 + i * plank * s, 1.2, plank * s);
+        }
+        break;
+      }
+      case "tile": {
+        for (let r = 0; r < H; r++) for (let c = 0; c < W; c++) {
+          g.fillStyle = (r + c) % 2 ? th.f1 : th.f2;
+          g.fillRect(x0 + c * s, y0 + r * s, s, s);
+        }
+        g.fillStyle = th.line;
+        for (let r = 0; r <= H; r++) g.fillRect(x0, y0 + r * s, W * s, 1.2);
+        for (let c = 0; c <= W; c++) g.fillRect(x0 + c * s, y0, 1.2, H * s);
+        break;
+      }
+      case "carpet": {
+        g.fillStyle = th.f1; g.fillRect(x0, y0, W * s, H * s);
+        g.fillStyle = th.line;
+        for (let i = 0; i < 900; i++) g.fillRect(x0 + rnd() * W * s, y0 + rnd() * H * s, 1.5, 1.5);
+        g.strokeStyle = th.f2; g.lineWidth = s * 0.12;
+        g.strokeRect(x0 + s * 0.6, y0 + s * 0.6, (W - 1.2) * s, (H - 1.2) * s);
+        break;
+      }
+      case "grass": {
+        g.fillStyle = th.f1; g.fillRect(x0, y0, W * s, H * s);
+        for (let i = 0; i < 500; i++) {
+          g.fillStyle = rnd() < 0.5 ? th.f2 : th.line;
+          const x = x0 + rnd() * W * s, y = y0 + rnd() * H * s;
+          g.fillRect(x, y, 1.5, 4);
+        }
+        break;
+      }
+      case "stone": {
+        g.fillStyle = th.f1; g.fillRect(x0, y0, W * s, H * s);
+        for (let r = 0; r < H; r++) {
+          const off = r % 2 ? 0.5 : 0;
+          for (let c = -off; c < W; c += 1) {
+            g.fillStyle = rnd() < 0.5 ? th.f1 : th.f2;
+            g.fillRect(x0 + Math.max(0, c) * s + 1, y0 + r * s + 1, (Math.min(W, c + 1) - Math.max(0, c)) * s - 2, s - 2);
+          }
+        }
+        break;
+      }
     }
+    // 水たまり（となりと つながって見えるよう、少し はみ出して 角を丸める）
+    terrain.tiles.forEach((t, i) => {
+      if (t !== WATER) return;
+      const c = i % COLS, r = (i - c) / COLS;
+      g.fillStyle = th.water;
+      roundRect(g, x0 + (c - 0.06) * s, y0 + (r - 0.06) * s, s * 1.12, s * 1.12, s * 0.3);
+      g.fill();
+    });
+    terrain.tiles.forEach((t, i) => {
+      if (t !== WATER) return;
+      const c = i % COLS, r = (i - c) / COLS;
+      g.strokeStyle = "rgba(255,255,255,.55)"; g.lineWidth = 1.5;
+      g.beginPath(); g.arc(x0 + (c + 0.35) * s, y0 + (r + 0.4) * s, s * 0.14, Math.PI * 1.1, Math.PI * 1.9); g.stroke();
+      g.beginPath(); g.arc(x0 + (c + 0.68) * s, y0 + (r + 0.7) * s, s * 0.1, Math.PI * 1.1, Math.PI * 1.9); g.stroke();
+    });
     // ふちの影
     const gr = g.createLinearGradient(0, y0, 0, y0 + s * 0.8);
     gr.addColorStop(0, "rgba(60,30,10,.25)"); gr.addColorStop(1, "rgba(60,30,10,0)");
     g.fillStyle = gr; g.fillRect(x0, y0, W * s, s * 0.8);
     return cv;
+  }
+
+  /** 物を1つ 描く（上の面と 前の面。上下・左右に となりがあれば つなげる） */
+  private drawBlock(th: Theme, c: number, r: number, t: Terrain): void {
+    const g = this.g, s = this.s;
+    const hgt = th.block === "plant" || th.block === "rock" ? 0.35 : 0.5;
+    const x = this.X(c), y = this.Y(r), topY = y - hgt * s;
+    const down = t.at(c, r + 1) === BLOCK;
+    const toyCol = ["#6fb0e0", "#f08a8a", "#f3c454", "#86cf7a"][(c * 7 + r * 3) % 4];
+    const b1 = th.block === "toy" ? toyCol : th.b1;
+    // 影
+    g.fillStyle = "rgba(40,20,10,.22)";
+    g.fillRect(x + s * 0.08, y + s * 0.08, s, s * (down ? 1 : 0.95));
+    if (th.block === "plant") {
+      // 鉢と しげみ
+      g.fillStyle = th.b2;
+      g.fillRect(x + s * 0.2, y + s * 0.35, s * 0.6, s * 0.55);
+      g.fillStyle = b1;
+      for (const [ox, oy, rr] of [[0.3, 0.25, 0.3], [0.7, 0.25, 0.3], [0.5, 0.05, 0.34], [0.5, 0.4, 0.3]]) {
+        g.beginPath(); g.arc(x + ox * s, topY + oy * s + s * 0.3, rr * s, 0, Math.PI * 2); g.fill();
+      }
+      g.fillStyle = "rgba(255,255,255,.18)";
+      g.beginPath(); g.arc(x + s * 0.4, topY + s * 0.2, s * 0.14, 0, Math.PI * 2); g.fill();
+      return;
+    }
+    if (th.block === "rock") {
+      g.fillStyle = th.b2;
+      g.beginPath(); g.ellipse(x + s * 0.5, y + s * 0.55, s * 0.5, s * 0.45, 0, 0, Math.PI * 2); g.fill();
+      g.fillStyle = b1;
+      g.beginPath(); g.ellipse(x + s * 0.5, y + s * 0.4, s * 0.46, s * 0.4, 0, 0, Math.PI * 2); g.fill();
+      g.fillStyle = "rgba(255,255,255,.25)";
+      g.beginPath(); g.ellipse(x + s * 0.35, y + s * 0.25, s * 0.15, s * 0.08, -0.4, 0, Math.PI * 2); g.fill();
+      return;
+    }
+    if (th.block === "bucket" || th.block === "barrel") {
+      g.fillStyle = th.b2;
+      g.fillRect(x + s * 0.1, topY + s * 0.25, s * 0.8, (hgt + 0.7) * s);
+      g.beginPath(); g.ellipse(x + s * 0.5, y + s * 0.95, s * 0.4, s * 0.12, 0, 0, Math.PI * 2); g.fill();
+      g.fillStyle = b1;
+      g.beginPath(); g.ellipse(x + s * 0.5, topY + s * 0.25, s * 0.4, s * 0.16, 0, 0, Math.PI * 2); g.fill();
+      g.strokeStyle = "rgba(0,0,0,.25)"; g.lineWidth = 2;
+      for (const k of [0.45, 0.8]) { g.beginPath(); g.moveTo(x + s * 0.1, topY + (0.25 + k * (hgt + 0.7)) * s); g.lineTo(x + s * 0.9, topY + (0.25 + k * (hgt + 0.7)) * s); g.stroke(); }
+      return;
+    }
+    // 箱の形（段ボール・たな・つみき・木箱・つづら）。上の面と 前の面（下のマスの物が 前の面に重なって つながる）
+    g.fillStyle = b1;
+    g.fillRect(x, topY, s, s);
+    g.fillStyle = th.b2;
+    g.fillRect(x, topY + s, s, hgt * s);
+    g.strokeStyle = "rgba(40,20,10,.35)"; g.lineWidth = 1.5;
+    g.strokeRect(x + 0.75, topY + 0.75, s - 1.5, s - 1.5 + hgt * s);
+    g.fillStyle = "rgba(0,0,0,.18)";
+    switch (th.block) {
+      case "box": g.fillStyle = "rgba(240,225,190,.7)"; g.fillRect(x + s * 0.44, topY, s * 0.12, s); break;
+      case "shelf": g.fillRect(x + s * 0.12, topY + s + hgt * s * 0.45, s * 0.76, 2); g.fillStyle = "#e9d08a"; g.fillRect(x + s * 0.44, topY + s + hgt * s * 0.25, s * 0.12, s * 0.06); break;
+      case "toy": g.fillStyle = "rgba(255,255,255,.35)"; g.beginPath(); g.arc(x + s * 0.5, topY + s * 0.5, s * 0.22, 0, Math.PI * 2); g.fill(); break;
+      case "crate": for (const k of [0.33, 0.66]) g.fillRect(x, topY + s * k, s, 2); g.fillRect(x + s * 0.48, topY, 2, s); break;
+      case "trunk": g.fillStyle = "#d8b25a"; g.fillRect(x, topY + s * 0.45, s, s * 0.08); g.fillRect(x + s * 0.44, topY + s + hgt * s * 0.2, s * 0.12, s * 0.14); break;
+    }
   }
 
   private shadow(x: number, y: number, rx: number): void {
@@ -184,7 +329,7 @@ export class Renderer {
     g.translate(x, y);
     g.scale(e.facing, 1);
     // 突進のため（ぷるぷる）
-    if ((e.def.ai === "charge" || e.def.ai === "boss2") && e.mode === 1) g.translate(Math.sin(t * 60) * s * 0.04, 0);
+    if ((e.def.ai === "charge" || e.def.ai === "boss2" || e.def.ai === "boss3") && e.mode === 1) g.translate(Math.sin(t * 60) * s * 0.04, 0);
     drawBug(g, e.def.kind, r * s * 1.3, t + e.id);
     if (e.flash > 0) {
       g.globalCompositeOperation = "source-atop";
@@ -301,6 +446,78 @@ function drawBug(g: CanvasRenderingContext2D, kind: string, R: number, t: number
       eyes(R * 0.75, 0, R * 0.1);
       break;
     }
+    case "gokiburi": {
+      leg(3, R * 0.95, "#3a2416", 0.5);
+      g.strokeStyle = "#3a2416"; g.lineWidth = Math.max(1, R * 0.05);
+      g.beginPath(); g.moveTo(R * 0.6, -R * 0.1); g.quadraticCurveTo(R * 1.3, -R * 0.6, R * 1.6, -R * 0.3); g.stroke();
+      g.beginPath(); g.moveTo(R * 0.6, R * 0.1); g.quadraticCurveTo(R * 1.3, R * 0.6, R * 1.6, R * 0.3); g.stroke();
+      g.fillStyle = "#6b3a1c";
+      g.beginPath(); g.ellipse(-R * 0.1, 0, R * 0.8, R * 0.5, 0, 0, Math.PI * 2); g.fill();
+      g.fillStyle = "rgba(255,220,180,.35)";
+      g.beginPath(); g.ellipse(-R * 0.25, -R * 0.18, R * 0.45, R * 0.12, 0, 0, Math.PI * 2); g.fill();
+      g.strokeStyle = "rgba(30,15,5,.6)"; g.lineWidth = 1;
+      g.beginPath(); g.moveTo(R * 0.25, 0); g.lineTo(-R * 0.85, 0); g.stroke();
+      g.fillStyle = "#4a2810";
+      g.beginPath(); g.ellipse(R * 0.6, 0, R * 0.26, R * 0.3, 0, 0, Math.PI * 2); g.fill();
+      break;
+    }
+    case "ka": {
+      g.strokeStyle = "#3a3a40"; g.lineWidth = Math.max(1, R * 0.05);
+      for (let i = 0; i < 3; i++) for (const sg of [-1, 1]) {
+        g.beginPath(); g.moveTo(-R * 0.2 + i * R * 0.25, 0); g.lineTo(-R * 0.6 + i * R * 0.5, sg * R * 1.2); g.stroke();
+      }
+      const fl = Math.sin(t * 60) * 0.5;
+      g.fillStyle = "rgba(220,235,255,.7)";
+      g.beginPath(); g.ellipse(-R * 0.2, -R * 0.55, R * 0.55, R * 0.2, -0.5 + fl, 0, Math.PI * 2); g.fill();
+      g.beginPath(); g.ellipse(-R * 0.2, R * 0.55, R * 0.55, R * 0.2, 0.5 - fl, 0, Math.PI * 2); g.fill();
+      g.fillStyle = "#4a4a52";
+      g.beginPath(); g.ellipse(-R * 0.55, 0, R * 0.6, R * 0.2, 0, 0, Math.PI * 2); g.fill();
+      g.fillStyle = "#2c2c32";
+      g.beginPath(); g.arc(R * 0.25, 0, R * 0.26, 0, Math.PI * 2); g.fill();
+      g.strokeStyle = "#2c2c32"; g.lineWidth = Math.max(1, R * 0.07);
+      g.beginPath(); g.moveTo(R * 0.45, 0); g.lineTo(R * 1.1, R * 0.05); g.stroke();
+      g.fillStyle = "#c0392b";
+      g.beginPath(); g.arc(R * 0.35, -R * 0.12, R * 0.09, 0, Math.PI * 2); g.fill();
+      break;
+    }
+    case "kemushi": case "kemushiko": {
+      const n = 6;
+      for (let i = 0; i < n; i++) {
+        const k = i / (n - 1), x = (-0.9 + k * 1.5) * R, yy = Math.sin(t * 8 - i * 0.9) * R * 0.1;
+        g.fillStyle = "#e9c43a";
+        for (let j = 0; j < 5; j++) { const a = (j / 5) * Math.PI * 2 + i; g.fillRect(x + Math.cos(a) * R * 0.38, yy + Math.sin(a) * R * 0.38, 1.5, 1.5); }
+        g.fillStyle = i % 2 ? "#6aa83a" : "#7dbb46";
+        g.beginPath(); g.arc(x, yy, R * 0.33, 0, Math.PI * 2); g.fill();
+        g.fillStyle = "#f2d24a";
+        g.beginPath(); g.arc(x, yy - R * 0.1, R * 0.08, 0, Math.PI * 2); g.fill();
+      }
+      g.fillStyle = "#3d6b24";
+      g.beginPath(); g.arc(R * 0.72, Math.sin(t * 8) * R * 0.1, R * 0.36, 0, Math.PI * 2); g.fill();
+      eyes(R * 0.82, Math.sin(t * 8) * R * 0.1, R * 0.1);
+      break;
+    }
+    case "kamakiri": {
+      g.strokeStyle = "#3f8a2c"; g.lineWidth = Math.max(1.5, R * 0.08); g.lineCap = "round";
+      for (const sg of [-1, 1]) for (let i = 0; i < 2; i++) {
+        const sw = Math.sin(t * 10 + i + sg) * R * 0.1;
+        g.beginPath(); g.moveTo(-R * 0.3 - i * R * 0.35, 0); g.lineTo(-R * 0.4 - i * R * 0.45 + sw, sg * R * 0.95); g.stroke();
+      }
+      g.fillStyle = "#6cbf4a";
+      g.beginPath(); g.ellipse(-R * 0.55, 0, R * 0.65, R * 0.28, 0, 0, Math.PI * 2); g.fill();
+      g.fillStyle = "#5aaa3c";
+      g.beginPath(); g.ellipse(R * 0.25, 0, R * 0.4, R * 0.14, 0, 0, Math.PI * 2); g.fill();
+      // かま
+      const sw = Math.sin(t * 6) * 0.3;
+      g.strokeStyle = "#4e9a34"; g.lineWidth = Math.max(2, R * 0.12);
+      for (const sg of [-1, 1]) {
+        g.beginPath(); g.moveTo(R * 0.4, sg * R * 0.1); g.lineTo(R * 0.9, sg * R * (0.45 + sw * 0.3)); g.lineTo(R * 0.7, sg * R * (0.15 + sw * 0.2)); g.stroke();
+      }
+      g.fillStyle = "#6cbf4a";
+      g.beginPath(); g.moveTo(R * 0.6, -R * 0.25); g.lineTo(R * 1.0, 0); g.lineTo(R * 0.6, R * 0.25); g.closePath(); g.fill();
+      g.fillStyle = "#e9e27a";
+      g.beginPath(); g.arc(R * 0.65, -R * 0.18, R * 0.09, 0, Math.PI * 2); g.arc(R * 0.65, R * 0.18, R * 0.09, 0, Math.PI * 2); g.fill();
+      break;
+    }
     case "hachi": case "jooubachi": {
       const fl = Math.sin(t * 45) * 0.5;
       g.fillStyle = "rgba(230,245,255,.75)";
@@ -321,4 +538,10 @@ function drawBug(g: CanvasRenderingContext2D, kind: string, R: number, t: number
       break;
     }
   }
+}
+
+function roundRect(g: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number): void {
+  g.beginPath();
+  g.moveTo(x + r, y); g.arcTo(x + w, y, x + w, y + h, r); g.arcTo(x + w, y + h, x, y + h, r);
+  g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath();
 }

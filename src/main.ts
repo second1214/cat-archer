@@ -5,7 +5,7 @@ import { ITEM_MAP, RARITY_NAMES } from "./core/equip";
 import { mulberry32 } from "./core/rng";
 import { CHEST_COST, finishRun, openChest } from "./core/run";
 import { loadoutOf, loadSave, powerOf, writeSave } from "./core/save";
-import { CHAPTER_NAMES, STAGES_PER_CHAPTER } from "./core/stages";
+import { CHAPTER_NAMES, ENEMIES, newEnemiesIn, STAGES_PER_CHAPTER } from "./core/stages";
 import { loadCatImages } from "./game/render";
 import { startBattle } from "./ui/battle";
 import { fmt, h, overlay, toast } from "./ui/dom";
@@ -48,7 +48,8 @@ function renderHome(): HTMLElement {
       h("div", { class: "ch-mid" },
         h("div", { class: "ch-no" }, `第${ch}章`),
         h("div", { class: "ch-name" }, CHAPTER_NAMES[ch - 1]),
-        h("div", { class: "ch-best" }, best >= STAGES_PER_CHAPTER ? "クリア済み ⭐" : `最高 ${best} / ${STAGES_PER_CHAPTER}`)),
+        h("div", { class: "ch-best" }, best >= STAGES_PER_CHAPTER ? "クリア済み ⭐" : `最高 ${best} / ${STAGES_PER_CHAPTER}`),
+        newEnemiesIn(ch).length ? h("div", { class: "ch-new" }, "新しい虫: ", newEnemiesIn(ch).map((k) => ENEMIES[k].name).join("・")) : null),
       h("button", { class: "ch-arrow", disabled: ch >= save.unlocked, onclick: () => setCh(ch + 1) }, "▶")),
     h("button", { class: "btn btn-play", onclick: () => play(ch) }, "出発！"),
     h("button", { class: `btn ${save.coins >= CHEST_COST ? "btn-pink" : "btn-gray"} chest`, disabled: save.coins < CHEST_COST, onclick: chest },
