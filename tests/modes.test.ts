@@ -6,7 +6,7 @@ import { finishRun } from "../src/core/run";
 import { G } from "../src/core/runes";
 import { loadoutOf, newSave } from "../src/core/save";
 import { rollSkills, SKILLS } from "../src/core/skills";
-import { finishTower, towerChapter, towerStart } from "../src/core/tower";
+import { finishTower, TOWER_FLOORS, TOWER_TICKETS, towerChapter, towerRange, towerTickets } from "../src/core/tower";
 import { World } from "../src/game/world";
 
 const H = 3600000;
@@ -38,24 +38,50 @@ describe("3択: レア度・引きなおし。復活", () => {
   });
 });
 
-describe("キャットタワー", () => {
-  it("階で 強くなり、5階ごとに ボス。終わりは ない", () => {
-    const w = new World(loadoutOf(newSave()), towerChapter(11), mulberry32(4), "chatora", Infinity, 11);
+describe("キャットタワー（本家の スカイタワー）", () => {
+  const tw = (start: number) => new World(loadoutOf(newSave()), towerChapter(start), mulberry32(4), "chatora", start + TOWER_FLOORS - 1, start);
+  it("1回 5階。階に はいるたびに スキルを選ぶ。経験値の レベルアップは ない。ボスは 出ない", () => {
+    const w = tw(11);
     expect(w.stage).toBe(11);
-    expect(w.pendingLevels + (w.choices ? 0 : 0)).toBeGreaterThan(0);
-    expect(w.chapterAt(30)).toBeGreaterThan(w.chapterAt(11));
-    w.startStage(15);
-    expect(w.enemies.some((e) => e.def.boss)).toBe(true);
+    expect(w.choices).not.toBeNull();
+    w.chooseSkill(w.choices![0]);
+    for (const e of w.enemies) e.dead = false;
+    expect(w.enemies.some((e) => e.def.boss)).toBe(false);
+    const lv = w.hero.level;
+    for (const e of w.enemies) (w as unknown as { kill(e: unknown): void }).kill(e);
+    expect(w.hero.level).toBe(lv);
+    expect(w.choices).toBeNull();
+    expect(w.chapterAt(40)).toBeGreaterThan(w.chapterAt(11));
   });
-  it("はじめての階だけ ごほうび。10階ごとに チェックポイント", () => {
+  it("階を クリアすると タワーの番猫（レア以上の スキル）。5階めで おしまい", () => {
+    const w = tw(1);
+    w.chooseSkill(w.choices![0]);
+    for (const e of w.enemies) e.dead = true;
+    for (let i = 0; i < 30 && w.state === "fight"; i++) w.step(1 / 60, { mx: 0, my: 0 });
+    expect(w.state).toBe("clear");
+    expect(w.event?.kind).toBe("guard");
+    expect(w.event!.skills.every((id) => (SKILLS.find((s) => s.id === id)!.tier ?? 0) >= 1)).toBe(true);
+    w.stage = TOWER_FLOORS; w.state = "fight"; w.event = null;
+    for (const e of w.enemies) e.dead = true;
+    for (let i = 0; i < 30 && w.state === "fight"; i++) w.step(1 / 60, { mx: 0, my: 0 });
+    expect(w.state).toBe("won");
+  });
+  it("1日 3枚。5階 ぜんぶ クリアしたときだけ 進む。25階で 大きな ごほうび", () => {
     const s = newSave();
-    const r = finishTower(s, 10);
-    expect(r.stones).toBe(10);
-    expect(r.churu).toBe(20);
-    expect(s.runeMats[G.epic]).toBe(1);
-    expect(finishTower(s, 10).stones).toBe(0);
-    expect(towerStart(s.towerBest)).toBe(11);
-    expect(towerStart(9)).toBe(1);
+    s.unlocked = 8; s.towerBest = 20;
+    const rng = mulberry32(5);
+    expect(finishTower(s, false, rng, "d")!.churu).toBe(0);
+    expect(s.towerBest).toBe(20);
+    const r = finishTower(s, true, rng, "d")!;
+    expect(s.towerBest).toBe(25);
+    expect(r.churu).toBe(2 * 4 + 50);
+    expect(r.runes).toHaveLength(1);
+    expect(s.runeMats[G.epic]).toBe(2);
+    expect(finishTower(s, true, rng, "d")).not.toBeNull();
+    expect(towerTickets(s, "d")).toBe(0);
+    expect(finishTower(s, true, rng, "d")).toBeNull();
+    expect(towerTickets(s, "e")).toBe(TOWER_TICKETS);
+    expect(towerRange(s)).toEqual([31, 35]);
   });
 });
 

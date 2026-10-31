@@ -83,6 +83,8 @@ export interface RollOpts {
   strikeSource?: boolean;
   /** 助っ人ねこのスキルの 出やすさ（重みの倍率） */
   strikeWeight?: number;
+  /** この レア度 以上だけ（タワーの番猫） */
+  minTier?: number;
 }
 
 /** まだ取れるスキルから、ちがうものを n 個えらぶ。 */
@@ -90,7 +92,7 @@ export function rollSkills(owned: SkillCounts, rng: Rng, n = 3, o: RollOpts = {}
   const has = (id: SkillId) => (owned[id] ?? 0) > 0;
   const source = !!o.strikeSource || STRIKE_SOURCES.some(has);
   const pool = SKILLS.filter((s) => (owned[s.id] ?? 0) < s.max && (s.id !== "heal" || o.hurt) && !(o.laser && LASER_USELESS.includes(s.id))
-    && !(STRIKE_SUPPORT.includes(s.id) && !source) && !exclude.includes(s.id));
+    && !(STRIKE_SUPPORT.includes(s.id) && !source) && !exclude.includes(s.id) && (s.tier ?? 0) >= (o.minTier ?? 0));
   const out: SkillId[] = [];
   while (out.length < n && pool.length > 0) {
     const w = pool.map((s) => (s.strike ? o.strikeWeight ?? 1 : 1) * TIER_WEIGHT[s.tier ?? 0]);

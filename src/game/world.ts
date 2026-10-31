@@ -4,7 +4,7 @@ import { rollItem, rollRarity, type Item } from "../core/equip";
 import type { Rng } from "../core/rng";
 import type { Loadout } from "../core/save";
 import { REROLLS, rollSkills, type SkillCounts, type SkillId } from "../core/skills";
-import { towerChapter } from "../core/tower";
+import { TOWER_STAGE_SHAPE, towerChapter } from "../core/tower";
 import { ENEMIES, stageInfo, STAGES_PER_CHAPTER, type EnemyDef, type EnemyKind } from "../core/stages";
 import { COLS, pickTerrain, ROWS, Terrain } from "../core/terrain";
 import { rollRune, RUNE_UNLOCK_CHAPTER, type Rune, type RuneEffects } from "../core/runes";
@@ -65,7 +65,8 @@ export interface Enemy {
 }
 
 /** ステージのあいだの できごと（飼い主のごほうび・のら猫ボスの 取り引き） */
-export interface StageEvent { kind: "angel" | "devil"; skills: SkillId[] }
+/** angel: 飼い主のごほうび、devil: のら猫ボスの 取り引き、guard: タワーの番猫（レア以上の スキルを1つ） */
+export interface StageEvent { kind: "angel" | "devil" | "guard"; skills: SkillId[] }
 /** 飼い主のごほうびが 来るステージ（クリアしたあと） */
 /** ハードモード: 敵の 体力・攻撃の 倍率 */
 export const HARD_HP = 3;
@@ -136,7 +137,7 @@ export class World implements StrikeHost {
   private orbCd = new Map<number, number>();
 
   /** lastStage: この面を クリアしたら おしまい（毎日の挑戦は 5） */
-  /** tower: キャットタワーの はじめの階（階 = ステージ。階ごとに 強くなり、終わりは ない） */
+  /** tower: キャットタワーの はじめの階（階 = ステージ。lastStage まで。階に はいるたびに スキルを選ぶ・経験値は ない） */
   constructor(readonly lo: Loadout, readonly chapter: number, readonly rng: Rng, readonly heroCat = "chatora", readonly lastStage = STAGES_PER_CHAPTER, readonly tower = 0, readonly hard = false) {
     this.hero = {
       x: W / 2, y: H - 1.5, r: 0.36, hp: lo.hp, maxHp: lo.hp, inv: 0, facing: 1, moving: false, dist: 0,
@@ -147,12 +148,11 @@ export class World implements StrikeHost {
     for (const id of lo.startSkills) this.skills[id] = Math.max(this.skills[id] ?? 0, 1);
     this.startStage(tower || 1);
     // タワーの 途中から はじめるときは 10階ごとに 3回 スキルを 選べる
-    if (tower > 1) { const k = Math.floor((tower - 1) / 10) * 3; this.hero.level += k; this.pendingLevels += k; this.offerLevel(); }
   }
 
   /** その面の 章（タワーは 階で かわる）と 章の中の 面（1〜10） */
   chapterAt(n: number): number { return this.tower ? towerChapter(n) : this.chapter; }
-  localStage(n: number): number { return this.tower ? ((n - 1) % STAGES_PER_CHAPTER) + 1 : n; }
+  localStage(n: number): number { return this.tower ? TOWER_STAGE_SHAPE[(n - this.tower) % TOWER_STAGE_SHAPE.length] : n; }
   private infoAt(n: number) { return stageInfo(this.chapterAt(n), this.localStage(n)); }
 
   // ---------- 助っ人ねこ（StrikeHost） ----------
@@ -206,6 +206,8 @@ export class World implements StrikeHost {
     }
     if (info.boss) this.sounds.push("boss");
     this.strikes?.onStageStart();
+    // タワー: 階に はいるたびに スキルを1つ 選ぶ
+    if (this.tower) { this.pendingLevels++; this.offerLevel(); }
     // ときどき 床に チュールが 落ちている
     this.churuPickup = null;
     if (n > 1 && this.lastStage === STAGES_PER_CHAPTER && this.rng() < CHURU_PICKUP_CHANCE) {
@@ -384,7 +386,10 @@ export class World implements StrikeHost {
     if (this.state === "clear") {
       const opts = { laser: this.laser, strikeSource: !!this.rune.timeSword || this.rune.potion.start, strikeWeight: this.rune.strikeSkillWeight };
       const ls = this.localStage(this.stage);
-      if (ANGEL_STAGES.includes(ls)) this.event = { kind: "angel", skills: rollSkills(this.skills, this.rng, 1, opts) };
+      if (this.tower) {
+        const sk = rollSkills(this.skills, this.rng, 3, { ...opts, minTier: 1 });
+        if (sk.length) this.event = { kind: "guard", skills: sk };
+      } else if (ANGEL_STAGES.includes(ls)) this.event = { kind: "angel", skills: rollSkills(this.skills, this.rng, 1, opts) };
       else if (DEVIL_STAGES.includes(ls) || (this.rune.pactExtra && ls === 8)) this.event = { kind: "devil", skills: rollSkills(this.skills, this.rng, 2, opts) };
     }
   }
@@ -620,6 +625,7 @@ export class World implements StrikeHost {
     }
     if (this.n("vamp")) this.heal(this.hero.maxHp * 0.02 * this.n("vamp"));
     const h = this.hero;
+    if (this.tower) return; // タワーは レベルアップなし（階ごとの スキルと 番猫）
     h.xp += e.def.xp * (1 + this.rune.expPct);
     while (h.xp >= this.xpNeed()) {
       h.xp -= this.xpNeed();
