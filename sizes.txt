@@ -1,0 +1,6 @@
+gv_tower https://archero-2.game-vault.net/wiki/Sky_Tower 34621
+fd_tower https://archero-2.fandom.com/wiki/Sky_Tower 5570
+mobi_tower https://mobi.gg/en/tips/archero-2-sky-tower/ 94892
+hub_home https://archero2hub.com/en 128662
+hub_t1 https://archero2hub.com/en/achievement/rewards/tower 277344
+rd_tower https://www.reddit.com/r/Archero2/search.json?q=sky+tower&restrict_sr=1&sort=top&limit=25 190240

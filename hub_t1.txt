@@ -1,0 +1,515 @@
+Sky Tower Rewards · Archero 2
+Archero 2 HubSupport
+Home
+Achievements
+Sky Tower Rewards
+Sky Tower Rewards
+Key rewards granted at specific Sky Tower floor milestones.
+Updated: 2026-09-28
+Range
+25~4000Floor
+50
+Total Rewards
+Legendary Artifact Universal Shard
+115
+Ruin Shovel
+77
+Promised Ruin Shovel
+68
+Wish Coin
+62
+Fantasy Chest Key
+61
+Random Collectible Gold
+4
+Random Ability or Enhance Rune
+1
+HighestLowest
+Jump
+500Floor1500Floor2500Floor3500Floor
+4000Floor
+20
+Legendary Artifact Universal Shard
+x20
+3950Floor
+6
+Promised Ruin Shovel
+x6
+3900Floor
+6
+Promised Ruin Shovel
+x6
+3850Floor
+5
+Wish Coin
+x5
+3800Floor
+5
+Fantasy Chest Key
+x5
+3750Floor
+20
+Legendary Artifact Universal Shard
+x20
+3700Floor
+6
+Promised Ruin Shovel
+x6
+3650Floor
+6
+Promised Ruin Shovel
+x6
+3600Floor
+5
+Wish Coin
+x5
+3550Floor
+5
+Fantasy Chest Key
+x5
+3500Floor
+20
+Legendary Artifact Universal Shard
+x20
+3450Floor
+6
+Promised Ruin Shovel
+x6
+3400Floor
+10
+Ruin Shovel
+x10
+3350Floor
+5
+Wish Coin
+x5
+3300Floor
+5
+Fantasy Chest Key
+x5
+3250Floor
+20
+Legendary Artifact Universal Shard
+x20
+3200Floor
+6
+Promised Ruin Shovel
+x6
+3150Floor
+10
+Ruin Shovel
+x10
+3100Floor
+5
+Wish Coin
+x5
+3050Floor
+5
+Fantasy Chest Key
+x5
+3000Floor
+15
+Legendary Artifact Universal Shard
+x15
+2950Floor
+6
+Promised Ruin Shovel
+x6
+2900Floor
+10
+Ruin Shovel
+x10
+2850Floor
+5
+Wish Coin
+x5
+2800Floor
+5
+Fantasy Chest Key
+x5
+2750Floor
+10
+Legendary Artifact Universal Shard
+x10
+2700Floor
+6
+Promised Ruin Shovel
+x6
+2650Floor
+10
+Ruin Shovel
+x10
+2600Floor
+5
+Wish Coin
+x5
+2550Floor
+5
+Fantasy Chest Key
+x5
+2500Floor
+10
+Legendary Artifact Universal Shard
+x10
+2450Floor
+4
+Promised Ruin Shovel
+x4
+2400Floor
+6
+Ruin Shovel
+x6
+2350Floor
+3
+Wish Coin
+x3
+2300Floor
+3
+Fantasy Chest Key
+x3
+2250Floor
+Random Collectible Gold
+x1
+2200Floor
+4
+Promised Ruin Shovel
+x4
+2150Floor
+6
+Ruin Shovel
+x6
+2100Floor
+3
+Wish Coin
+x3
+2050Floor
+3
+Fantasy Chest Key
+x3
+2000Floor
+Random Collectible Gold
+x1
+1950Floor
+4
+Promised Ruin Shovel
+x4
+1900Floor
+6
+Ruin Shovel
+x6
+1850Floor
+3
+Wish Coin
+x3
+1800Floor
+3
+Fantasy Chest Key
+x3
+1750Floor
+Random Collectible Gold
+x1
+1700Floor
+4
+Promised Ruin Shovel
+x4
+1650Floor
+6
+Ruin Shovel
+x6
+1600Floor
+3
+Wish Coin
+x3
+1550Floor
+3
+Fantasy Chest Key
+x3
+1500Floor
+Random Collectible Gold
+x1
+1450Floor
+4
+Promised Ruin Shovel
+x4
+1400Floor
+6
+Ruin Shovel
+x6
+1350Floor
+3
+Wish Coin
+x3
+1300Floor
+3
+Fantasy Chest Key
+x3
+1250Floor
+Random Ability or Enhance Rune
+x1
+1200Floor
+2
+Wish Coin
+x2
+1150Floor
+2
+Fantasy Chest Key
+x2
+1100Floor
+2
+Wish Coin
+x2
+1050Floor
+2
+Fantasy Chest Key
+x2
+1000Floor
+2
+Wish Coin
+x2
+950Floor
+2
+Fantasy Chest Key
+x2
+900Floor
+2
+Wish Coin
+x2
+850Floor
+2
+Fantasy Chest Key
+x2
+800Floor
+2
+Wish Coin
+x2
+750Floor
+2
+Fantasy Chest Key
+x2
+700Floor
+2
+Wish Coin
+x2
+650Floor
+2
+Fantasy Chest Key
+x2
+600Floor
+2
+Wish Coin
+x2
+550Floor
+2
+Fantasy Chest Key
+x2
+500Floor
+2
+Wish Coin
+x2
+450Floor
+2
+Fantasy Chest Key
+x2
+400Floor
+Wish Coin
+x1
+350Floor
+2
+Ruin Shovel
+x2
+300Floor
+Ruin Shovel
+x1
+250Floor
+Ruin Shovel
+x1
+200Floor
+Ruin Shovel
+x1
+150Floor
+Ruin Shovel
+x1
+100Floor
+Ruin Shovel
+x1
+50Floor
+25
+Diamond
+x25
+25Floor
+25
+Diamond
+x25
+Sky Tower Rewards Guide
+Sky Tower is floor-based PvE content where reaching specific floors for the first time grants high-value cumulative rewards such as diamonds, enhancement scrolls, and materials. This page lays out the first-reach rewards by floor in a single table, serving as a guide to help you decide how high to aim.
+Sky Tower is by far the single largest source of enhancement scrolls, so if scroll shortage is the bottleneck on your progression, the most efficient approach is to use this page's table and push as high as possible all the way to the top.Read more
+Enemy stats climb steeply with each floor, so the floor you can clear is determined by your build strength. Rather than forcing through many floors at once, the most resource-efficient flow is to revisit Sky Tower each time you push your build with character breakthroughs and gear enhancement, and update your peak floor incrementally.
+Frequently Asked Questions
+QDo Sky Tower rewards reset over time?
+The first-reach rewards shown on this page are one-time only. You cannot receive the reward for a given floor twice, so it is important not to miss any floor up to your peak. Daily and weekly bonus rewards are run as separate systems.QWhere do I farm enhancement scrolls if I am short?
+Sky Tower is the single largest source. Use the table on this page to check which rewards drop at each floor and push to the highest floor you can reach first. Guild merchant and event shops can also be used as supplementary sources to speed up your accumulation.QHow high should I push for the best efficiency?
+It depends on your build strength. Rather than forcing through one or two floors at a time, revisit Sky Tower each time you push your build up a tier and update your peak floor. The first target range is to keep going until your enhancement scroll supply is comfortable.
+H
+By Hotteok · Playing since Feb 2025 · 450 days
+Every number and recommendation on this page is verified in-game by the author and kept up to date.
+Published 2026-04-19Updated 2026-09-28How we verifyReport an error
+Related Pages
+Chapter Rewards
+Hard Chapter Rewards
+Tier List
+Character Tier List
+About·Privacy Policy·Copyright/DMCA·Terms of Service·Contact·Support·Report Issue
+Archero 2 is a trademark of Habby Pte. Ltd. Game data, names, images, and assets are © Habby Pte. Ltd. Archero2 Hub is an unofficial fan-run community resource and is not affiliated with, endorsed, or sponsored by Habby.
+Archero 2 HubSupport
+Event10
+Fishing Event Guide
+Gauge timing by fish grade and fishing mini-game guide.
+Fishing Shop Guide
+Shop purchase priority based on your etching unlock status.
+Twin Core Efficiency
+Twin Cores per fishing weight (kg) and cores per 1,000 kg, in one chart.
+Vibrant Voyage Core Efficiency
+A table of cumulative milestone rewards and badge/core efficiency per draw.
+Dice Guide
+Reach 100,000 points with the optimal dice multiplier strategy.
+Island Treasure Planner
+Calculate the dice you need for any target score and how short you are.
+Contract Mystling Guide
+Probabilities, milestones, and the fund breakdown for the Mystling Fool.
+Summon Event Guide
+9-stage milestone rewards, recommended route to reach the 400-pull pity in 3 months, cumulative Summon Points distribution, and single-pull reward probabilities.
+Event Missions
+Check resources required for each event mission.
+Redeem Codes
+Check the latest Archero 2 redeem codes and enter them right away.Guides12
+Twinborn Rune Guide
+Fuse two same-series runes (Enhancement, Ability, or Blessing) into a single slot. Rules, unlocks, and materials at a glance.
+Tracking Eye Guide
+How to maximize your odds of rolling Tracking — Rabbit Foot, Seraph, Symphony / Echo Scythe, Intelligence enchant, and ability picks.
+Best Spending Plan
+Buying priorities by monthly budget — get the most value for free, light, medium, and heavy spenders.
+Beginner's Roadmap
+Step-by-step progression guide from chapter 1 — what to prioritize, what to avoid, and how to clear early walls fast.
+Gem Spending Guide
+Where to spend (and not spend) your diamonds — Mythstone chests, Rune Ruins, and common F2P mistakes.
+Shop Buying Guide
+Purchase priority for Guild, Expedition, Island, Arena, and Event shops — by engraving unlock stage.
+Gear Sets Guide
+Compare Griffin, Oracle, and Dragoon set traits, F2P/low-spender pick strategy, and final PvP/PvE builds.
+Gear Swap Guide
+Scroll swap costs, sources, and best timing — plus series swap conditions, cooldown, and what carries over.
+Godforge Guide
+Upgrade conditions, set-specific material sources, and the weapon-first priority strategy for Godforge.
+Etched Rune Guide
+Unlock conditions, rune types, build-specific combinations, and where to obtain etched runes.
+Shackled Jungle Guide
+Rune Enchantment Stone content — boss mechanics, avoiding skip loss, recommended active skills and rune builds.
+Magic Plant Defense Guide
+Pet egg content — how it works, solo vs party differences, egg grade rates per stage, and recommended runes, skills, and characters.Calculators9
+Stat Calculator
+Calculate ATK/HP and set effects by artifact star level.
+Arrow Ability Calculator
+Compare expected damage and change rates by front/diagonal arrow ability combos.
+Character Shard Calculator
+Select character rarity and target star to calculate shard farming days.
+Gem Income Calculator
+Pick your Arena rank, Seal Battle group, and owned passes to estimate monthly gem income on a 4-week basis.
+Aeon Core Calculator
+Enter pity count, event days, target cores and find the optimal purchase plan.
+Rune Simulator
+Expected results per pull count and target rune achievement calculator.
+Rune Upgrade Calculator
+Pick the Epic+ runes you own to see how many more Epic runes you need for your target grade.
+Damage Efficiency
+Enter your current stat totals to see which stat gives the best damage efficiency to raise next.
+Vibrant Voyage Core Calculator
+Calculates the draws and cost to reach your core or relic shard goal, by luck percentile.LabNEW4
+Lightwing Arrow Test
+Lightwing Arrow proc rate and Lucky Cracker / Band-Aid synergy verified across 1,000 shots.
+Sprite Damage TestNEW
+How sprites inherit ATK, how sprite damage % stacks, and what the Assault rune adds, verified in-game.
+Damage FormulaNEW
+How one hit is calculated, which stats add and which multiply, and what changes per mode, verified in-game.
+Swift Arrow Test
+Verified in-game: Swift Arrow cuts damage by 20% and shrinks Energy Ring hit count.Characters4
+Character Catalog
+Hero abilities, star-breakthrough effects, and skin effects at a glance.
+Character Tier List
+Recommended character tiers for PvP and PvE modes.
+Character Resonance
+Recommended character resonance compositions for PvP and PvE.
+Shard Requirements
+View shard requirements per star level for Rare, Epic and Legendary characters.Artifacts2
+Artifact Codex
+Browse every artifact set bonus and individual effect on a single page.
+Artifact Shards
+View shard requirements per star level for Legendary and Mythic artifacts.Gear5
+Gear Tier List
+Recommended gear set combinations for PvP and PvE modes.
+Gear Effects
+Gear options by grade from Common to Chaotic, plus Godforge.
+Godforge
+Materials and effects needed to Godforge one gear from 0★ to 5★.
+Gear Fusion
+Fusion path and total materials from S Epic to S Chaotic.
+Gear Upgrade Cost
+Calculate gold and scrolls needed for gear upgrades.Runes6
+Rune Tier List
+Recommended rune tiers for PvP and PvE modes.
+Rune Effects
+Rune options and enchantments by grade, Common to Mythic.
+Rune Builds
+Recommended rune combinations and enchantments by equipment.
+Rune Enchantment Tier
+View enchantment options and tiers for each rune.
+Rune Fusion
+Base runes required to craft 1 Mythic rune with step-by-step fusion recipes.
+Twinborn Runes
+Twinborn Workshop unlock condition, 15 fusion groups across Enhancement, Ability & Blessing runes, Runic Remnant & Twinborn Core costs, and rune dismantle yield — all at a glance.Builds3
+Build Editor
+Compose a character, gear, and runes; share via link.
+Build Ranking
+Browse popular builds sorted by views.
+Tier List
+Rank characters, gear, and runes from S to D and share.Mystlings2
+Mystling Shard Cost
+Check the standard shard cost and cumulative total for Mystling 0 to 25 stars.
+Mystling Calculator
+Calculate event tickets and package plans for your target Mystling stars.View allSkill2
+Skill Catalog
+Browse every in-game skill with stats and effects.
+Skill Tier List
+Recommended skill tiers at a glance.GuildNEW6
+Guild Merchant
+Check bargain prices and recommendations for guild merchant items.
+Guild Research
+Effects and coin costs for all 27 guild research entries across combat, growth, and events.
+Guild RaidNEW
+Difficulty tiers, node layout, boss HP, settlement rewards and Frenzy Challenge.
+Guild BanquetNEW
+Festivity thresholds for 6 banquet tiers, red packet odds and expected value, cheer mechanics.
+Guild Boss
+Check the daily guild boss schedule and stats.
+Guild Boss Rewards
+View reward box contents for each damage milestone.Umbral Tempest4
+Universal Talent
+Calculate Umbral Tempest universal talent levels and total Virtus Dust cost.
+Class Talent
+Umbral Tempest class talent trees with recommended builds.
+Class Guide
+Umbral Tempest class tier list and recommendations — Ranger, Alchemist, Druid, Diviner.
+What to Buy (F2P)
+Recommended purchase order and item prices for the Abyssal Crystal & Gloom Shard shop.Achievements3
+Chapter Rewards
+Key rewards granted for clearing chapters 1–210.
+Hard Chapter Rewards
+Key rewards for clearing Hard difficulty chapters.
+Sky Tower Rewards
+Key rewards for reaching Sky Tower floors.View allMore1
+Sacred Hall
+Costs and unlock rewards for each Sacred Hall phase (LV1–LV24).
+Home
+Guide
+Event
+Tools
+All
