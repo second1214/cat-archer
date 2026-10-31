@@ -7,6 +7,7 @@ import { rollSkills, type SkillCounts, type SkillId } from "../core/skills";
 import { ENEMIES, stageInfo, STAGES_PER_CHAPTER, type EnemyDef, type EnemyKind } from "../core/stages";
 import { COLS, pickTerrain, ROWS, Terrain } from "../core/terrain";
 import { rollRune, RUNE_UNLOCK_CHAPTER, type Rune, type RuneEffects } from "../core/runes";
+import { CHURU_BOSS } from "../core/run";
 import { Strikes, type StrikeEnemy, type StrikeHost } from "./strikes";
 
 /** 部屋の広さ（単位: マス） */
@@ -96,6 +97,7 @@ export class World implements StrikeHost {
   coins = 0;
   drops: Item[] = [];
   runeDrops: Rune[] = [];
+  churu = 0;
   /** 助っ人ねこ（ストライク） */
   readonly strikes: Strikes;
   kills = 0;
@@ -115,6 +117,8 @@ export class World implements StrikeHost {
       atkCd: 0.3, shootAnim: 0, hurtAnim: 0, level: 1, xp: 0,
     };
     this.strikes = new Strikes(this);
+    // シリーズの セット効果: はじめから 持っているスキル
+    for (const id of lo.startSkills) this.skills[id] = Math.max(this.skills[id] ?? 0, 1);
     this.startStage(1);
   }
 
@@ -136,7 +140,8 @@ export class World implements StrikeHost {
   get guard(): number { return Math.min(0.6, this.lo.stats.guard); }
   get pierce(): boolean { return this.lo.pierce || this.n("pierce") > 0; }
   get bounce(): number { return this.lo.bounce + 2 * this.n("bounce"); }
-  get orbs(): number { return 2 * this.n("orbit"); }
+  get orbs(): number { return 2 * this.n("orbit") + this.lo.orbs; }
+  get strikePct(): number { return this.lo.stats.strikePct; }
   /** 攻撃が レーザー（武器 か スキル） */
   get laser(): boolean { return this.lo.laser || this.n("laser") > 0; }
   xpNeed(level = this.hero.level): number { return 6 + 4 * (level - 1); }
@@ -312,7 +317,7 @@ export class World implements StrikeHost {
     h.shootAnim = 0.2;
     const laser = this.laser;
     // スキルで レーザーにしたときは 1発 -20%（武器のレーザーは 攻撃力で 調整ずみ）
-    const dmg = this.atk * (1 - 0.1 * this.n("multi")) * (1 - 0.15 * this.n("front")) * (this.pierce && !laser ? 0.75 : 1) * (laser && !this.lo.laser ? 0.8 : 1);
+    const dmg = this.atk * (1 - 0.1 * this.n("multi")) * (1 - 0.15 * this.n("front")) * (this.pierce && !laser ? 0.75 : 1) * (laser && !this.lo.laser ? 0.8 : 1) * (laser ? 1 + this.lo.stats.laserPct : 1);
     const angles: number[] = [a];
     const d = this.n("diag"), s = this.n("side"), b = this.n("back");
     if (d >= 1) angles.push(a + Math.PI / 4, a - Math.PI / 4);
@@ -487,6 +492,7 @@ export class World implements StrikeHost {
     this.fx.push({ kind: "die", x: e.x, y: e.y, v: e.def.r, t: 0 });
     this.sounds.push("kill");
     this.coins += e.def.coins * this.coinMul;
+    if (e.def.boss) this.churu += CHURU_BOSS;
     this.strikes.onKill();
     if (e.def.split) {
       const reach = this.terrain.flow(this.hero.x, this.hero.y);
@@ -706,7 +712,7 @@ export class World implements StrikeHost {
         if (e.dead || (this.orbCd.get(e.id) ?? 0) > 0) continue;
         if (Math.hypot(e.x - ox, e.y - 0.3 - oy) < e.def.r + 0.25) {
           this.orbCd.set(e.id, 0.45);
-          this.damage(e, this.atk * 0.5, "dmg");
+          this.damage(e, this.atk * 0.5 * (1 + this.lo.stats.orbitPct), "dmg");
         }
       }
     }

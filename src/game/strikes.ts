@@ -18,6 +18,8 @@ const BEAM_HITS = 4;
 const RICOCHET_MAX = 3;
 const POTION_CATS = 5;
 const HOMING_TURN = 4.5;
+/** ボス猫が 現れてから 走りだすまで */
+export const DRAGON_WINDUP = 0.3;
 
 export interface StrikeEnemy { id: number; x: number; y: number; hp: number; maxHp: number; dead: boolean; def: { r: number } }
 
@@ -36,6 +38,8 @@ export interface StrikeHost {
   readonly critMul: number;
   /** 攻撃の速さの倍率（1 が ふつう） */
   readonly speedMul: number;
+  /** 装備の 助っ人ねこのダメージ +% */
+  readonly strikePct: number;
   /** プレイヤーの ゆうどう */
   readonly homing: boolean;
   nearest(x: number, y: number, skip?: Set<number>, maxD?: number): StrikeEnemy | null;
@@ -60,6 +64,8 @@ export interface Strike {
   beams: number;
   beamT: number;
   cat: string;
+  /** 現れてから 動きだすまで（ボス猫の 構え） */
+  delay: number;
 }
 
 export interface Pickup { x: number; y: number; t: number }
@@ -84,7 +90,7 @@ export class Strikes {
   get hasPotion(): boolean { return this.w.rune.potion.start; }
 
   /** 助っ人ねこの ダメージの倍率（専用の増加） */
-  private get mul(): number { return 1 + 0.5 * this.w.n("s_boost"); }
+  private get mul(): number { return (1 + 0.5 * this.w.n("s_boost")) * (1 + this.w.strikePct); }
   private baseDmg(dragon: boolean): number {
     const coef = this.beamMode ? (dragon ? DRAGON_BEAM_COEF : BEAM_COEF) : dragon ? DRAGON_COEF : COEF;
     return (this.w.atkPower * coef + this.w.rune.strikeDmg) * this.mul;
@@ -99,12 +105,16 @@ export class Strikes {
     if (!tg) return false;
     for (let i = 0; i < count; i++) {
       const dragon = this.w.rng() < this.w.rune.dragonChance;
-      const a = this.w.rng() * Math.PI * 2;
-      // 猫のまわりから 飛び出す（部屋の外・物の中なら 猫の真上から）
-      let x = Math.max(0.2, Math.min(8.8, h.x + Math.cos(a) * 0.8)), y = Math.max(0.2, Math.min(14.8, h.y - 0.4 + Math.sin(a) * 0.5));
-      if (this.w.terrain.blocksShot(x, y + 0.3)) { x = h.x; y = h.y - 0.4; }
       const beam = beamCat || this.beamMode;
+      // ふつうは 攻撃だけが 猫の位置から飛ぶ。ボス猫は 猫のまわりに現れて、少し構えてから 走っていく
+      let x = h.x, y = h.y - 0.4;
+      if (dragon) {
+        const a = this.w.rng() * Math.PI * 2;
+        x = Math.max(0.3, Math.min(8.7, h.x + Math.cos(a) * 1.1)); y = Math.max(0.3, Math.min(14.7, h.y - 0.4 + Math.sin(a) * 0.7));
+        if (this.w.terrain.blocksShot(x, y + 0.3)) { x = h.x; y = h.y - 0.4; }
+      }
       this.launch(x, y, tg, dragon ? "dragon" : "normal", this.baseDmg(dragon), beam);
+      if (dragon) this.list[this.list.length - 1].delay = DRAGON_WINDUP;
     }
     return true;
   }
@@ -114,7 +124,7 @@ export class Strikes {
     const sp = kind === "mini" ? MINI_SPEED : SPEED;
     this.list.push({
       x, y, vx: ((tg.x - x) / d) * sp, vy: ((tg.y - 0.3 - y) / d) * sp, kind, dmg, target: tg.id, life: kind === "mini" ? 1.2 : 1.6,
-      hit: new Set(), ric: 0, homing, beams: beam && kind !== "mini" ? BEAM_HITS : 0, beamT: 0,
+      hit: new Set(), ric: 0, homing, beams: beam && kind !== "mini" ? BEAM_HITS : 0, beamT: 0, delay: 0,
       cat: kind === "dragon" ? "taisho" : kind === "mini" ? "komugi" : this.catIds[Math.floor(this.w.rng() * this.catIds.length)],
     });
   }
@@ -191,6 +201,13 @@ export class Strikes {
       // 追いかける子ねこは ねらいが いなくなったら 次の敵へ
       if (!tg && s.homing) { tg = this.w.nearest(s.x, s.y + 0.3, s.hit, STRIKE_RANGE); if (tg) s.target = tg.id; }
       // レーザーを撃つ猫: 敵の近くで止まって 撃つ
+      if (s.delay > 0) {
+        s.delay -= dt; s.life += dt;
+        // 構えているあいだは ねらう敵の方を向く
+        if (tg) { const d = Math.hypot(tg.x - s.x, tg.y - 0.3 - s.y) || 1, sp = Math.hypot(s.vx, s.vy); s.vx = ((tg.x - s.x) / d) * sp; s.vy = ((tg.y - 0.3 - s.y) / d) * sp; }
+        out.push(s);
+        continue;
+      }
       if (s.beams > 0) {
         const near = tg && Math.hypot(tg.x - s.x, tg.y - s.y) < 3;
         if (near || s.life < 1) {
