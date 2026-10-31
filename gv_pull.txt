@@ -1,0 +1,142 @@
+Pull Rates - Archero 2 Wiki and Guides
+Game Vault
+Home
+News
+Reviews
+Wikis
+Wikis
+All Wikis
+Hades 2
+Helldivers 2
+Frostpunk 2
+CIFI
+Request a wiki
+33
+494
+200
+1,778
+Archero 2 Wiki and Guides
+ Navigation
+Main page
+Recent changes
+Random page
+Special pages
+Upload file
+ Community
+Guides
+Codes
+ Toggle menu
+Archero 2 Wiki and Guides
+Pull Rates
+Log in
+ Toggle personal menu
+ Search
+ Toggle search
+Archero 2 Wiki and Guides
+Pull Rates
+From Archero 2 Wiki and Guides
+When playing Archero 2 you will be able to use Keys/Wish tokens to obtain new Gear or Artifacts. Below are the tables that show you the % chance you have of pulling that Gear/Artifact. 
+For example if you were to use a key on the Chromatic Chest you will have 2.18% chance to pull Epic Gear (This does not include the pity pull)
+For example if you were to use a Wish you will have 24% chance to pull an Epic Artifact Shard (This does not include the pity pull)
+All calculations are based off singular pulls and do not stack, if you are to a 10x pull this is 10 single pulls so each time the below % apply, so in theory doing a 10x pull on Mythstone and getting rare gear for every pull is 38.18% each time (not including the epic pity pull)
+Rune Ruin pulls are broken down by chest type and then each then has its own individual break down for the rune contained i.e
+Revive rune is rarer and has half the probability of other blessing runes (0.15% pull rate in a Sturdy Chest, 0.30% pull rate for other blessing rune)
+Chest Pull Rates[edit | edit source]
+ | Chest Type
+ | Epic S Tier Gear
+ | Epic Tier Gear
+ | Rare Tier Gear
+ | Fine Tier Gear
+ | Normal Tier Gear
+ | Mythstone Chest
+ | 1.46%
+ | 2.18%
+ | 38.18%
+ | 58.18%
+ | N/A
+ | Chromatic Chest
+ | 1.46%
+ | 2.18%
+ | 38.18%
+ | 58.18%
+ | N/A
+ | Obsidian Chest
+ | N/A
+ | 4%
+ | 40%
+ | 56%
+ | N/A
+ | Silver Chest
+ | N/A
+ | N/A
+ | N/A
+ | 33.33%
+ | 66.67%
+Mythstone Chests are more specific-type chests of Chromatic Chests. The type of equipment that can be pulled from the chest cycle from Griffin > Oracle > Dragoon with each set stays for 3-days long.
+Wish Pull Rates[edit | edit source]
+ | Artifact Type
+ | Mythic
+ | Legendary
+ | Epic
+ | Rare
+ | Artifact
+ | 0.1%
+ | 1%
+ | 9%
+ | 18%
+ | Artifact Shards
+ | N/A
+ | N/A
+ | 24%
+ | 47.9%
+Only certain Legendary and Mythic Artifacts can be obtained through wishes.
+Rune Ruins Pull Rates[edit | edit source]
+ | Chest Type
+ | Epic
+ | Rare
+ | Fine
+ | Normal
+ | Requirements
+ | Rusty Chest
+ | N/A
+ | N/A
+ | 7.2%
+ | 28.8%
+ | N/A
+ | Sturdy Chest
+ | N/A
+ | 10%
+ | 40%
+ | N/A
+ | 2x 
+ | Glorious Chest
+ | 2.8%
+ | 11.20%
+ | N/A
+ | N/A
+ | 4x 
+Promised ruins are the same as Rune Ruins (same pull rate), except that it has a smaller rune loot pool. The pool cycles between elemental/circle, weapon/meteor, and sprite/strike.
+ | Archero 2 navigation 
+This box: view • talk • edit
+ | Main Tabs
+ | Characters • Gear • Runes • Skills • Artifacts • Talent Cards
+ | Game Mechanics
+ | Events
+ | Useful Pages
+ | Currency and Items • Pull Rates • Reward Codes • Collection of game Tips • FAQ
+ | Guides
+ | All Guides • Ultimate Beginners Guide
+ | Builds
+ | Oracle Build
+×
+Retrieved from "https://archero-2.game-vault.net/w/index.php?title=Pull_Rates&oldid=1170"
+ This page was last edited on 21 March 2025, at 07:26.
+Archero 2 Wiki and Guides
+Explore the Game Vault
+Game Vault
+Reviews
+Wikis
+Privacy policy
+About Archero 2 Wiki and Guides
+Disclaimers
+Archero 2 Wiki and Guides is a Game-Vault Community.

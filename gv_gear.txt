@@ -1,0 +1,545 @@
+Gear - Archero 2 Wiki and Guides
+Game Vault
+Home
+News
+Reviews
+Wikis
+Wikis
+All Wikis
+Hades 2
+Helldivers 2
+Frostpunk 2
+CIFI
+Request a wiki
+33
+494
+200
+1,778
+Archero 2 Wiki and Guides
+ Navigation
+Main page
+Recent changes
+Random page
+Special pages
+Upload file
+ Community
+Guides
+Codes
+ Toggle menu
+Archero 2 Wiki and Guides
+Gear
+Log in
+ Toggle personal menu
+ Search
+ Toggle search
+Archero 2 Wiki and Guides
+Gear
+From Archero 2 Wiki and Guides
+Archero 2 includes various equipment that give stat bonuses to the hero when equipped and buff different aspects of their builds. 
+Contents
+1 Gear
+1.1 Blacksmith
+1.2 Gear Sets
+1.3 All Gear
+Gear[edit | edit source]
+There are 6 types of equipment in the Archero 2, and you can equip one of each in its respective slot:
+Weapon
+Armor
+Helm
+Boots
+Amulet
+Ring
+It is possible to level up equipment using Gear Scrolls & Gold that will add additional main stats to the gear. If another gear is equipped, the upgrades will carry over, so upgrades improve the gear slot.
+Each piece of gear can have different quality's as well as additional effects that can boost specific builds.
+Blacksmith[edit | edit source]
+Blacksmith allows players to merge the gear in order to improve its quality. It will require either an exact copy (duplicate) of an item of the same quality tier or same type of item of the same quality tier. (Universal material can be used in place of any "same slot gear" when merging, see below table)
+Equipment Merging Item requirements
+ | Upgraded Item
+ | Fodder
+ | Merging Result
+ | Normal Gear
+ | 2x Normal Duplicate Gear
+ | Fine Gear
+ | Fine Gear
+ | 2x Fine Duplicate Gear
+ | Rare Gear
+ | Rare Gear
+ | 2x Rare Duplicate Gear
+ | Epic Gear
+ | Epic Gear
+ | 1x Epic Same Slot Gear or 
+ | Epic +1 Gear
+ | Epic +1 Gear
+ | 2x Epic Same Slot Gear or 
+ | Epic +2 Gear
+ | Epic +2 Gear
+ | 1x Epic Duplicate +2 Gear
+ | Legendary Gear
+ | Legendary Gear
+ | 1x Legendary Same Slot Gear or 
+ | Legendary +1 Gear
+ | Legendary Gear
+ | 1x Legendary Same Slot Gear or 
+ | Legendary +2 Gear
+ | Legendary Gear
+ | 2x Legendary Same Slot Gear or 
+ | Legendary +3 Gear
+ | Legendary +3 Gear
+ | 1x Legendary Duplicate +3 gear
+ | Mythic Gear
+ | Mythic Gear
+ | 1x Legendary Duplicate +3 gear
+ | Mythic +1 Gear
+ | Mythic +1 Gear
+ | 1x Legendary Duplicate +3 gear
+ | Mythic +2 Gear
+ | Mythic +2 Gear
+ | 1x Legendary Duplicate +3 gear
+ | Mythic +3 Gear
+ | Mythic +3 Gear
+ | 1x Legendary Duplicate +3 gear
+ | Mythic +4 Gear
+ | Mythic +4 Gear
+ | 1x Legendary Duplicate +3 gear
+ | Chaotic Gear
+Gear Sets[edit | edit source]
+You can find set specific information for all Archero 2 Gear by clicking on one of the sets or scrolling down and viewing the whole list of available gear.
+Oracle Set
+Dragon Knight Set
+Griffin Set
+Echo Set
+Decisiveness Set
+Destruction Set
+Weapons
+All Gear[edit | edit source]
+ | Name
+ | Type
+ | Fine
+ | Rare
+ | Epic
+ | Legendary
+ | Legendary +3
+ | Mythic
+ | Mythic +2
+ | Mythic +4
+ | Chaotic
+ | Oracle Light Spear
+ | Weapon
+ | ATK PWR +5%
+ | ATK PWR increases with combo, up to 10% (reached at 20 combo).
+ | For every 5 combo, CRIT rate increases by 2%, up to 8%
+ | ATK PWR +10%
+ | Weapons base stats increased by 20%
+ | For every 5 combo, CRIT rate increases by 4%, up to 16%
+ | Weapon's base stat's +30%
+ | Weapon's base stat's +40%
+ | The more enemies the main weapon hits, the higher the next attack's DMG
+ | Oracle Amulet
+ | Amulet
+ | ATK PWR +5%
+ | CRIT DMG +12%
+ | For every 5 combo, the next DMG is doubled
+ | ATK PWR +10%
+ | Amulets base stats increased by 20%
+ | For every 3 combo, the next DMG is doubled
+ | Amulet's base stat's +30%
+ | Amulet's base stat's +40%
+ | When combo reaches >40 hits, projectile splits +3
+ | Oracle Ring
+ | Ring
+ | ATK PWR +5%
+ | CRIT Rate +3%
+ | For every 5 combo, ATK SPD increases by 2%
+ | ATK PWR +10%
+ | Rings base stats increased by 20%
+ | For every 5 combo, ATK SPD increases by 4%, up to 16%
+ | Ring's base stat's +30%
+ | Ring's base stat's +40%
+ | When combo reaches >40 hits, deal increased DMG to enemies at Max HP
+ | Oracle Armor
+ | Armor
+ | Max HP +5%
+ | Barrage DMG REDUCE +5%
+ | For every 5 combo, the next hit +2 diagonal arrows
+ | Max HP +10%
+ | Armor's base stats increased by 20%
+ | For every 5 combo, the next hit +4 diagonal arrows
+ | Armor's base stat's +30%
+ | Armor's base stat's +40%
+ | When looting Hearts, chance to gain Invincibility shield for 2s
+ | Oracle Helmet
+ | Helmet
+ | Max HP +5%
+ | Red heart heal +20%
+ | Gain 2x combo on CRIT
+ | Max HP +10%
+ | Helmets base stats increased by 20%
+ | Gain 3x combo on CRIT
+ | Helmet's base stat's +30%
+ | Helmet's base stat's +40%
+ | Chance to gain +1 Multishot on critical hit
+ | Oracle Boots
+ | Boots
+ | Max HP +5%
+ | Dodge +5%
+ | CRIT DMG increases by 32% when combo exceeds 30
+ | Max HP +10%
+ | Boots' base stats increased by 20%
+ | CRIT DMG increases by 48% when combo exceeds 20
+ | Boots' base stat's +30%
+ | Boots' base stat's +40%
+ | 20% DMG REDUC when stationary
+ | Griffin Claw
+ | Weapon
+ | ATK PWR+5%
+ | The closer, the higher DMG, up to 10%
+ | The closer, the higher CRIT Rate, up to 9%
+ | ATK PWR+10%
+ | Weapon's base stats increased by 20%
+ | The closer, the higher CRIT Rate, up to 18%
+ | Weapon's base stat's +30%
+ | Weapon's base stat's +40%
+ | Close-range damage taken -20%
+ | Griffin Amulet
+ | Amulet
+ | ATK PWR+5%
+ | CRIT DMG+12%
+ | When injured, single instance of DMG returned as 2x DMG AoE wave with 7m radius, can trigger every 0.25s
+ | ATK PWR+10%
+ | Amulet's base stats increased by 20%
+ | When injured, single instance of DMG returned as 4x DMG AoE wave with 7m radius, can trigger every 0.25s
+ | Amulet's base stat's +30%
+ | Amulet's base stat's +40%
+ | When taking DMG within distance of 7, chance to drop Hearts
+ | Griffin Ring
+ | Ring
+ | ATK PWR+5%
+ | CRIT Rate+3%
+ | CRIT Rate increases with more nearby monsters, up to 9%.
+ | ATK PWR+10%
+ | Ring's base stats increased by 20%
+ | CRIT Rate increases with more nearby monsters, up to 18%.
+ | Ring's base stat's +30%
+ | Ring's base stat's +40%
+ | Hearts heal more at lower HP, up to 100%
+ | Griffin Armor
+ | Armor
+ | Max HP+5%
+ | Barrage DMG REDUC+5%
+ | Deals 0.3x ATK PWR as damage every 0.3s to enemies within 7 meters
+ | Max HP+10%
+ | Armor's base stats increased by 20%
+ | Doubles continuous DMG dealt to enemies within 7 meters
+ | Armor's base stat's +30%
+ | Armor's base stat's +40%
+ | Weakens enemies within 7m, deepens enemy wounds by 30%
+ | Griffin Helmet
+ | Helmet
+ | Max HP+5%
+ | Red Heart Heal+20%
+ | The closer, the higher CRIT DMG, up to 36%.
+ | Max HP+10%
+ | Helmet's base stats increased by 20%
+ | The closer, the higher CRIT DMG, up to 72%.
+ | Helmet's base stat's +30%
+ | Helmet's base stat's +40%
+ | Higher ATK SPD at closer distances to the target, up to 100%
+ | Griffin Boots
+ | Boots
+ | Max HP+5%
+ | Dodge+5%
+ | CRIT DMG increases with more nearby monsters, up to 36%.
+ | Max HP+10%
+ | Boots' base stats increased by 20%
+ | CRIT DMG increases with more nearby monsters, up to 72%.
+ | Boots' base stat's +30%
+ | Boots' base stat's +40%
+ | 20% DMG REDUC when moving
+ | Dragon Knight Crossbow
+ | Weapon
+ | ATK PWR+5%
+ | 50% chance to cause an explosion on hit dealing 0.5x ATK PWR as damage in a small area
+ | Explosion DMG +200%, Meteors converted to explosion DMG
+ | ATK PWR+10%
+ | Weapon's base stats increased by 20%
+ | 75% chance to cause an explosion on hit
+ | Weapon's base stat's +30%
+ | Weapon's base stat's +40%
+ | Gain +5% Main weapon DMG for each skill you take in battle (up to +50%)
+ | Dragon Knight Amulet
+ | Amulet
+ | ATK PWR+5%
+ | CRIT DMG+12%
+ | Randomly detonates 2 monsters on the field every 2s
+ | ATK PWR+10%
+ | Amulet's base stats increased by 20%
+ | Randomly detonates 4 monsters on the field every 2s
+ | Amulet's base stat's +30%
+ | Amulet's base stat's +40%
+ | Enemies damaged by explosions may attract meteor
+ | Dragon Knight Ring
+ | Ring
+ | ATK PWR+5%
+ | CRIT Rate+3%
+ | Chance to drop a landmine when hitting an enemy, which explodes after a short time.
+ | ATK PWR+10%
+ | Ring's base stats increased by 20%
+ | Chance to drop landmine on hitting an enemy is doubled
+ | Ring's base stat's +30%
+ | Ring's base stat's +40%
+ | Spawn 1 mine periodically
+ | Dragon Knight Armor
+ | Armor
+ | Max HP+5%
+ | Barrage DMG REDUC+5%
+ | Gain 1 [Flame Shield] that lasts for 10s when damaged; it shatters and explodes upon being hit again.
+ | Max HP+10%
+ | Armor's base stats increased by 20%
+ | Slowly restore HP while [Flame Shield] is active
+ | Armor's base stat's +30%
+ | Armor's base stat's +40%
+ | Heart healing effect +20%
+ | Dragon Knight Helmet
+ | Helmet
+ | Max HP+5%
+ | Red Heart Heal+20%
+ | For every 1 monster defeated or after every 5s, the next attack causes an explosion
+ | Max HP+10%
+ | Helmet's base stats increased by 20%
+ | Monsters within the explosion radius are ignited
+ | Helmet's base stat's +30%
+ | Helmet's base stat's +40%
+ | Ignited enemies take double explosion damage
+ | Dragon Knight Boots
+ | Boots
+ | Max HP+5%
+ | Dodge+5%
+ | Triggers an explosion on the attacking monster when Dodging.
+ | Max HP+10%
+ | Boots' base stats increased by 20%
+ | Dodge+10%
+ | Boots' base stat's +30%
+ | Boots' base stat's +40%
+ | 10% DMG REDUC
+ | Beam Staff
+ | Weapon
+ | NA
+ | ATK PWR+5%
+ | ATK PWR increases with combo, up to 10% (reached at 20 combo).
+ | For every 5 Combo, CRIT Rate increases by 2%, up to 8%.
+ | Weapon's base stats increased by 20%
+ | NA
+ | NA
+ | NA
+ | NA
+ | Echo Amulet
+ | Amulet
+ | NA
+ | ATK PWR+5%
+ | CRIT DMG+12%
+ | For every 5 Combo, the next DMG is doubled
+ | Amulet's base stats increased by 20%
+ | NA
+ | NA
+ | NA
+ | NA
+ | Echo Ring
+ | Ring
+ | NA
+ | ATK PWR+5%
+ | CRIT Rate+3%
+ | For every 5 Combo, ATK SPD increases by 2%, up to 8%.
+ | Ring's base stats increased by 20%
+ | NA
+ | NA
+ | NA
+ | NA
+ | Echo Armor
+ | Armor
+ | NA
+ | Max HP+5%
+ | Barrage DMG REDUC+5%
+ | For every 5 Combo, the next hit gains 2 diagonal arrows
+ | Armor's base stats increased by 20%
+ | NA
+ | NA
+ | NA
+ | NA
+ | Echo Helmet
+ | Helmet
+ | NA
+ | Max HP+5%
+ | Red Heart Heal+20%
+ | Gain 2x Combo on CRIT
+ | Helmet's base stats increased by 20%
+ | NA
+ | NA
+ | NA
+ | NA
+ | Echo Boots
+ | Boots
+ | NA
+ | Max HP+5%
+ | Dodge+5%
+ | CRIT DMG increases by 32% when Combo exceeds 30
+ | Boots' base stats increased by 20%
+ | NA
+ | NA
+ | NA
+ | NA
+ | Heroic Longbow
+ | Weapon
+ | NA
+ | ATK PWR+5%
+ | 50% chance to cause an explosion on hit dealing 0.5x ATK PWR as damage in a small area
+ | Explosion DMG +200%, Meteors converted to explosion DMG
+ | Weapon's base stats increased by 20%
+ | NA
+ | NA
+ | NA
+ | NA
+ | Amulet of Destruction
+ | Amulet
+ | NA
+ | ATK PWR+5%
+ | CRIT DMG+12%
+ | Randomly detonates 2 monsters on the field every 2s
+ | Amulet's base stats increased by 20%
+ | NA
+ | NA
+ | NA
+ | NA
+ | Ring of Destruction
+ | Ring
+ | NA
+ | ATK PWR+5%
+ | CRIT Rate+3%
+ | Chance to drop a landmine when killing an enemy, which explodes after a short time.
+ | Ring's base stats increased by 20%
+ | NA
+ | NA
+ | NA
+ | NA
+ | Armor of Destruction
+ | Armor
+ | NA
+ | Max HP+5%
+ | Barrage DMG REDUC+5%
+ | Gain 1 [Flame Shield] that lasts for 10s when damaged; it shatters and explodes upon being hit again.
+ | Armor's base stats increased by 20%
+ | NA
+ | NA
+ | NA
+ | NA
+ | Helmet of Destruction
+ | Helmet
+ | NA
+ | Max HP+5%
+ | Red Heart Heal+20%
+ | For every 1 monster defeated or after every 5s, the next attack causes an explosion
+ | Helmet's base stats increased by 20%
+ | NA
+ | NA
+ | NA
+ | NA
+ | Boots of Destruction
+ | Boots
+ | NA
+ | Max HP+5%
+ | Dodge+5%
+ | Triggers an explosion on the attacking monster when Dodging.
+ | Boots' base stats increased by 20%
+ | NA
+ | NA
+ | NA
+ | NA
+ | Agile Knuckles
+ | Weapon
+ | NA
+ | ATK PWR+5%
+ | The closer, the higher DMG, up to 10%
+ | The closer, the higher CRIT Rate, up to 9%
+ | Weapon's base stats increased by 20%
+ | NA
+ | NA
+ | NA
+ | NA
+ | Amulet of Decisiveness
+ | Amulet
+ | NA
+ | ATK PWR+5%
+ | CRIT DMG+12%
+ | When injured, single instance of DMG returned as 2x DMG AoE wave with 7m radius, can trigger every 0.25s
+ | Amulet's base stats increased by 20%
+ | NA
+ | NA
+ | NA
+ | NA
+ | Ring of Decisiveness
+ | Ring
+ | NA
+ | ATK PWR+5%
+ | CRIT Rate+3%
+ | CRIT Rate increases with more nearby monsters, up to 9%.
+ | Ring's base stats increased by 20%
+ | NA
+ | NA
+ | NA
+ | NA
+ | Armor of Decisiveness
+ | Armor
+ | NA
+ | Max HP+5%
+ | Barrage DMG REDUC+5%
+ | Deals 0.3x ATK PWR as damage every 0.3s to enemies within 7 meters
+ | Armor's base stats increased by 20%
+ | NA
+ | NA
+ | NA
+ | NA
+ | Helmet of Decisiveness
+ | Helmet
+ | NA
+ | Max HP+5%
+ | Red Heart Heal+20%
+ | The closer, the higher CRIT DMG, up to 36%.
+ | Helmet's base stats increased by 20%
+ | NA
+ | NA
+ | NA
+ | NA
+ | Boots of Decisiveness
+ | Boots
+ | NA
+ | Max HP+5%
+ | Dodge+5%
+ | CRIT DMG increases with more nearby monsters, up to 36%.
+ | Boots' base stats increased by 20%
+ | NA
+ | NA
+ | NA
+ | NA
+ | Archero 2 navigation 
+This box: view • talk • edit
+ | Main Tabs
+ | Characters • Gear • Runes • Skills • Artifacts • Talent Cards
+ | Game Mechanics
+ | Events
+ | Useful Pages
+ | Currency and Items • Pull Rates • Reward Codes • Collection of game Tips • FAQ
+ | Guides
+ | All Guides • Ultimate Beginners Guide
+ | Builds
+ | Oracle Build
+×
+Retrieved from "https://archero-2.game-vault.net/w/index.php?title=Gear&oldid=1656"
+ This page was last edited on 18 July 2025, at 09:00.
+Archero 2 Wiki and Guides
+Explore the Game Vault
+Game Vault
+Reviews
+Wikis
+Privacy policy
+About Archero 2 Wiki and Guides
+Disclaimers
+Archero 2 Wiki and Guides is a Game-Vault Community.

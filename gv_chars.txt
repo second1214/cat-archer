@@ -1,0 +1,621 @@
+Characters - Archero 2 Wiki and Guides
+Game Vault
+Home
+News
+Reviews
+Wikis
+Wikis
+All Wikis
+Hades 2
+Helldivers 2
+Frostpunk 2
+CIFI
+Request a wiki
+33
+494
+200
+1,778
+Archero 2 Wiki and Guides
+ Navigation
+Main page
+Recent changes
+Random page
+Special pages
+Upload file
+ Community
+Guides
+Codes
+ Toggle menu
+Archero 2 Wiki and Guides
+Characters
+Log in
+ Toggle personal menu
+ Search
+ Toggle search
+Archero 2 Wiki and Guides
+Characters
+From Archero 2 Wiki and Guides
+In Archero 2, characters are your playable heroes, each offering unique abilities that shape your gameplay experience. You can find and manage them within the Gear menu on the Characters Tab. Unlocking new characters requires obtaining 50 of their specific shards, which are acquired through in-game quests and activities, or by purchasing them from the shop and during special events.
+Currently, 8 characters are available in Archero 2:
+Alex
+Nyanja
+Helix
+Hela
+Mymu
+Hou Yi
+Seraph
+Dracoola
+Rolla
+Loki
+Phynx
+Nezha
+Otta
+Atreus
+Thor
+Cleo
+Wukong
+A key feature for character progression is Resonance, available at 3 and 6 levels. This allows you to select an additional skill from another unlocked character, providing significant build customization.
+Contents
+1 Leveling up Characters
+2 Characters
+2.1 Alex
+2.2 Nyanja
+2.3 Helix
+2.4 Hela
+2.5 Mymu
+2.6 Hou Yi
+2.7 Seraph
+2.8 Dracoola
+2.9 Rolla
+2.10 Loki
+2.11 Phynx
+2.12 Nezha
+2.13 Otta
+2.14 Atreus
+2.15 Thor
+2.16 Cleo
+2.17 Wukong
+Leveling up Characters[edit | edit source]
+Each character can be leveled up by obtaining more shards, improving their base stats and unlocking powerful new abilities at higher star levels.
+Rare and Epic Shard Requirements for Star Levels
+ | Star Level
+ | Shard Requirement
+ | 0 (unlock)
+ | 50 shards
+ | 1 
+ | 50 shards
+ | 2 
+ | 100 shards
+ | 3 
+ | 100 shards
+ | 4 
+ | 150 shards
+ | 5 
+ | 150 shards
+ | 6 
+ | 200 shards
+ | 7 
+ | 300 shards
+ | 8 
+ | 500 shards
+Legendary Shard Requirements for Star Levels
+ | Star Level
+ | Shard Requirement
+ | 0 (unlock)
+ | 50 shards
+ | 1 
+ | 50 shards
+ | 2 
+ | 50 shards
+ | 3 
+ | 50 shards
+ | 4 
+ | 100 shards
+ | 5 
+ | 100 shards
+ | 6 
+ | 100 shards
+ | 7 
+ | 150 shards
+ | 8 
+ | 150 shards
+Characters[edit | edit source]
+Alex's basic skin
+Alex[edit | edit source]
+Alex is a brave demon hunter, recognizable by his family's signature white hair. When monsters threaten, he fearlessly wields his Demon Hunter's bow and sets off on adventure without hesitation.
+Powerful HP Recovery: Alex possesses strong self-healing capabilities.
+Hunter Bloodline Awakening: His unique bloodline awakens over time in battle, granting him enhanced combat prowess.
+Descendant of Atreus: Alex is a direct descendant of the renowned bow hero, Atreus.
+To view Alex's full progression details and Star-Up Attributes, expand this section.
+Alex Attribute List
+ | Star Requirement
+ | Star-Up Attribute
+ | 0 
+ | [Braveheart LV.1] Increases Red Heart drops
+ | 1 
+ | [All] MAX HP +3%
+ | 2 
+ | [Braveheart LV.2] Increases ATK SPD by 10% for 10s after a crit
+ | 3 
+ | Resonance unlock
+ | 4 
+ | [All] MAX HP +3%
+ | 5 
+ | [Braveheart LV.3] Increases in-game EXP gain by 10%
+ | 6 
+ | Resonance slot +1
+ | 7 
+ | [All] MAX HP +3%
+ | 8 
+ | [Braveheart LV.4] Guarantees a crit on the next attack after taking damage
+Nyanja's basic skin
+Nyanja[edit | edit source]
+Meow! Nyanja is a dangerous assassin capable of unleashing arcane power with its fluffy tail.
+Wind Control and Sleeping: Nyanja excels at manipulating wind and can put enemies to sleep.
+Silent Movement: The pads on Nyanja's paws allow it to move silently.
+Brother Meowgik: The monster invasion has led to frequent contact with its brother, Meowgik.
+To view Nyanja's full progression details and Star-Up Attributes, expand this section.
+Nyanja Attribute List
+ | Star Requirement
+ | Star-Up Attribute
+ | 0 
+ | [Cloudfooted LV.1] MOV SPD +10% and periodically releases Swift Wind to push back and damage enemies
+ | 1 
+ | [All] MOV SPD +2%
+ | 2 
+ | [Cloudfooted LV.2] Increases Swift Wind range and doubles Swift Wind DMG
+ | 3 
+ | Resonance unlock
+ | 4 
+ | [All] MOV SPD +2%
+ | 5 
+ | [Cloudfooted LV.3] Triggers an explosion upon contact with monsters during Swift Wind
+ | 6 
+ | Resonance slot +1
+ | 7 
+ | [All] MOV SPD +2%
+ | 8 
+ | [Cloudfooted LV.4] Significantly reduces Swift Wind cycle
+Helix's basic skin
+Helix[edit | edit source]
+Awoo! Helix is a legendary hunter, frozen for hundreds of years in an avalanche and now awakened.
+Immense Power: In desperate situations, Helix's body unleashes immense power.
+Raised by Wolves: Helix is an orphan who was raised by wolves.
+No Full Moon Transformation: Being human, there's no need to fear him transforming on a full moon.
+To view Helix's full progression details and Star-Up Attributes, expand this section.
+Helix Attribute List
+ | Star Requirement
+ | Star-Up Attribute
+ | 0 
+ | [Absolute Counter LV.1] Lower HP increases ATK, up to +20%
+ | 1 
+ | [All] ATK PWR +3%
+ | 2 
+ | [Absolute Counter LV.2] Increases ATK SPD by 20% for 5s after taking DMG
+ | 3 
+ | Resonance unlock
+ | 4 
+ | [All] ATK PWR +3%
+ | 5 
+ | [Absolute Counter LV.3] Increases ATK by 20% for 10s after taking DMG
+ | 6 
+ | Resonance slot +1
+ | 7 
+ | [All] ATK PWR +3%
+ | 8 
+ | [Absolute Counter LV.4] Increases ATK SPD by 20% when HP is below 50%
+Hela's basic skin
+Hela[edit | edit source]
+Hela rules the underworld. Darkness and death are her language.
+Terrifying Charm: She may look terrifying, but all are drawn to her. That's just the kind of aura she gives off.
+Monsterous Siblings: The giant wolf Fenrir and World Serpent Jormungandr are her brothers.
+Intimidating Presence: “She never steals the spotlight. Just her presence alone keeps everyone off me.“ -Loki
+To view Hela's full progression details and Star-Up Attributes, expand this section.
+Hela Attribute List
+ | Star Requirement
+ | Star-Up Attribute
+ | 0 
+ | [Hadean Blessing LV.1] Hela increases her own and all nearby allies' attack by 5%
+ | 1 
+ | [All] Max HP +3%
+ | 2 
+ | [Hadean Blessing LV.2] Hela restores 1% HP to herself and all nearby allies over time
+ | 3 
+ | Resonance unlock
+ | 4 
+ | [All] Max HP +3%
+ | 5 
+ | [Hadean Blessing LV.3] Hela increases her own and all nearby allies' CRIT Rate by 5%
+ | 6 
+ | Resonance slot +1
+ | 7 
+ | [All] Max HP +3%
+ | 8 
+ | [Hadean Blessing LV.4] Hela increases her own and all nearby allies' CRIT DMG by 20%
+Mymu's basic skin
+Mymu[edit | edit source]
+Mymu is a cursed mummy who awoke to find his name forgotten. Yet his battle instincts remain.
+Bandaged Mystery: What's hidden beneath Mymu's bandages is a mystery.
+Whispered Resolve: Each time he's about to fall, he hears chaotic whispers that galvanize strength.
+Faithful Instinct: Mymu is often lost in confusion, but he never fails to recognize his allies.
+To view Mymu's full progression details and Star-Up Attributes, expand this section.
+Mymu Attribute List
+ | Star Requirement
+ | Star-Up Attribute
+ | 0 
+ | [Immortal Curse LV.1] When HP reaches 0 for the first time, 60% chance to enter [Overdraw], consuming [50%-100%] of HP. -50% ATK and MOV SPD when [Overdraw] is active
+ | 1 
+ | [All] ATK PWR +3%
+ | 2 
+ | [Immortal Curse LV.2] Defeating enemies has a small chance of removing [Overdraw]
+ | 3 
+ | Resonance unlock
+ | 4 
+ | [All] ATK PWR +3%
+ | 5 
+ | [Immortal Curse LV.3] When [Overdraw] is active, -30% ATK and MOV SPD to surrounding enemies
+ | 6 
+ | Resonance slot +1
+ | 7 
+ | [All] ATK PWR +3%
+ | 8 
+ | [Immortal Curse LV.4] When entering [Overdraw], Overdraw HP drain range increases to [100%-150%]
+Hou Yi's basic skin
+Hou Yi[edit | edit source]
+Shot down the nine suns, bearing the weight of world's salvation and embers of a blazing sky, standing watch over the mortal realm in an endless dusk.
+Heavens Tremble: The earth-shaking feat of that day renders all worlds pale by comparison.
+Forgiving Light: Within his quiver rests a shard of light, a symbol of forgiveness and hope.
+Unbroken Watch: He stands resolute, guarding all that he holds dear.
+To view Hou Yi's full progression details and Star-Up Attributes, expand this section.
+Hou Yi Attribute List
+ | Star Requirement
+ | Star-Up Attribute
+ | 0 
+ | [Sunpiercer LV.1] Gain 1 [Sunpiercer] stack for eavh boss defeated. Each stack increases ATK SPD by 4% (Max 9 stacks)
+ | 1 
+ | [All] ATK PWR +3%
+ | 2 
+ | [Sunpiercer LV.2] Each [Sunpiercer] stack additionally increases ATK by 4%
+ | 3 
+ | Resonance unlock
+ | 4 
+ | [All] ATK PWR +3%
+ | 5 
+ | [Sunpiercer LV.3] Gain 2 [Sunpiercer] stacks for each boss defeated, and 1 stack for each elite defeated
+ | 6 
+ | Resonance slot +1
+ | 7 
+ | [All] ATK PWR +3%
+ | 8 
+ | [Sunpiercer LV.4] Gain 2 [Sunpiercer] stacks when entering battle. Each stack additionally increases CRIT DMG by 4%
+Seraph's basic skin
+Seraph[edit | edit source]
+Seraph is a fearless paladin with demigod blood, constantly receiving divine blessings in combat.
+Divine Blessings: Seraph receives divine blessings in combat, enhancing her prowess.
+Ageless Appearance: Her appearance never ages.
+Whispers to the Moon: Some have witnessed Seraph whispering to the moon at night.
+To view Seraph's full progression details and Star-Up Attributes, expand this section.
+Seraph Attribute List
+ | Star Requirement
+ | Star-Up Attribute
+ | 0 
+ | [Divine Favor LV.1] 50% chance to encounter the Valkyrie at the start
+ | 1 
+ | [All] CRIT DMG REDUC +15%
+ | 2 
+ | [Divine Favor LV.2] Chance to get another skill when healing is selected during the encounter with the Angel
+ | 3 
+ | Resonance unlock
+ | 4 
+ | [All] CRIT DMG REDUC +15%
+ | 5 
+ | [Divine Favor LV.3] Chance that MAX HP is not reduced when making a pact with the devil
+ | 6 
+ | Resonance slot +1
+ | 7 
+ | [All] CRIT DMG REDUC +15%
+ | 8 
+ | [Divine Favor LV.4] Easier to get higher grade abilities when acquiring new abilities
+Dracoola's basic skin
+Dracoola[edit | edit source]
+Dracoola is the immortal overlord of darkness. Having lived for over nine centuries, he has seen off three generations of vampire brides and defeated Van Helsing six times.
+Blood Absorption: Dracoola absorbs the enemy's fresh blood, converting it into his own life force.
+Archero Alliance: He has buried the hatchet with the Archero clan and become friends.
+Sunny Day Accessory: On fine sunny days, Dracoola will carry a black umbrella.
+To view Dracoola's full progression details and Star-Up Attributes, expand this section.
+Dracoola Attribute List
+ | Star Requirement
+ | Star-Up Attribute
+ | 0 
+ | [Lifesteal LV.1] Chance to absorb enemy HP during attacks
+ | 1 
+ | [All] Gears' Base Attributes Increase +5%
+ | 2 
+ | [Lifesteal LV.2] Excess healing will be converted into damage on the next attack
+ | 3 
+ | Resonance unlock
+ | 4 
+ | [All] Gears' Base Attributes Increase +5%
+ | 5 
+ | [Lifesteal LV.3] When HP is over 50%, MOV SPD +20%
+ | 6 
+ | Resonance slot +1
+ | 7 
+ | [All] Gears' Base Attributes Increase +5%
+ | 8 
+ | [Lifesteal LV.4] At full HP, ATK +40%
+Rolla's basic skin
+Rolla[edit | edit source]
+Rolla hails from the land of extreme cold and is a steadfast companion of the demon hunters. She spends every waking moment pursuing the path of magic.
+Frost Imbued Attacks: Rolla's attacks are imbued with the power of frost, capable of freezing foes.
+Deadly Frost Blades: Enchanted by her song, frost winds transform into deadly blades, fatal to enemies but eternally loyal to her.
+Past Alliance: Rolla and Atreus once fought together to seal a past demon king.
+To view Rolla's full progression details and Star-Up Attributes, expand this section.
+Rolla Attribute List
+ | Star Requirement
+ | Star-Up Attribute
+ | 0 
+ | [Frostsinger LV.1] Attacks are imbued with ice (Freeze)
+ | 1 
+ | [All] CRIT DMG +10%
+ | 2 
+ | [Frostsinger LV.2] Enemy ATK is reduced for 5s after being unfrozen
+ | 3 
+ | Resonance unlock
+ | 4 
+ | [All] CRIT DMG +10%
+ | 5 
+ | [Frostsinger LV.3] Attacks are imbued with the formidable ice element (Super Freeze)
+ | 6 
+ | Resonance slot +1
+ | 7 
+ | [All] CRIT DMG +10%
+ | 8 
+ | [Frostsinger LV.4] Summons frost meteor when attacking frozen enemies
+Loki's basic skin
+Loki[edit | edit source]
+Loki, God of Mischief. His trail is a mystery, his words laced with mockery. His idea of fun? To get under your skin.
+Chaos Mood: Getting Loki's help is sheer chaos, depending entirely on his mood.
+Erratic Presence: Loki's focus on the battlefield borders on madness: fast, then slow, now you can see him, now you don't. Utterly unpredictable.
+To view Loki's full progression details and Star-Up Attributes, expand this section.
+Loki Attribute List
+ | Star Requirement
+ | Star-Up Attribute
+ | 0 
+ | [Fervent Rhythm LV.1] When moving, there is a chance to enter [Focus State], increasing ATK by 20% for 3s
+ | 1 
+ | [All] More damage vs players +5%
+ | 2 
+ | [Fervent Rhythm LV.2] After entering [Focus State] 2 times, the next time this state is active, ATK SPD is increased by 30%, and duration is doubled
+ | 3 
+ | Resonance unlock
+ | 4 
+ | [All] More damage vs players +5%
+ | 5 
+ | [Fervent Rhythm LV.3] When [Focus State] fades, there is a 30% chance to enter this state again
+ | 6 
+ | Resonance slot +1
+ | 7 
+ | [All] More damage vs players +5%
+ | 8 
+ | [Fervent Rhythm LV.4] When battling players, if [Focus State] is active, there is a chance to gain immunity to all Control effects
+Phynx's basic skin
+Phynx[edit | edit source]
+Phynx is the guardian of the Temple of Sand, bearing the bloodline of the cat god.
+Temple Guardian: Proud and aloof, Phynx allows only the strongest to set foot inside the temple.
+Sunny Snack: Legend has it that Phynx's favorite food is a sun-warmed stone.
+Warm Greeting: On their first meeting, Phynx was greeted by Nyanja's enthused grooming.
+To view Phynx's full progression details and Star-Up Attributes, expand this section.
+Phynx Attribute List
+ | Star Requirement
+ | Star-Up Attribute
+ | 0 
+ | [Desert Tribunal LV.1] Mix sand into the elements. Elemental DMG inflicts [Bleed], dealing 15% Bleed DMG every 0.15s
+ | 1 
+ | [All] CRIT Rate +2%
+ | 2 
+ | [Desert Tribunal LV.2] Every 10 Bleed hits increases Elemental DMG by 5% for 5s (Max 5 stacks)
+ | 3 
+ | Resonance unlock
+ | 4 
+ | [All] CRIT Rate +2%
+ | 5 
+ | [Desert Tribunal LV.3] Against Burning or Poisoned enemies, +50% Bleed DMG dealt. Their Burn or Posion debuffs also tick 20% faster
+ | 6 
+ | Resonance slot +1
+ | 7 
+ | [All] CRIT Rate +2%
+ | 8 
+ | [Desert Tribunal LV.4] If enemy takes Lightning or Ice DMG, all remaining Bleed ticks are resolved instantly
+Nezha's basic skin
+Nezha[edit | edit source]
+Reborn from a spirit pearl, formed of lotus and root. With a rebellious flame, he walks the path of correction.
+Yearning Skies: Beneath the Wind Fire Wheels lies his first longing for flight and freedom.
+Lotus Vow: Excluding hot-blooded recklessness, yet bound by deep loyalty. Once he claims a companion, he will guard them with is life.
+Crimson Rebirth: The resolve to sever bone and return it to his father, and the hope born from lotus rebirth, coexist within him.
+To view Nezha's full progression details and Star-Up Attributes, expand this section.
+Nezha Attribute List
+ | Star Requirement
+ | Star-Up Attribute
+ | 0 
+ | [Cosmic Hoop LV.1] The character's movement path will burn for an extended duration
+ | 1 
+ | [All] CRIT DMG REDUC +15%
+ | 2 
+ | [Cosmic Hoop LV.2] Main Weapon attacks have a chance to fire 2 [Cosmic Hoops] at target
+ | 3 
+ | Resonance unlock
+ | 4 
+ | [All] CRIT DMG REDUC +15%
+ | 5 
+ | [Cosmic Hoop LV.3] [Cosmic Hoops] gain [Fiery path] effect and can track enemies
+ | 6 
+ | Resonance slot +1
+ | 7 
+ | [All] CRIT DMG REDUC +15%
+ | 8 
+ | [Cosmic Hoop LV.4] Main Weapon attacks have a chance to fire 3 [Cosmic Hoops] at target, with a chance to chain-fire
+Otta's basic skin
+Otta[edit | edit source]
+Otta is a treasure hunter who sails her pirate ship across the seas in search of lost treasures.
+Intense Fighting Spirit: The stronger the enemy, the more intense Otta's fighting spirit becomes.
+Bone Shattering: Once provoked, Otta shatters her enemies' bones like shells.
+Loyal Navigator: The little otter that roams near Otta is her child and her loyal navigator.
+To view Otta's full progression details and Star-Up Attributes, expand this section.
+Otta Attribute List
+ | Star Requirement
+ | Star-Up Attribute
+ | 0 
+ | [Brutality LV.1] The higher the enemy's HP, the easier it is to land a CRIT
+ | 1 
+ | [All] CRIT RATE +4%
+ | 2 
+ | [Brutality LV.2] After taking damage, gain +40% CRIT Rate and +60% CRIT DMG for 5s
+ | 3 
+ | Resonance unlock
+ | 4 
+ | [All] CRIT Rate +4%
+ | 5 
+ | [Brutality LV.3] CRIT hits can insta-kill minions below 30% HP
+ | 6 
+ | Resonance slot +1
+ | 7 
+ | [All] CRIT Rate +4%
+ | 8 
+ | [Brutality LV.4] The farther the range, the higher the CRIT Rate, up to 15%
+Atreus's basic skin
+Atreus[edit | edit source]
+Atreus, once revered as the "Archero Hero" and leader of the demon hunters, now finds his fate inextricably intertwined with the forces of darkness.
+Dance with Darkness: Demon King Atreus dances with the darkness, harnessing its powers as his shield.
+Sealed Demon King: He defeated the previous demon king, sealing its power in a gem embedded in his chest.
+Gnawing Whispers: The demon king's endless whispers from within the gem gnaw away at Atreus' will.
+To view Atreus's full progression details and Star-Up Attributes, expand this section.
+Atreus Attribute List
+ | Star Requirement
+ | Star-Up Attribute
+ | 0 
+ | [Demon King Energy LV.1] Starts off with shield equal to 50% HP. When shield is active, elemental DMG +10%, Crit DMG +30%
+ | 1 
+ | [All] Shield HP +10%
+ | 2 
+ | [Demon King Energy LV.2] Chance to summon dark energy orbs when enemies are hit; can pull hate. Energy orbs release energy rings to attack nearby enemies. Up to 3 orbs can be present
+ | 3 
+ | Resonance unlock
+ | 4 
+ | [All] Shield HP +10%
+ | 5 
+ | [Demon King Energy LV.3] When HP is below 50%, absorbs dark energy orbs on the map to restore shield HP (each orb restores 10% HP). Only triggers 1 time per game
+ | 6 
+ | Resonance slot +1
+ | 7 
+ | [All] Shield HP +10%
+ | 8 
+ | [Demon King Energy LV.4] Dark energy orbs will form a binding field when destroyed. Enemies caught in the field will have their projectiles slowed and DMG taken increased. Field lasts 10s
+Thor's basic skin
+Thor[edit | edit source]
+Thor is a divine warrior of thunder, descending like a storm against the unknown.
+Guided Hammer: Thor's hammer is called Mjolnir, capable of locking onto enemies.
+Storm Charge: Thor is adept at tearing across the battlefield like a lightning bolt, turning enemy hordes into electrified ash.
+Electric Aura: “Where he goes, stuff gets zapped.“ -Loki
+To view Thor's full progression details and Star-Up Attributes, expand this section.
+Thor Attribute List
+ | Star Requirement
+ | Star-Up Attribute
+ | 0 
+ | [Storm's Judgment LV.1] Weapon detaches and auto-attacks (Weapon Enchantment without debuffs)
+ | 1 
+ | [All] Lightning DMG +30%
+ | 2 
+ | [Storm's Judgment LV.2] When moving, there is a chance to summon Mjolnir, homing in on enemies and dealing 100% DMG
+ | 3 
+ | Resonance unlock
+ | 4 
+ | [All] Lightning DMG +30%
+ | 5 
+ | [Storm's Judgment LV.3] Attacks deal Lightning damage. Mjolnir inherits the hero's CRIT Rate. After dealing a critical hit, there is a chance to paralyze enemies for 0.5s
+ | 6 
+ | Resonance slot +1
+ | 7 
+ | [All] Lightning DMG +30%
+ | 8 
+ | [Storm's Judgment LV.4] When Mjolnir paralyzes an enemy, it fires 3 more Mini-Mjolnirs
+Cleo's basic skin
+Cleo[edit | edit source]
+Cleo, queen of the Lost Desert Kingdom, wields a fury fierce enough to ignite the sands themselves.
+Blazing Offense: Cleo wields flame magic, leaving her enemies nowhere to hide.
+Scorched Crown: Her crown embodies the will of the Scorched Serpent, incinerating all who defy her.
+Merciless Rule: Cleo tolerates no failure — not from herself nor her peers.
+To view Cleo's full progression details and Star-Up Attributes, expand this section.
+Cleo Attribute List
+ | Star Requirement
+ | Star-Up Attribute
+ | 0 
+ | [Ember Throne LV.1] Attacks are greatly enhanced by Fire (Blaze and Super Blaze)
+ | 1 
+ | [All] Fire DMG +30%
+ | 2 
+ | [Ember Throne LV.2] For every 20 Fire hits, mark the enemy with the highest percentage HP on the field. After 1s, trigger a cross-shaped explosion and remove the mark, dealing 300% DMG and leaving behind a burning trail
+ | 3 
+ | Resonance unlock
+ | 4 
+ | [All] Fire DMG +30%
+ | 5 
+ | [Ember Throne LV.3] Trigger a cross-shaped explosion at your location after marking a target, dealing 300% DMG and leaving behind a burning trail. ATK +40% for 3s after marking
+ | 6 
+ | Resonance slot +1
+ | 7 
+ | [All] Fire DMG +30%
+ | 8 
+ | [Ember Throne LV.4] Marking an enemy also Frightens them. Marked enemies suffer -50% ATK before exploding. Marked players suffer -35% ATK before exploding
+Wukong's basic skin
+Wukong[edit | edit source]
+Born from living stone, he challenges heaven and earth, riding clouded paths in pursuit of true freedom.
+Fiery Insight: Possessing fiery eyes that pierce illusion, and seventy-two transformations that toy with gods and demons alike.
+Unbroken Spirit: Imprisoned beneath the Five Elements Mountain for five hundred years, yet his sense of justice and earnest remain unwavering.
+True Path: On the westward journey, he mocks all things. But his vow to his master and companions remains his one true path.
+To view Wukong's full progression details and Star-Up Attributes, expand this section.
+Wukong Attribute List
+ | Star Requirement
+ | Star-Up Attribute
+ | 0 
+ | [Monkey Brethren LV.1] Summons 3 permanent [Monkey Mirages] after entering battle
+ | 1 
+ | [All] CRIT DMG +20%
+ | 2 
+ | [Monkey Brethren LV.2] When attacking or taking damage, chance to summon 1 [Monkey Mirage] for 10s. Up to 6 [Monkey Mirages] can exist
+ | 3 
+ | Resonance unlock
+ | 4 
+ | [All] CRIT DMG +20%
+ | 5 
+ | [Monkey Brethren LV.3] For each [Monkey Mirage] on the map, increases ATK, DMG REDUC, and Control RES by 3.5%
+ | 6 
+ | Resonance slot +1
+ | 7 
+ | [All] CRIT DMG +20%
+ | 8 
+ | [Monkey Brethren LV.4] [Monkey Mirages] have a chance to steal nearby enemy Hearts and Potions, increasing Wukong's ATK by 20% for 7s
+ | Archero 2 navigation 
+This box: view • talk • edit
+ | Main Tabs
+ | Characters • Gear • Runes • Skills • Artifacts • Talent Cards
+ | Game Mechanics
+ | Events
+ | Useful Pages
+ | Currency and Items • Pull Rates • Reward Codes • Collection of game Tips • FAQ
+ | Guides
+ | All Guides • Ultimate Beginners Guide
+ | Builds
+ | Oracle Build
+×
+Retrieved from "https://archero-2.game-vault.net/w/index.php?title=Characters&oldid=1847"
+ This page was last edited on 22 February 2026, at 18:17.
+Archero 2 Wiki and Guides
+Explore the Game Vault
+Game Vault
+Reviews
+Wikis
+Privacy policy
+About Archero 2 Wiki and Guides
+Disclaimers
+Archero 2 Wiki and Guides is a Game-Vault Community.

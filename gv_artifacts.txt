@@ -1,0 +1,533 @@
+Artifacts - Archero 2 Wiki and Guides
+Game Vault
+Home
+News
+Reviews
+Wikis
+Wikis
+All Wikis
+Hades 2
+Helldivers 2
+Frostpunk 2
+CIFI
+Request a wiki
+33
+494
+200
+1,778
+Archero 2 Wiki and Guides
+ Navigation
+Main page
+Recent changes
+Random page
+Special pages
+Upload file
+ Community
+Guides
+Codes
+ Toggle menu
+Archero 2 Wiki and Guides
+Artifacts
+Log in
+ Toggle personal menu
+ Search
+ Toggle search
+Archero 2 Wiki and Guides
+Artifacts
+From Archero 2 Wiki and Guides
+There is a variety of Artifacts available in Archero 2 Artifacts can be obtained by using Wish Token in the shop tab.
+You can obtain Wish Token by various means:
+Sky Tower
+Tasks
+Purchases
+Events
+Contents
+1 Artifacts
+1.1 Mythic Artifact List
+1.2 Legendary Artifact List
+1.3 Epic Artifact List
+1.4 Rare Artifact List
+1.5 Artifact Sets
+1.5.1 Golden Dragon's Treasure Set
+1.5.2 Battle Rite Set
+1.5.3 Heartseeker Arrow Set
+1.5.4 Fright Night Set
+1.5.5 Lawbreaker Set
+1.5.6 Heavenly Music Set
+1.5.7 Defiance of Fate Set
+1.5.8 Viking Battle Cry Set
+1.5.9 Rare Treasure Set
+1.5.10 Sleepless Stories Set
+1.5.11 Hypnosis Stories Set
+1.5.12 Wonderful Plant Set
+1.5.13 Knight's Oath Set
+Artifacts[edit | edit source]
+You are guaranteed a Legendary or Mythic Artifact if you unsuccessfully find one within 100 wishes. Pull % can be found on Pull Rates
+Each Artifact can be increased to 15 Star which increases the Artifacts base stats. Each Star adds +50% base stats.
+You can find all available Archero 2 Artifacts in the following tables including the Base Stats and if applicable Special Stats (Epic Artifacts or higher)
+There are also set bonus's which are below the lists
+Mythic Artifact List[edit | edit source]
+ | Name
+ | Description
+ | Base Stats
+ | Special Stats
+ | Places to obtain
+ | Cupid's Arrow
+ | This arrow burns with fiery passion, igniting the flames of love within the soul
+ | ATK +360 & HP +1440
+ | Flame DMG +20%
+ | Exchange shop
+ | Demon King's Eye
+ | An eye sealed in a gemstone. It greedily devours everything it see's
+ | ATK +360 & HP +1440
+ | Player DMG reduced by 8%
+ | Exchange shop
+ | Goldfinger
+ | Every stone it touches turns to gold
+ | ATK +360 & HP +1440
+ | DODGE +4%
+ | Wish
+ | Golden Fleece
+ | Not just any wool, but a treasure every adventurer dreams of
+ | ATK +360 & HP +1440
+ | ATK SPD +6%
+ | Wish
+ | Ravenous Chain
+ | A chain forged with demonic fangs
+ | ATK +360 & HP +1440
+ | SPRITE DMG +12%
+ | Event
+ | Pan's Flute
+ | A flute full of magic. It's sounds attracts cattle
+ | ATK +360 & HP +1440
+ | CRIT Rate +4%
+ | Wish
+ | Tidal Conch
+ | Holds the power of the ocean
+ | ATK +360 & HP +1440
+ | CRIT DMG +16%
+ | Wish
+ | Golden Mask
+ | Beneath the mask, it sparks the imagination
+ | ATK +360 & HP +1440
+ | DMG Reduction +4%
+ | Wish
+ | Demon Blood
+ | A blood sample labelled "Flammable and Explosive"
+ | ATK +360 & HP +1440
+ | DMG to players increased by 8%
+ | Exchange shop
+ | Swiftwind Jade
+ | Infused with the power of raging winds
+ | ATK +360 & HP +1440
+ | Chance to spawn whirlwind when Cloudfooted is active
+ | Event
+ | Aeon Spire
+ | Forged by Vidar himself, this elegant blade harvests all souls in its path
+ | ATK +360 & HP +1440
+ | Circle DMG +12%
+ | Event
+ | Protective Blazon
+ | Born of the World Tree´s roots, granting warriors the power to evade lethal strikes
+ | ATK +360 & HP +1440
+ | Reduced Crit Rate from Players +4%
+ | Exchange shop
+ | Dice of Destiny
+ | Legend says the supreme gods decide fate with a dice roll, that whoever casts a six can bend destiny itself
+ | ATK +360 & HP +1440
+ | Increased Crit Rate vs Players +4%
+ | Exchange Shop
+ | Bladeborne
+ | When the Bladeborn awakens, the soaring sword becomes a sentient hunter, cutting down all enmity in its path
+ | ATK +360 & HP +1440
+ | Strike DMG +12%
+ | Event
+ | Everburn Comet
+ | A fiery star bearing the war god´s will, still burning after its descent
+ | ATK +360 & HP +1440
+ | Meteor DMG +12%
+ | Event
+ | Boltfang Candy Jar
+ | No candy sits inside this bone jar, only crackling jaws that spark with danger
+ | ATK +360 & HP +1440
+ | Lightning DMG +20%
+ | Event
+ | Gungnir
+ | Odin´s divine spear, a symbol of unfailing aim, granting its wielder unmatched precision with every strike
+ | ATK +360 & HP +1440
+ | Hit Rate +4%
+ | Event
+ | Voidblade
+ | A voidborne rift that binds itself to your main weapon, granting every strike an edge beyond the corporeal
+ | ATK +360 & HP +1440
+ | Main Weapon DMG +12%
+ | Event
+Legendary Artifact List[edit | edit source]
+ | Name
+ | Description
+ | Base Stats
+ | Special Stats
+ | Places to obtain
+ | Cupid's Bow
+ | Love is the worlds sweetest passion-once tainted, there is no escape
+ | ATK +120 & HP +480
+ | Poison DMG +10%
+ | Exchange shop
+ | Brisingamen
+ | A treasure forged by four dwarven smiths, fought over by gods
+ | ATK +120 & HP +480
+ | DMG vs Elites +4%
+ | Wish
+ | Dragon Heart
+ | Look, even after leaving the dragon's body, it still beats
+ | ATK +120 & HP +480
+ | HP +2%
+ | Wish
+ | Attack Horn
+ | Charge! Charge! Let the ennemies feel the wrath of the Viking warriors
+ | ATK +120 & HP +480
+ | DMG vs ground ennemies +8%
+ | Wish
+ | Healing Grail
+ | This cup's water can heal ailments. What, for drinking? Hmm... no one has tried yet
+ | ATK +120 & HP +480
+ | Boss DMG +8%
+ | Wish
+ | Damocles' Sword
+ | The tangible Samocles' sword can be easily avoided, while the intangible one is everywhere
+ | ATK +120 & HP +480
+ | DMG vs minions +4%
+ | Wish
+ | Gargoyle
+ | Well, it looks scary, but it's meant too
+ | ATK +120 & HP +480
+ | CRIT DMG +8%
+ | Wish
+ | Bull Skull
+ | An unrotting hard bone, symbolizing strength
+ | ATK +120 & HP +480
+ | ATK +3%
+ | Wish
+ | Fire Phoenix Feather
+ | Feathers glowing with flames, seeming to hold power
+ | ATK +120 & HP +480
+ | DMG vs airborne Enemies +4%
+ | Wish
+ | Magic Harp
+ | Play it, you'll witness a magical feast
+ | ATK +120 & HP +480
+ | Gear base stats +3%
+ | Wish
+ | Thronebreaker Shield
+ | Said to have withstood the Felflame King´s final blow, leaving nary but the faintest scratch
+ | ATK +120 & HP +480
+ | Reduced Crit DMG from Players +8%
+ | Exchange Shop
+ | Broodmother Scale
+ | The broodmother of dragons once shielded her kin from a meteor storm. This scale is all that´s left
+ | ATK +120 & HP +480
+ | Reduced Main Weapon DMG taken +2%
+Reduced Meteor DMG taken +2%
+ | Event
+ | Thorned Treeheart
+ | Born to stop intruders, it once guarded a slumbering princess
+ | ATK +120 & HP +480
+ | Reduced Sprite DMG taken +2%
+Reduced Sword Strike DMG taken +2%
+ | Event
+ | Medusa's Eye
+ | Even without its petrifying power, it can still warp incoming strikes, turning fatal blows into glancing ones
+ | ATK +120 & HP +480
+ | Reduced Elemental DMG taken +2%
+Reduced Circle DMG taken +2%
+ | Event
+ | Frostflame Lamp
+ | It´s said the moment it´s lit, a chill pierces through your bones
+ | ATK +120 & HP +480
+ | Ice Damage +10%
+ | Event
+ | Quiet Quill
+ | A feather from the Nightwing, soothing burns and bleeding alike
+ | ATK +120 & HP +480
+ | Effect RES +4%
+ | Event
+Epic Artifact List[edit | edit source]
+ | Name
+ | Description
+ | Base Stats
+ | Special Stats
+ | Magic Lamp
+ | Hold it tight, rub it three times
+ | ATK +60 & HP +240
+ | Ground DMG reduced +4%
+ | Margic Carpet
+ | A flying magic carpet
+ | Gold in Gold Cave +4%
+ | HP +2%
+ | Poison Apple
+ | A sweet, purple poison apple
+ | ATK +60 & HP +240
+ | MOVE SPD +1.6%
+ | Laurel Wreath
+ | Wear the Laurel Wreath to prove you are the ultimate victor
+ | ATK +60 & HP +240
+ | DMG Reduce vs Elite +3%
+ | Four-Leaf Clover
+ | A rare and elusive four-Leaf clover
+ | ATK +60 & HP +240
+ | DMG Reduce vs Minion +4%
+ | Crystal Shoe
+ | Fragile as glass but carrying fairy-tale dreams
+ | ATK +60 & HP +240
+ | DMG Reduce vs Bosses +4%
+ | Red Hood
+ | This hat prevents you from getting lost in the forrest
+ | ATK +60 & HP +240
+ | DMG Reduce vs airborne +3%
+Rare Artifact List[edit | edit source]
+ | Name
+ | Description
+ | Base Stats
+ | Special Stats
+ | Gladiator's Helm
+ | Worn by years of erosion and battle scared
+ | ATK +40 & HP +160
+ | N/A
+ | Pumpkin Lantern
+ | Hold this smiling companion, and you won't fear the dark on a Halloweens night
+ | ATK +40 & HP +160
+ | N/A
+ | Supreme Staff
+ | Hey, its not a walking stick; it's a symbol of kingship and dominion
+ | ATK +40 & HP +160
+ | N/A
+ | Iron Throne
+ | A throne that has sparked countless battles
+ | ATK +40 & HP +160
+ | N/A
+ | Sword in the Stone
+ | It sits quietly in the rock
+ | ATK +40 & HP +160
+ | N/A
+Artifact Sets[edit | edit source]
+One you have collected certain Artifacts you unlock Set Bonus's which will increase your overall base stats
+You can find all available Archero 2 Artifact sets in the following table, each sets can be increased up to 5 times based on the Artifacts Star level
+Golden Dragon's Treasure Set[edit | edit source]
+ | Artifacts
+ | Activate
+ | All 3 Star
+ | All 6 Star
+ | All 9 Star
+ | All 12 Star
+ | All 15 Star
+ | Golden Fleece Golden Mask Goldfinger
+ | ATK +12% & HP +12%
+ | ATK +18% & HP +18%
+ | ATK +24% & HP +24%
+ | ATK +30% & HP +30%
+ | ATK +36% & HP +36%
+ | ATK +42% & HP +42%
+Battle Rite Set[edit | edit source]
+ | Artifacts
+ | Activate
+ | All 3 Star
+ | All 6 Star
+ | All 9 Star
+ | All 12 Star
+ | All 15 Star
+ | Thronebreaker Shield Dice of Destiny Protective Blazon
+ | ATK +8% & HP +8%
+ | ATK +12% & HP +12%
+ | ATK +16% & HP +16%
+ | ATK +20% & HP +20%
+ | ATK +24% & HP +24%
+ | ATK +28% & HP +28%
+Heartseeker Arrow Set[edit | edit source]
+ | Artifacts
+ | Activate
+ | All 3 Star
+ | All 6 Star
+ | All 9 Star
+ | All 12 Star
+ | All 15 Star
+ | Cupid's Arrow Cupid's Bow
+ | ATK +4% & HP +4%
+ | ATK +6% & HP +6%
+ | ATK +8% & HP +8%
+ | ATK +10% & HP +10%
+ | ATK +12% & HP +12%
+ | ATK +14% & HP +14%
+Fright Night Set[edit | edit source]
+ | Artifacts
+ | Activate
+ | All 3 Star
+ | All 6 Star
+ | All 9 Star
+ | All 12 Star
+ | All 15 Star
+ | Frostflame Lamp Boltfang Candy Jar
+ | ATK +4% & HP +4%
+ | ATK +6% & HP +6%
+ | ATK +8% & HP +8%
+ | ATK +10% & HP +10%
+ | ATK +12% & HP +12%
+ | ATK +14% & HP +14%
+Lawbreaker Set[edit | edit source]
+ | Artifacts
+ | Activate
+ | All 3 Star
+ | All 6 Star
+ | All 9 Star
+ | All 12 Star
+ | All 15 Star
+ | Quiet Quill Voidblade
+ | ATK +4% & HP +4%
+ | ATK +6% & HP +6%
+ | ATK +8% & HP +8%
+ | ATK +10% & HP +10%
+ | ATK +12% & HP +12%
+ | ATK +14% & HP +14%
+Heavenly Music Set[edit | edit source]
+ | Artifacts
+ | Activate
+ | All 3 Star
+ | All 6 Star
+ | All 9 Star
+ | All 12 Star
+ | All 15 Star
+ | Magic Harp Pan's Flute Tidal Conch
+ | ATK +12% & HP +12%
+ | ATK +18% & HP +18%
+ | ATK +24% & HP +24%
+ | ATK +30% & HP +30%
+ | ATK +36% & HP +36%
+ | ATK +42% & HP +42%
+Defiance of Fate Set[edit | edit source]
+ | Artifacts
+ | Activate
+ | All 3 Star
+ | All 6 Star
+ | All 9 Star
+ | All 12 Star
+ | All 15 Star
+ | Broodmother Scale Thorned Treeheart Medusa's Eye
+ | ATK +4% & HP +4%
+ | ATK +6% & HP +6%
+ | ATK +8% & HP +8%
+ | ATK +10% & HP +10%
+ | ATK +12% & HP +12%
+ | ATK +14% & HP +14%
+Viking Battle Cry Set[edit | edit source]
+ | Artifacts
+ | Activate
+ | All 3 Star
+ | All 6 Star
+ | All 9 Star
+ | All 12 Star
+ | All 15 Star
+ | Attack Horn Bull Skull Dragon Heart
+ | ATK +4% & HP +4%
+ | ATK +6% & HP +6%
+ | ATK +8% & HP +8%
+ | ATK +10% & HP +10%
+ | ATK +12% & HP +12%
+ | ATK +14% & HP +14%
+Rare Treasure Set[edit | edit source]
+ | Artifacts
+ | Activate
+ | All 3 Star
+ | All 6 Star
+ | All 9 Star
+ | All 12 Star
+ | All 15 Star
+ | Brisingamen Healing Grail Fire Phoenix Feather
+ | ATK +4% & HP +4%
+ | ATK +6% & HP +6%
+ | ATK +8% & HP +8%
+ | ATK +10% & HP +10%
+ | ATK +12% & HP +12%
+ | ATK +14% & HP +14%
+Sleepless Stories Set[edit | edit source]
+ | Artifacts
+ | Activate
+ | All 3 Star
+ | All 6 Star
+ | All 9 Star
+ | All 12 Star
+ | All 15 Star
+ | Poison Apple Gargoyle Damocles' Sword
+ | ATK +4% & HP +4%
+ | ATK +6% & HP +6%
+ | ATK +8% & HP +8%
+ | ATK +10% & HP +10%
+ | ATK +12% & HP +12%
+ | ATK +14% & HP +14%
+Hypnosis Stories Set[edit | edit source]
+ | Artifacts
+ | Activate
+ | All 3 Star
+ | All 6 Star
+ | All 9 Star
+ | All 12 Star
+ | All 15 Star
+ | Crystal Shoe Red Hood Magic Lamp Margic Carpet
+ | ATK +2% & HP +2%
+ | ATK +3% & HP +3%
+ | ATK +4% & HP +4%
+ | ATK +5% & HP +5%
+ | ATK +6% & HP +6%
+ | ATK +7% & HP +7%
+Wonderful Plant Set[edit | edit source]
+ | Artifacts
+ | Activate
+ | All 3 Star
+ | All 6 Star
+ | All 9 Star
+ | All 12 Star
+ | All 15 Star
+ | Pumpkin Lantern Four-Leaf Clover Laurel Wreath
+ | ATK +2% & HP +2%
+ | ATK +3% & HP +3%
+ | ATK +4% & HP +4%
+ | ATK +5% & HP +5%
+ | ATK +6% & HP +6%
+ | ATK +7% & HP +7%
+Knight's Oath Set[edit | edit source]
+ | Artifacts
+ | Activate
+ | All 3 Star
+ | All 6 Star
+ | All 9 Star
+ | All 12 Star
+ | All 15 Star
+ | Gladiator's Helm Sword in the Stone Iron Throne Supreme Staff
+ | ATK +1% & HP +1%
+ | ATK +1.5% & HP +1.5%
+ | ATK +2% & HP +2%
+ | ATK +2.5% & HP +2.5%
+ | ATK +3% & HP +3%
+ | ATK +3.5% & HP +3.5%
+ | Archero 2 navigation 
+This box: view • talk • edit
+ | Main Tabs
+ | Characters • Gear • Runes • Skills • Artifacts • Talent Cards
+ | Game Mechanics
+ | Events
+ | Useful Pages
+ | Currency and Items • Pull Rates • Reward Codes • Collection of game Tips • FAQ
+ | Guides
+ | All Guides • Ultimate Beginners Guide
+ | Builds
+ | Oracle Build
+×
+Retrieved from "https://archero-2.game-vault.net/w/index.php?title=Artifacts&oldid=1781"
+ This page was last edited on 28 December 2025, at 21:24.
+Archero 2 Wiki and Guides
+Explore the Game Vault
+Game Vault
+Reviews
+Wikis
+Privacy policy
+About Archero 2 Wiki and Guides
+Disclaimers
+Archero 2 Wiki and Guides is a Game-Vault Community.
