@@ -24,7 +24,11 @@ app.append(shell);
 document.addEventListener("pointerdown", unlockAudio, { once: true });
 void loadCatImages(save.cat);
 
+let lastTab: "home" | "equip" | "gacha" = "home";
 function render(): void {
+  // 同じタブを 描きなおすときは スクロールの位置を 保つ（合成・分解のたびに 上に戻らないように）
+  const keep = lastTab === tab ? shell.querySelector(".screen")?.scrollTop ?? 0 : 0;
+  lastTab = tab;
   const body = tab === "home" ? renderHome() : tab === "equip" ? renderEquip(save, render) : renderGacha(save, render);
   shell.replaceChildren(
     h("header", { class: "top" },
@@ -35,6 +39,8 @@ function render(): void {
       h("button", { class: tab === "home" ? "on" : "", onclick: () => { tab = "home"; sfx("tap"); render(); } }, h("span", null, "🏠"), "ホーム"),
       h("button", { class: tab === "equip" ? "on" : "", onclick: () => { tab = "equip"; sfx("tap"); render(); } }, h("span", null, "🎒"), "装備"),
       h("button", { class: tab === "gacha" ? "on" : "", onclick: () => { tab = "gacha"; sfx("tap"); render(); } }, h("span", null, "🎁"), "おみやげ")));
+  const sc = shell.querySelector(".screen");
+  if (sc) sc.scrollTop = keep;
 }
 
 function renderHome(): HTMLElement {

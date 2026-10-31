@@ -567,6 +567,7 @@ export class World implements StrikeHost {
     if (e.def.boss) this.churu += CHURU_BOSS;
     if (e.elite && this.rng() < 0.5) this.drops.push(rollItem(this.rng, 0, rollRarity(this.rng, this.chapter, true)));
     this.strikes.onKill();
+    if (e.def.deathRing) this.ring(e, e.def.deathRing);
     if (e.def.split) {
       const reach = this.terrain.flow(this.hero.x, this.hero.y);
       for (let i = 0; i < 2; i++) this.enemies.push(this.spawn(e.def.split, reach, [e.x, e.y]));
@@ -701,6 +702,22 @@ export class World implements StrikeHost {
         if (e.t <= 0) { this.aim(e, 3, 0.26); e.t = 2.6 + this.rng() * 0.5; }
         break;
       }
+      case "hop":
+        // バッタ: 止まる → ぴょんと 猫の近くへ 跳ぶ
+        if (e.mode === 0) {
+          go(0, 0);
+          if (e.t <= 0) {
+            const a = Math.atan2(dy, dx) + (this.rng() - 0.5) * 0.9;
+            e.dx = Math.cos(a); e.dy = Math.sin(a); e.mode = 1; e.t = Math.min(0.45, dist / sp + 0.05);
+          }
+        } else if (go(e.dx * sp, e.dy * sp) || e.t <= 0) { e.mode = 0; e.t = 0.7 + this.rng() * 0.5; }
+        break;
+      case "ringer":
+        // セミ: ゆっくり歩いて ときどき 全方向へ 鳴き弾
+        if (e.t2 <= 0) { const a = this.rng() * Math.PI * 2; e.dx = Math.cos(a); e.dy = Math.sin(a); e.t2 = 1.5 + this.rng(); }
+        if (go(e.dx * sp, e.dy * sp)) e.t2 = 0;
+        if (e.t <= 0) { this.ring(e, 8); e.t = 3 + this.rng() * 0.6; }
+        break;
       case "boss1": {
         const [ux, uy] = toward();
         go(ux * sp, uy * sp);
@@ -765,7 +782,7 @@ export class World implements StrikeHost {
   }
 
   private eshot(e: Enemy, a: number): void {
-    this.eshots.push({ x: e.x, y: e.y - 0.2, vx: Math.cos(a) * ESHOT_SPEED, vy: Math.sin(a) * ESHOT_SPEED, r: 0.17, dmg: e.shot, life: 6 });
+    this.eshots.push({ x: e.x, y: e.y - 0.2, vx: Math.cos(a) * ESHOT_SPEED * (e.def.shotSpeed ?? 1), vy: Math.sin(a) * ESHOT_SPEED * (e.def.shotSpeed ?? 1), r: 0.17 * (e.def.shotR ?? 1), dmg: e.shot, life: 6 });
   }
 
   private moveEShots(dt: number): void {

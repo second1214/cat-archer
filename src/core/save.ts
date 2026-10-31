@@ -12,7 +12,7 @@ export const SAVE_VERSION = 2;
 const V1_RARITY = [0, 2, 3, 4] as const;
 /** はじめの チュール（開発中なので 多め） */
 export const START_CHURU = 300;
-export const CHAPTERS = 20;
+export const CHAPTERS = 50;
 
 export interface SaveData {
   version: number;

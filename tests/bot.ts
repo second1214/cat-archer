@@ -33,11 +33,14 @@ export function botInput(w: World): Input {
   return { mx: 0, my: 0 };
 }
 
-export function runBot(lo: Loadout, chapter: number, seed = 1, maxT = 900) {
+/** 強い組み合わせ（レーザー・ゆうどう・壁ではねる + 攻撃系）。難しさは これを前提に 合わせる */
+export const STRONG: SkillId[] = ["laser", "homing", "bounce", "multi", "front", "atk", "aspd", "diag", "crit", "bolt", "fire", "hpup", "heal", "orbit"];
+
+export function runBot(lo: Loadout, chapter: number, seed = 1, maxT = 900, pref: SkillId[] = PREF) {
   const w = new World(lo, chapter, mulberry32(seed));
   const dt = 1 / 30;
   while (w.time < maxT && w.state !== "dead" && w.state !== "won") {
-    if (w.choices) { w.chooseSkill(PREF.find((p) => w.choices!.includes(p)) ?? w.choices[0]); continue; }
+    if (w.choices) { w.chooseSkill(pref.find((p) => w.choices!.includes(p)) ?? w.choices[0]); continue; }
     if (w.event) { w.chooseEvent(w.event.kind === "angel" ? "heal" : "refuse"); continue; }
     w.step(dt, botInput(w));
   }

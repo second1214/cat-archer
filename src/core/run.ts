@@ -1,5 +1,5 @@
 // プレイの結果をセーブへ入れる・宝箱・合成・強化（画面から呼ぶ。テストもここを使う）。
-import { ITEM_MAP, MAX_RARITY, mergePartners, rollItem, upgradeCost, type Item, type Rarity } from "./equip";
+import { fodderRarity, ITEM_MAP, MAX_RARITY, mergePartners, MYTHIC, rollItem, upgradeCost, type Item, type Rarity } from "./equip";
 import { weighted, type Rng } from "./rng";
 import { MAX_GRADE, RUNE_MAP, RUNE_MERGE_COUNT, RUNE_UNLOCK_CHAPTER, RUNE_TYPES, rollRune, type Rune } from "./runes";
 import { CHAPTERS, equippedSet, etchedSlotsOpen, type SaveData } from "./save";
@@ -90,7 +90,7 @@ export function mergeItem(save: SaveData, uid: number, useMaterials = true): Ite
   const p = mergePartners(save.items, base, equippedSet(save), useMaterials ? save.materials : []);
   if (!p) return null;
   const ids = new Set(p.mates.map((m) => m.uid));
-  save.materials[base.r] -= p.mats;
+  save.materials[fodderRarity(base.r)] -= p.mats;
   base.lv = Math.max(base.lv, ...p.mates.map((m) => m.lv));
   base.r = (base.r + 1) as Rarity;
   save.items = save.items.filter((x) => !ids.has(x.uid));
@@ -102,8 +102,15 @@ export function dismantleItem(save: SaveData, uid: number): boolean {
   const it = save.items.find((x) => x.uid === uid);
   if (!it || it.locked || equippedSet(save).has(uid)) return false;
   save.items = save.items.filter((x) => x.uid !== uid);
-  save.materials[it.r]++;
+  // ミシックから上は 作るのに使った レジェンドの数だけ レジェンドの素材に もどす（ミシック = 3つ、+1ごとに +2）
+  if (it.r >= MYTHIC) save.materials[4] += 3 + 2 * (it.r - MYTHIC);
+  else save.materials[it.r]++;
   return true;
+}
+
+/** まとめて分解（付けている・鍵の かかった装備は とばす）。分解した数 */
+export function dismantleMany(save: SaveData, uids: readonly number[]): number {
+  return uids.filter((u) => dismantleItem(save, u)).length;
 }
 
 /** まとめて合成（合成できなくなるまで。装備中のものを 先に土台にする）。 */

@@ -266,3 +266,23 @@ button:disabled { cursor: default; }
 .tl-mid small { font-size: 12px; color: var(--ink2); }
 .tl-next { color: #3a9a5a !important; }
 .tl-row .btn { min-width: 76px; }
+
+/* まとめて分解 */
+.eq-head-btns { display: flex; gap: 6px; }
+.pick-bar { position: sticky; top: 0; z-index: 3; display: flex; flex-direction: column; gap: 6px; padding: 8px 10px; border-radius: 14px; background: #fff3cf; box-shadow: 0 0 0 2px var(--line), 0 4px 10px rgba(0,0,0,.15); }
+.pick-bar-t { font-weight: 900; font-size: 13px; }
+.pick-bar-q { display: flex; flex-wrap: wrap; gap: 4px; }
+.pick-bar-q button { font-size: 11px; }
+.pick-bar-btns { display: flex; justify-content: flex-end; gap: 8px; }
+.eq-grid.picking .icard.unpickable { opacity: .35; }
+.eq-grid.picking .icard.picked { transform: scale(.92); box-shadow: inset 0 0 0 3px var(--rc), 0 0 0 3px #d0517e, 0 0 10px #ff8fb8; }
+.eq-grid.picking .icard.picked::before { content: "✔"; position: absolute; top: -6px; right: -4px; width: 20px; height: 20px; border-radius: 50%; background: #d0517e; color: #fff; font-size: 12px; display: grid; place-items: center; z-index: 2; }
+
+/* ミシック+・カオス */
+:root { --r6: #d6304a; --r10: #6b2fd0; }
+.icard.r6, .icard.r7, .icard.r8, .icard.r9 { --rc: var(--r6); background: linear-gradient(160deg, #ffe0e6, #ff9fb0); box-shadow: inset 0 0 0 3px var(--r6), 0 0 0 2px var(--line), 0 0 16px rgba(214,48,74,.75); }
+.icard.r10 { --rc: var(--r10); background: conic-gradient(from 0deg, #2b1a4a, #6b2fd0, #e04a8a, #f0a020, #3aa0e0, #2b1a4a); box-shadow: inset 0 0 0 3px #fff, 0 0 0 2px var(--line), 0 0 18px rgba(107,47,208,.9); }
+.icard.r10 .icard-lv { color: #fff; text-shadow: 0 1px 2px #000; }
+.item-head.r6, .item-head.r7, .item-head.r8, .item-head.r9 { --rc: var(--r6); } .item-head.r10 { --rc: var(--r10); }
+.eq-mat.r6, .eq-mat.r7, .eq-mat.r8, .eq-mat.r9 { --rc: var(--r6); } .eq-mat.r10 { --rc: var(--r10); }
+.gc-rar.r6, .gc-rar.r7, .gc-rar.r8, .gc-rar.r9 { --rc: var(--r6); } .gc-rar.r10 { --rc: var(--r10); }

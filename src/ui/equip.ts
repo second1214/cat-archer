@@ -1,6 +1,6 @@
 // 装備の画面: 5つの枠・合成素材・持ち物・装備の窓（装備・強化・合成・分解）。ルーンは べつのタブ。
-import { activeTraits, ITEM_MAP, itemStats, MAX_LEVEL, MAX_RARITY, MERGE_COUNT, mergePartners, RARITY_NAMES, SERIES_MAP, setBonuses, SLOT_NAMES, SLOTS, upgradeCost, type Item, type Stats } from "../core/equip";
-import { dismantleItem, equipItem, mergeAll, mergeItem, toggleLock, unequipItem, upgradeItem } from "../core/run";
+import { activeTraits, allTraits, fodderRarity, ITEM_MAP, MYTHIC, itemStats, MAX_LEVEL, MAX_RARITY, MERGE_COUNT, mergePartners, RARITY_NAMES, SERIES_MAP, setBonuses, SLOT_NAMES, SLOTS, upgradeCost, type Item, type Stats } from "../core/equip";
+import { dismantleItem, dismantleMany, equipItem, mergeAll, mergeItem, toggleLock, unequipItem, upgradeItem } from "../core/run";
 import { RUNE_UNLOCK_CHAPTER } from "../core/runes";
 import { equippedItems, equippedSet, loadoutOf, powerOf, writeSave, type SaveData } from "../core/save";
 import { fmt, h, overlay, toast } from "./dom";
@@ -30,11 +30,14 @@ export function itemCard(it: Item, opts: { equipped?: boolean; merge?: boolean; 
 }
 
 let equipTab: "gear" | "runes" = "gear";
+/** まとめて分解: えらんでいる 装備（null なら ふつうの表示） */
+let picking: Set<number> | null = null;
 
 export function renderEquip(save: SaveData, rerender: () => void): HTMLElement {
   const tabs = h("div", { class: "eq-tabs" },
     h("button", { class: equipTab === "gear" ? "on" : "", onclick: () => { equipTab = "gear"; sfx("tap"); rerender(); } }, "装備"),
     h("button", { class: equipTab === "runes" ? "on" : "", onclick: () => { equipTab = "runes"; sfx("tap"); rerender(); } }, "ルーン", save.unlocked < RUNE_UNLOCK_CHAPTER ? " 🔒" : ""));
+  if (equipTab !== "gear") picking = null;
   if (equipTab === "runes") return h("div", { class: "screen equip" }, tabs, renderRunes(save, rerender));
   const eq = equippedSet(save);
   const lo = loadoutOf(save);
@@ -60,19 +63,52 @@ export function renderEquip(save: SaveData, rerender: () => void): HTMLElement {
       h("span", null, "❤️ 体力 ", h("b", null, fmt(lo.hp))),
       h("span", null, "戦力 ", h("b", null, fmt(powerOf(lo))))),
     h("div", { class: "eq-mats" }, h("span", { class: "eq-mats-t" }, "合成素材"),
-      RARITY_NAMES.map((n, r) => h("span", { class: `eq-mat r${r}` }, n.slice(0, 2), h("b", null, String(save.materials[r]))))),
-    h("div", { class: "eq-head" },
+      RARITY_NAMES.slice(0, MYTHIC).map((n, r) => h("span", { class: `eq-mat r${r}` }, n.slice(0, 2), h("b", null, String(save.materials[r]))))),
+    picking ? pickBar(save, sorted, rerender) : h("div", { class: "eq-head" },
       h("span", null, `持ち物 ${save.items.length}`),
-      h("button", { class: `btn btn-small ${canMergeAny ? "btn-gold" : "btn-gray"}`, disabled: !canMergeAny, onclick: () => {
-        const made = mergeAll(save);
-        if (made.length) { writeSave(save); sfx("levelup"); toast(`${made.length}回 合成しました`); rerender(); }
-      } }, "まとめて合成")),
-    h("div", { class: "eq-grid" }, sorted.map((it) => itemCard(it, {
-      equipped: eq.has(it.uid),
-      merge: !!mergePartners(save.items, it, eq),
-      onclick: () => openItem(save, it.uid, rerender),
-    }))),
-    h("p", { class: "muted small" }, `同じ装備・同じ品質を ${MERGE_COUNT}つ合わせると、1段上がります（コモン → グレート → レア → エピック → レジェンド → ミシック）。足りない分は 同じ品質の 合成素材で うめられます。いらない装備は 分解すると 同じ品質の 合成素材になります。`));
+      h("div", { class: "eq-head-btns" },
+        h("button", { class: "btn btn-small", onclick: () => { picking = new Set(); sfx("tap"); rerender(); } }, "まとめて分解"),
+        h("button", { class: `btn btn-small ${canMergeAny ? "btn-gold" : "btn-gray"}`, disabled: !canMergeAny, onclick: () => {
+          const made = mergeAll(save);
+          if (made.length) { writeSave(save); sfx("levelup"); toast(`${made.length}回 合成しました`); rerender(); }
+        } }, "まとめて合成"))),
+    h("div", { class: `eq-grid ${picking ? "picking" : ""}` }, sorted.map((it) => {
+      const can = !eq.has(it.uid) && !it.locked;
+      const card = itemCard(it, {
+        equipped: eq.has(it.uid),
+        merge: !picking && !!mergePartners(save.items, it, eq),
+        onclick: () => {
+          if (!picking) { openItem(save, it.uid, rerender); return; }
+          if (!can) { toast(it.locked ? "鍵が かかっています" : "装備中は 分解できません"); return; }
+          if (picking.has(it.uid)) picking.delete(it.uid); else picking.add(it.uid);
+          sfx("tap"); rerender();
+        },
+      });
+      if (picking) card.classList.add(picking.has(it.uid) ? "picked" : can ? "pickable" : "unpickable");
+      return card;
+    })),
+    h("p", { class: "muted small" }, `同じ装備・同じ品質を ${MERGE_COUNT}つ合わせると、1段上がります（コモン → グレート → レア → エピック → レジェンド → ミシック）。ミシックから上（+1〜+4 → カオス）は、同じ装備の レジェンド 2つで 1段上がります。足りない分は 同じ品質の 合成素材で うめられます。いらない装備は 分解すると 同じ品質の 合成素材になります。`));
+}
+
+/** まとめて分解の 操作の帯（えらんだ数・品質ごとに ぜんぶ えらぶ・分解・やめる） */
+function pickBar(save: SaveData, sorted: Item[], rerender: () => void): HTMLElement {
+  const sel = picking!;
+  const eq = equippedSet(save);
+  const can = sorted.filter((x) => !eq.has(x.uid) && !x.locked);
+  const byR = (r: number) => can.filter((x) => x.r === r);
+  return h("div", { class: "pick-bar" },
+    h("div", { class: "pick-bar-t" }, `分解する 装備を えらぶ（${sel.size}個）`),
+    h("div", { class: "pick-bar-q" }, RARITY_NAMES.map((n, r) => byR(r).length ? h("button", { class: `eq-mat r${r}`, onclick: () => {
+      const list = byR(r), all = list.every((x) => sel.has(x.uid));
+      for (const x of list) { if (all) sel.delete(x.uid); else sel.add(x.uid); }
+      sfx("tap"); rerender();
+    } }, `${n.slice(0, 2)}ぜんぶ`) : null)),
+    h("div", { class: "pick-bar-btns" },
+      h("button", { class: "btn btn-small btn-gray", onclick: () => { picking = null; rerender(); } }, "やめる"),
+      h("button", { class: `btn btn-small ${sel.size ? "btn-pink" : "btn-gray"}`, disabled: !sel.size, onclick: () => {
+        const n = dismantleMany(save, [...sel]);
+        picking = null; writeSave(save); sfx("levelup"); toast(`${n}個 分解して 合成素材に した`); rerender();
+      } }, `${sel.size}個 分解`)));
 }
 
 function openItem(save: SaveData, uid: number, rerender: () => void): void {
@@ -85,8 +121,9 @@ function openItem(save: SaveData, uid: number, rerender: () => void): void {
   const p = mergePartners(save.items, it, eq, save.materials);
   const traits = activeTraits(it);
   const sr = d.series ? SERIES_MAP[d.series] : null;
-  const same = save.items.filter((x) => x.uid !== uid && x.id === it.id && x.r === it.r && !eq.has(x.uid)).length;
-  const lack = Math.max(0, MERGE_COUNT - 1 - same - save.materials[it.r]);
+  const fr = fodderRarity(it.r);
+  const same = save.items.filter((x) => x.uid !== uid && x.id === it.id && x.r === fr && !eq.has(x.uid) && !x.locked).length;
+  const lack = Math.max(0, MERGE_COUNT - 1 - same - save.materials[fr]);
   const close = () => { m.close(); rerender(); };
   const m = overlay(h("div", { class: "item" },
     h("div", { class: `item-head r${it.r}` },
@@ -101,7 +138,7 @@ function openItem(save: SaveData, uid: number, rerender: () => void): void {
     sr ? h("div", { class: "item-series" }, h("b", null, `${sr.icon} ${sr.name}シリーズ`), h("span", null, `${sr.focus}に 特化`),
       h("span", null, `2つ: ${sr.set2.desc}`), h("span", null, `4つ: ${sr.set4.desc}`)) : null,
     h("div", { class: "item-st" }, statLines(itemStats(it))),
-    h("div", { class: "item-tr" }, d.traits.map((t) => h("div", { class: `tr ${traits.includes(t) ? "on" : ""}` },
+    h("div", { class: "item-tr" }, allTraits(it.id).filter((t) => t.at <= Math.max(MYTHIC, it.r + 2)).map((t) => h("div", { class: `tr ${traits.includes(t) ? "on" : ""}` },
       h("span", { class: "tr-at" }, RARITY_NAMES[t.at]), t.desc))),
     h("div", { class: "item-btns" },
       h("button", { class: "btn", onclick: () => {
@@ -113,10 +150,10 @@ function openItem(save: SaveData, uid: number, rerender: () => void): void {
       } }, cost === null ? "最大レベル" : h("span", null, "強化 ", h("small", null, `🐟${fmt(cost)}`))),
       h("button", { class: `btn ${p ? "btn-pink" : "btn-gray"}`, disabled: !p, onclick: () => {
         if (mergeItem(save, uid)) { writeSave(save); sfx("levelup"); toast(`${d.name}が ${RARITY_NAMES[it.r]}になった！`); close(); openItem(save, uid, rerender); }
-      } }, it.r >= MAX_RARITY ? "最大" : p ? h("span", null, "合成", p.mats ? h("small", null, ` 素材${p.mats}`) : null) : h("span", null, "合成 ", h("small", null, `あと${lack}つ`)))),
+      } }, it.r >= MAX_RARITY ? "最大" : p ? h("span", null, "合成", p.mats ? h("small", null, ` 素材${p.mats}`) : null) : h("span", null, "合成 ", h("small", null, fr !== it.r ? `${RARITY_NAMES[fr]} あと${lack}` : `あと${lack}つ`)))),
     h("div", { class: "item-btns two" },
       h("button", { class: `btn ${isEq || it.locked ? "btn-gray" : ""}`, disabled: isEq || !!it.locked, onclick: () => {
         if (dismantleItem(save, uid)) { writeSave(save); sfx("tap"); toast(`${RARITY_NAMES[it.r]}の 合成素材を 手に入れた`); close(); }
-      } }, h("span", null, "分解 ", h("small", null, `→ ${RARITY_NAMES[it.r]}素材`))),
+      } }, h("span", null, "分解 ", h("small", null, it.r >= MYTHIC ? `→ レジェンド素材 ${3 + 2 * (it.r - MYTHIC)}` : `→ ${RARITY_NAMES[it.r]}素材`))),
       h("button", { class: "btn btn-gray", onclick: () => m.close() }, "とじる"))), "", () => m.close());
 }
