@@ -1,4 +1,4 @@
-# 調べもの: スカイタワーの ページを 取って 本文を research-more ブランチに保存（ゲームには関係しない）
+# 調べもの: スカイタワーの ページを 取って 本文を research-strike ブランチに保存（ゲームには関係しない）
 name: assets
 on:
   push:
@@ -15,12 +15,16 @@ jobs:
           UA="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/124 Safari/537.36"
           get(){ curl -sSL -A "$UA" --max-time 40 "$2" -o "$1.html"; echo "$1 $2 $(wc -c < "$1.html")" >> sizes.txt; }
           get hub_home "https://archero2hub.com/en"
-          grep -oE 'href="[^"]*"' hub_home.html | sed 's/href="//;s/"$//' | grep -iE 'talent|card|godforge|mystling|pet|scroll|gear-swap|egg|plant|engrav|etch|artifact' | sort -u | head -14 > hub_links.txt
+          grep -oE 'href="[^"]*"' hub_home.html | sed 's/href="//;s/"$//' | grep -iE 'skill|strike|sword|abilit|rune/' | sort -u | head -12 > hub_links.txt
           i=0; while read -r l; do i=$((i+1)); case "$l" in /*) l="https://archero2hub.com$l";; esac; get "hub_$i" "$l"; echo "hub_$i $l" >> hub_map.txt; done < hub_links.txt
-          get gv_mystling "https://archero-2.game-vault.net/wiki/Mystlings"
-          get gv_pets "https://archero-2.game-vault.net/wiki/Pets"
-          get gv_godforge "https://archero-2.game-vault.net/wiki/Godforge"
-          get gv_scroll "https://archero-2.game-vault.net/wiki/Gear"
+          # 検索して 上の ページを 取る
+          for q in "archero+2+strike+sword+mechanics" "archero+2+dragon+strike+how+it+works" "archero+2+sword+strike+build+guide+flying+swords"; do
+            curl -sSL -A "$UA" --max-time 30 "https://html.duckduckgo.com/html/?q=$q" -o s.html
+            grep -oE 'uddg=[^&"]+' s.html | sed 's/uddg=//' | python3 -c "import sys,urllib.parse;[print(urllib.parse.unquote(l.strip())) for l in sys.stdin]" | grep -viE 'youtube|reddit|facebook|tiktok|twitter|x\.com|instagram' | head -4 >> search_links.txt
+          done
+          sort -u search_links.txt -o search_links.txt
+          i=0; while read -r l; do i=$((i+1)); get "web_$i" "$l"; echo "web_$i $l" >> web_map.txt; done < search_links.txt
+          get gv_skills "https://archero-2.game-vault.net/wiki/Skills"
           python3 - <<'PY'
           import glob, re
           from html.parser import HTMLParser
@@ -46,7 +50,7 @@ jobs:
       - name: push
         run: |
           cd out
-          git init -q -b research-more
+          git init -q -b research-strike
           git config user.name "github-actions"; git config user.email "actions@github.com"
           git add -A && git commit -qm "tower pages"
-          git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}" research-more
+          git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}" research-strike
