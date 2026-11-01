@@ -5,7 +5,9 @@ import { talentCost, TALENTS, talentValue, trainTalent } from "./core/talents";
 import { ITEM_MAP, RARITY_NAMES } from "./core/equip";
 import { mulberry32 } from "./core/rng";
 import { CHEST_COST, claimDaily, finishRun, openChest } from "./core/run";
-import { loadoutOf, loadSave, powerOf, resetSave, writeSave } from "./core/save";
+import { equippedSet, loadoutOf, loadSave, powerOf, resetSave, writeSave } from "./core/save";
+import { mergePartners } from "./core/equip";
+import { runePartners } from "./core/run";
 import { CHAPTER_NAMES, ENEMIES, newEnemiesIn, STAGES_PER_CHAPTER } from "./core/stages";
 import { loadCatImages } from "./game/render";
 import { startBattle } from "./ui/battle";
@@ -47,7 +49,13 @@ const challengeBadge = () => {
   const back = save.unlocked >= TOWER_UNLOCK && save.towerPaidTo < save.towerBest;
   return daily || back;
 };
-const shopBadge = () => save.wishBells >= 1 || save.coins >= CHEST_COST;
+/** ショップ: 10回 願えるとき */
+const shopBadge = () => save.wishBells >= 10;
+/** 装備: 合成できる 装備・ルーンが あるとき */
+const equipBadge = () => {
+  const eq = equippedSet(save);
+  return save.items.some((x) => mergePartners(save.items, x, eq)) || save.runes.some((x) => runePartners(save, x, false));
+};
 
 function render(): void {
   // 同じタブを 描きなおすときは スクロールの位置を 保つ（合成・分解のたびに 上に戻らないように）
@@ -56,9 +64,10 @@ function render(): void {
   bgm("home");
   const body = tab === "home" ? renderHome() : tab === "equip" ? renderEquip(save, render)
     : tab === "shop" ? renderGacha(save, render, chestCard()) : tab === "challenge" ? renderChallenge() : renderTrain();
+  // 今いる タブには しるしを 出さない
   const navBtn = (t: Tab, icon: string, label: string, badge = false) =>
     h("button", { class: `${tab === t ? "on" : ""} ${t === "home" ? "nav-main" : ""}`, onclick: () => { tab = t; sfx("tap"); render(); } },
-      h("span", null, icon), label, badge ? h("i", { class: "nav-dot" }) : null);
+      h("span", null, icon), label, badge && tab !== t ? h("i", { class: "nav-dot" }) : null);
   shell.replaceChildren(
     h("header", { class: "top" },
       h("div", { class: "money" },
@@ -70,7 +79,7 @@ function render(): void {
     body,
     h("nav", { class: "tabs five" },
       navBtn("shop", "🛒", "ショップ", shopBadge()),
-      navBtn("equip", "🎒", "装備"),
+      navBtn("equip", "🎒", "装備", equipBadge()),
       navBtn("home", "⚔️", "冒険", homeBadge()),
       navBtn("challenge", "🏆", "挑戦", challengeBadge()),
       navBtn("train", "💪", "修行")));
@@ -105,8 +114,8 @@ function renderHome(): HTMLElement {
         h("img", { class: "hero-cat", src: `cat/${save.cat}/sit.png`, alt: catName(save.cat) }),
         h("div", { class: "hero-pow" }, "戦力 ", h("b", null, fmt(powerOf(lo))))),
       h("div", { class: "side-col" },
-        sideBtn("🐱", catName(save.cat), pickCat),
-        sideBtn("🎁", "宝箱", () => { tab = "shop"; render(); }, save.coins >= CHEST_COST))),
+        sideBtn("🐱", "ねこ", pickCat),
+        sideBtn("🏋️", "修行", () => { tab = "train"; render(); }))),
     h("div", { class: "ch-card" },
       h("button", { class: "ch-arrow", disabled: ch <= 1, onclick: () => setCh(ch - 1) }, "◀"),
       h("div", { class: "ch-mid" },
@@ -117,10 +126,10 @@ function renderHome(): HTMLElement {
           h("button", { class: hard ? "" : "on", onclick: () => { hard = false; sfx("tap"); render(); } }, "ノーマル"),
           h("button", { class: hard ? "on hard" : "", onclick: () => { hard = true; sfx("tap"); render(); } }, "ハード")) : null,
         hard && best < STAGES_PER_CHAPTER ? h("div", { class: "ch-new" }, `敵 体力×3・攻撃×2。にぼし×2・はじめてのクリアで 🍥${HARD_FIRST_CHURU}`) : null,
-        !hard && newEnemiesIn(ch).length ? h("div", { class: "ch-new" }, "新しい虫: ", newEnemiesIn(ch).map((k) => ENEMIES[k].name).join("・")) : null),
+        !hard && newEnemiesIn(ch).length ? h("div", { class: "ch-new" }, "新しい虫: ", newEnemiesIn(ch).map((k, i) => h("span", { class: "nowrap" }, (i ? "・" : "") + ENEMIES[k].name))) : null),
       h("button", { class: "ch-arrow", disabled: ch >= save.unlocked, onclick: () => setCh(ch + 1) }, "▶")),
-    h("button", { class: `btn btn-play ${hard ? "hard" : ""}`, onclick: () => play(ch, hard) }, hard ? "ハードで 出発！" : "出発！"),
-    save.unlocked <= 2 ? h("p", { class: "muted small how" }, "指をすべらせて移動。止まると いちばん近い虫へ 自動で毛玉を撃ちます。") : null);
+    save.unlocked === 1 && !save.best[1] ? h("div", { class: "how-bubble" }, "まずは「出発！」。指で 動かして、止まると 自動で 撃つよ") : null,
+    h("button", { class: `btn btn-play ${hard ? "hard" : ""}`, onclick: () => play(ch, hard) }, hard ? "ハードで 出発！" : "出発！"));
 }
 
 /** 挑戦: キャットタワー・毎日の挑戦 */
@@ -174,7 +183,7 @@ function openPatrol(): void {
       writeSave(save); sfx("coin"); m.close(); render();
       toast(r.coins ? `パトロール: 🐟${fmt(r.coins)}${r.churu ? ` 🍥${r.churu}` : ""}${r.stones ? ` 🪨${r.stones}` : ""}` : "パトロールに 出かけた");
     } }, save.patrolAt ? "受け取る" : "はじめる"),
-    h("button", { class: "btn btn-gray btn-wide", onclick: () => m.close() }, "とじる")), "", () => m.close());
+    h("button", { class: "btn btn-ghost btn-wide", onclick: () => m.close() }, "とじる")), "", () => m.close());
 }
 
 /** 設定: 音・データの リセット */
@@ -183,9 +192,9 @@ function openSettings(): void {
   const m = overlay(h("div", { class: "pick" },
     h("h2", null, "⚙️ 設定"),
     h("button", { class: "btn btn-wide", onclick: () => { setMuted(!isMuted()); m.close(); render(); openSettings(); } }, isMuted() ? "🔇 音: なし（タップで あり）" : "🔊 音: あり（タップで なし）"),
-    h("button", { class: "btn btn-gray btn-wide", onclick: () => { m.close(); openHowTo(); } }, "❓ 遊び方"),
+    h("button", { class: "btn btn-wide", onclick: () => { m.close(); openHowTo(); } }, "❓ 遊び方"),
     h("button", { class: "btn btn-wide danger", onclick: () => { m.close(); confirmReset(); } }, "🗑️ 冒険の記録を ぜんぶ 消す"),
-    h("button", { class: "btn btn-gray btn-wide", onclick: () => m.close() }, "とじる")), "", () => m.close());
+    h("button", { class: "btn btn-ghost btn-wide", onclick: () => m.close() }, "とじる")), "", () => m.close());
 }
 
 function openHowTo(): void {
@@ -197,7 +206,7 @@ function openHowTo(): void {
       "💪 修行: にぼしで ずっと残る 力を 上げる。",
       "🛒 ショップ: 宝箱・おみやげ（装備）・おみくじ（ルーン）・願い（宝物）。",
       "上の 🐟🍥🪨🔔 を タップすると 使いみちが 出ます。"].map((t) => h("p", { class: "help-p" }, t)),
-    h("button", { class: "btn btn-gray btn-wide", onclick: () => m.close() }, "とじる")), "", () => m.close());
+    h("button", { class: "btn btn-ghost btn-wide", onclick: () => m.close() }, "とじる")), "", () => m.close());
 }
 
 function confirmReset(): void {
@@ -210,9 +219,9 @@ function confirmReset(): void {
         h("h2", null, "さいごの 確認"),
         h("p", { class: "small" }, "もう一度 押すと 消えます。"),
         h("button", { class: "btn btn-wide danger", onclick: () => { resetSave(); location.reload(); } }, "消して はじめから"),
-        h("button", { class: "btn btn-gray btn-wide", onclick: () => m2.close() }, "やめる")), "", () => m2.close());
+        h("button", { class: "btn btn-ghost btn-wide", onclick: () => m2.close() }, "やめる")), "", () => m2.close());
     } }, "消す"),
-    h("button", { class: "btn btn-gray btn-wide", onclick: () => m.close() }, "やめる")), "", () => m.close());
+    h("button", { class: "btn btn-ghost btn-wide", onclick: () => m.close() }, "やめる")), "", () => m.close());
 }
 
 /** ショップの 宝箱 */
@@ -240,12 +249,12 @@ function openMissions(): void {
           h("div", { class: "tl-mid" }, h("b", null, d.name), h("div", { class: "bar ms-bar" }, h("div", { class: "bar-fill xp", style: `width:${(v / d.goal) * 100}%` })), h("small", null, `${v} / ${d.goal}`)),
           h("button", { class: `btn btn-small ${!got && v >= d.goal ? "btn-gold" : "btn-gray"}`, disabled: got || v < d.goal, onclick: () => {
             if (claimMission(save, d.id)) { writeSave(save); sfx("coin"); draw(); }
-          } }, got ? "済み" : `🍥${d.churu}`));
+          } }, got ? "✓ 済み" : `🍥${d.churu}`));
       })),
       h("button", { class: `btn ${!m.bonus && m.claimed.length === MISSIONS.length ? "btn-pink" : "btn-gray"} btn-wide`, disabled: m.bonus || m.claimed.length < MISSIONS.length, onclick: () => {
         if (claimBonus(save)) { writeSave(save); sfx("levelup"); draw(); }
       } }, m.bonus ? "ぜんぶ達成 済み" : `ぜんぶ達成で 🍥${MISSION_BONUS.churu}・🪨${MISSION_BONUS.stones}・🔔${MISSION_BONUS.bells}`),
-      h("button", { class: "btn btn-gray btn-wide", onclick: () => { mm.close(); render(); } }, "とじる"));
+      h("button", { class: "btn btn-ghost btn-wide", onclick: () => { mm.close(); render(); } }, "とじる"));
   };
   draw();
   const mm = overlay(body, "", () => { mm.close(); render(); });
@@ -260,7 +269,7 @@ function pickCat(): void {
       class: `pick-cat ${c.id === save.cat ? "on" : ""}`,
       onclick: () => { save.cat = c.id; writeSave(save); void loadCatImages(c.id); sfx("tap"); m.close(); render(); },
     }, h("img", { src: `cat/${c.id}/sit.png`, alt: "", loading: "lazy" }), h("span", null, c.name)))),
-    h("button", { class: "btn btn-gray btn-wide", onclick: () => m.close() }, "とじる")), "", () => m.close());
+    h("button", { class: "btn btn-ghost btn-wide", onclick: () => m.close() }, "とじる")), "", () => m.close());
 }
 
 function chest(): void {
@@ -284,10 +293,9 @@ function play(chapter: number, hardMode = false): void {
     writeSave(save);
     shell.style.display = "";
     render();
-    if (rw.unlocked) toast(`第${rw.unlocked}章「${CHAPTER_NAMES[rw.unlocked - 1]}」へ行けるようになった！`);
-    else if (rw.newBest) toast("最高記録こうしん！");
-    if (rw.churu) setTimeout(() => toast(`🍥 チュール +${rw.churu}`), rw.unlocked || rw.newBest ? 1900 : 0);
-    if (rw.stones) setTimeout(() => toast(`🪨 爪とぎ石 +${rw.stones}`), 3800);
+    const got = [rw.churu ? `🍥+${rw.churu}` : "", rw.stones ? `🪨+${rw.stones}` : ""].filter(Boolean).join(" ");
+    const head = rw.unlocked ? `第${rw.unlocked}章「${CHAPTER_NAMES[rw.unlocked - 1]}」へ 行けるように なった！` : rw.newBest ? "最高記録 こうしん！" : "";
+    if (head || got) toast([head, got].filter(Boolean).join("　"));
   }, undefined, hardMode);
 }
 

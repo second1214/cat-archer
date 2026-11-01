@@ -29,21 +29,48 @@ function append(el: Element, c: Child): void {
 
 export const fmt = (n: number) => Math.round(n).toLocaleString("ja-JP");
 
-/** 画面の上に重ねる窓。close() で消える。 */
+/** 画面の上に重ねる窓。close() で消える。onBackdrop を わたすと 右上の ✕・背景タップ・Escape でも 閉じる */
+const stack: { close(): void; back?: () => void }[] = [];
 export function overlay(content: HTMLElement, cls = "", onBackdrop?: () => void): { el: HTMLElement; close(): void } {
-  const el = h("div", { class: `ov ${cls}` }, h("div", { class: "ov-box" }, content));
+  const box = h("div", { class: "ov-box" }, content);
+  if (onBackdrop) box.prepend(h("button", { class: "ov-x", "aria-label": "とじる", onclick: () => onBackdrop() }, "✕"));
+  const el = h("div", { class: `ov ${cls}` }, box);
   if (onBackdrop) el.addEventListener("click", (e) => { if (e.target === el) onBackdrop(); });
   document.body.append(el);
-  return { el, close: () => el.remove() };
+  const me = { el, close: () => { el.remove(); const k = stack.indexOf(me); if (k >= 0) stack.splice(k, 1); }, back: onBackdrop };
+  stack.push(me);
+  return me;
+}
+window.addEventListener("keydown", (e) => {
+  if (e.key !== "Escape") return;
+  const top = stack[stack.length - 1];
+  top?.back?.();
+});
+
+/** 確認の窓（壊す操作の前に） */
+export function confirmBox(title: string, text: string, okLabel: string, onOk: () => void): void {
+  const m = overlay(h("div", { class: "pick" },
+    h("h2", null, title),
+    h("p", { class: "help-p" }, text),
+    h("button", { class: "btn btn-wide danger", onclick: () => { m.close(); onOk(); } }, okLabel),
+    h("button", { class: "btn btn-ghost btn-wide", onclick: () => m.close() }, "やめる")), "", () => m.close());
 }
 
-let toastTimer = 0;
+/** トースト: 順番に 出す。長い文は 長く 出す */
+const toastQ: string[] = [];
+let toasting = false;
 export function toast(msg: string): void {
+  toastQ.push(msg);
+  if (!toasting) nextToast();
+}
+function nextToast(): void {
+  const msg = toastQ.shift();
   document.querySelector(".toast")?.remove();
+  if (msg === undefined) { toasting = false; return; }
+  toasting = true;
   const el = h("div", { class: "toast" }, msg);
   document.body.append(el);
-  clearTimeout(toastTimer);
-  toastTimer = window.setTimeout(() => el.remove(), 1800);
+  window.setTimeout(() => { el.remove(); nextToast(); }, Math.min(4000, 1300 + 55 * msg.length));
 }
 
 /** 「？」ボタン: 説明を 窓で出す（画面に 長い文を 置かないため） */
@@ -53,6 +80,6 @@ export function helpBtn(title: string, ...lines: string[]): HTMLElement {
     const m = overlay(h("div", { class: "pick help" },
       h("h2", null, title),
       lines.map((t) => h("p", { class: "help-p" }, t)),
-      h("button", { class: "btn btn-gray btn-wide", onclick: () => m.close() }, "とじる")), "", () => m.close());
+      h("button", { class: "btn btn-ghost btn-wide", onclick: () => m.close() }, "とじる")), "", () => m.close());
   } }, "？");
 }

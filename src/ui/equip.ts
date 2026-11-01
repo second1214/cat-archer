@@ -5,12 +5,12 @@ import { activeTraits, allTraits, fodderRarity, ITEM_MAP, MYTHIC, itemStats, MAX
 import { dismantleItem, dismantleMany, equipItem, mergeAll, mergeItem, toggleLock, unequipItem, upgradeItem } from "../core/run";
 import { RUNE_UNLOCK_CHAPTER } from "../core/runes";
 import { equippedItems, equippedSet, loadoutOf, powerOf, writeSave, type SaveData } from "../core/save";
-import { fmt, h, helpBtn, overlay, toast } from "./dom";
+import { confirmBox, fmt, h, helpBtn, overlay, toast } from "./dom";
 import { renderRunes } from "./runes";
 import { sfx } from "./sfx";
 
 const STAT_LABEL: [keyof Stats, string, boolean][] = [
-  ["atk", "攻撃力", false], ["hp", "体力", false], ["hpPct", "体力", true], ["atkPct", "攻撃力", true], ["aspd", "攻撃の速さ", true],
+  ["atk", "攻撃力", false], ["hp", "体力", false], ["hpPct", "体力ボーナス", true], ["atkPct", "攻撃力ボーナス", true], ["aspd", "攻撃の速さ", true],
   ["crit", "会心", true], ["dodge", "よける", true], ["guard", "受けるダメージ -", true], ["coinPct", "にぼし", true],
   ["laserPct", "レーザー", true], ["strikePct", "助っ人ねこ", true], ["orbitPct", "まわる玉", true],
 ];
@@ -25,6 +25,7 @@ export function itemCard(it: Item, opts: { equipped?: boolean; merge?: boolean; 
   return h("button", { class: `icard r${it.r} ${d.series ? "series" : ""}`, onclick: opts.onclick },
     h("div", { class: "icard-ico" }, d.icon),
     h("div", { class: "icard-lv" }, `Lv${it.lv}`),
+    it.r > MYTHIC && it.r < MAX_RARITY ? h("div", { class: "icard-plus" }, `+${it.r - MYTHIC}`) : null,
     d.series ? h("div", { class: "icard-sr" }, SERIES_MAP[d.series].icon) : null,
     it.locked ? h("div", { class: "icard-lock" }, "🔒") : null,
     opts.equipped ? h("div", { class: "icard-eq" }, "装備中") : null,
@@ -67,7 +68,7 @@ export function renderEquip(save: SaveData, rerender: () => void): HTMLElement {
       h("span", null, "❤️ 体力 ", h("b", null, fmt(lo.hp))),
       h("span", null, "戦力 ", h("b", null, fmt(powerOf(lo))))),
     h("div", { class: "eq-mats" }, h("span", { class: "eq-mats-t" }, "合成素材"),
-      RARITY_NAMES.slice(0, MYTHIC).map((n, r) => h("span", { class: `eq-mat r${r}` }, n.slice(0, 2), h("b", null, String(save.materials[r]))))),
+      RARITY_NAMES.slice(0, MYTHIC).map((n, r) => h("span", { class: `eq-mat r${r}` }, n, h("b", null, String(save.materials[r]))))),
     save.essence || save.cores || Object.values(save.crystals).some(Boolean) ? h("div", { class: "eq-mats" }, h("span", { class: "eq-mats-t" }, "神鍛"),
       h("span", { class: "eq-mat" }, "✨", h("b", null, fmt(save.essence))),
       SERIES.map((sr) => h("span", { class: "eq-mat" }, sr.icon, h("b", null, String(save.crystals[sr.id] ?? 0)))),
@@ -110,12 +111,13 @@ function pickBar(save: SaveData, sorted: Item[], rerender: () => void): HTMLElem
       const list = byR(r), all = list.every((x) => sel.has(x.uid));
       for (const x of list) { if (all) sel.delete(x.uid); else sel.add(x.uid); }
       sfx("tap"); rerender();
-    } }, `${n.slice(0, 2)}ぜんぶ`) : null)),
+    } }, `${n} ぜんぶ`) : null)),
     h("div", { class: "pick-bar-btns" },
       h("button", { class: "btn btn-small btn-gray", onclick: () => { picking = null; rerender(); } }, "やめる"),
       h("button", { class: `btn btn-small ${sel.size ? "btn-pink" : "btn-gray"}`, disabled: !sel.size, onclick: () => {
-        const n = dismantleMany(save, [...sel]);
-        picking = null; writeSave(save); sfx("levelup"); toast(`${n}個 分解して 合成素材に した`); rerender();
+        const go = () => { const n = dismantleMany(save, [...sel]); picking = null; writeSave(save); sfx("levelup"); toast(`${n}個 分解して 合成素材に した`); rerender(); };
+        const top = Math.max(...save.items.filter((x) => sel.has(x.uid)).map((x) => x.r));
+        confirmBox(`${sel.size}個 分解しますか？`, `えらんだ 装備は なくなり、品質ごとの 合成素材に なります（いちばん高いのは ${RARITY_NAMES[top]}）。もとに もどせません。`, `${sel.size}個 分解する`, go);
       } }, `${sel.size}個 分解`)));
 }
 
@@ -146,25 +148,26 @@ function openItem(save: SaveData, uid: number, rerender: () => void): void {
     sr ? h("div", { class: "item-series" }, h("b", null, `${sr.icon} ${sr.name}シリーズ`), h("span", null, `${sr.focus}に 特化`),
       h("span", null, `2つ: ${sr.set2.desc}`), h("span", null, `4つ: ${sr.set4.desc}`)) : null,
     h("div", { class: "item-st" }, statLines(itemStats(it))),
+    powerCompare(save, it, isEq),
     h("div", { class: "item-tr" }, allTraits(it.id).filter((t) => t.at <= Math.max(MYTHIC, it.r + 2)).map((t) => h("div", { class: `tr ${traits.includes(t) ? "on" : ""}` },
-      h("span", { class: "tr-at" }, RARITY_NAMES[t.at]), t.desc))),
+      h("span", { class: `tr-at q${t.at}` }, RARITY_NAMES[t.at]), t.desc.replace(/^(ミシック\+\d|カオス): /, "")))),
     sr ? gfBox(save, it, () => { close(); openItem(save, uid, rerender); }) : null,
+    h("button", { class: `btn btn-wide ${isEq || it.locked ? "btn-gray" : "danger"} item-dis`, disabled: isEq || !!it.locked, onclick: () => {
+        const go = () => { if (dismantleItem(save, uid)) { writeSave(save); sfx("tap"); toast(`${RARITY_NAMES[it.r]}の 合成素材を 手に入れた`); close(); } };
+        if (it.r >= 3) confirmBox(`${d.name}（${RARITY_NAMES[it.r]}）を 分解しますか？`, "この装備は なくなります。もとに もどせません。", "分解する", go); else go();
+      } }, h("span", null, "分解 ", h("small", null, (it.r >= MYTHIC ? `→ レジェンド素材 ${3 + 2 * (it.r - MYTHIC)}` : `→ ${RARITY_NAMES[it.r]}素材`) + (sr && it.r >= MAX_RARITY ? `・${sr.icon}結晶 ${CRYSTALS_PER_CHAOS}` : `・✨${essenceOf(it.r)}`)))),
     h("div", { class: "item-btns" },
-      h("button", { class: "btn", onclick: () => {
+      h("button", { class: `btn ${isEq ? "" : "btn-gold"}`, onclick: () => {
         if (isEq) unequipItem(save, uid); else equipItem(save, uid);
         writeSave(save); sfx("tap"); close();
       } }, isEq ? "はずす" : "装備する"),
-      h("button", { class: `btn ${cost !== null && save.coins >= cost ? "btn-gold" : "btn-gray"}`, disabled: cost === null || save.coins < cost, onclick: () => {
+      h("button", { class: `btn ${cost !== null && save.coins >= cost ? "" : "btn-gray"}`, disabled: cost === null || save.coins < cost, onclick: () => {
         if (upgradeItem(save, uid)) { writeSave(save); sfx("coin"); close(); openItem(save, uid, rerender); }
       } }, cost === null ? "最大レベル" : h("span", null, "強化 ", h("small", null, `🐟${fmt(cost)}`))),
       h("button", { class: `btn ${p ? "btn-pink" : "btn-gray"}`, disabled: !p, onclick: () => {
         if (mergeItem(save, uid)) { writeSave(save); sfx("levelup"); toast(`${d.name}が ${RARITY_NAMES[it.r]}になった！`); close(); openItem(save, uid, rerender); }
-      } }, it.r >= MAX_RARITY ? "最大" : p ? h("span", null, "合成", p.mats ? h("small", null, ` 素材${p.mats}`) : null) : h("span", null, "合成 ", h("small", null, fr !== it.r ? `${RARITY_NAMES[fr]} あと${lack}` : `あと${lack}つ`)))),
-    h("div", { class: "item-btns two" },
-      h("button", { class: `btn ${isEq || it.locked ? "btn-gray" : ""}`, disabled: isEq || !!it.locked, onclick: () => {
-        if (dismantleItem(save, uid)) { writeSave(save); sfx("tap"); toast(`${RARITY_NAMES[it.r]}の 合成素材を 手に入れた`); close(); }
-      } }, h("span", null, "分解 ", h("small", null, (it.r >= MYTHIC ? `→ レジェンド素材 ${3 + 2 * (it.r - MYTHIC)}` : `→ ${RARITY_NAMES[it.r]}素材`) + (sr && it.r >= MAX_RARITY ? `・${sr.icon}結晶 ${CRYSTALS_PER_CHAOS}` : `・✨${essenceOf(it.r)}`)))),
-      h("button", { class: "btn btn-gray", onclick: () => m.close() }, "とじる"))), "", () => m.close());
+      } }, it.r >= MAX_RARITY ? "最大" : p ? h("span", null, "合成", p.mats ? h("small", null, ` 素材${p.mats}`) : null) : h("span", null, "合成 ", h("small", null, fr !== it.r ? `${RARITY_NAMES[fr]} あと${lack}` : `あと${lack}つ`))))), "", () => m.close());
+
 }
 
 /** 神鍛（ミシック+3 以上の シリーズ装備） */
@@ -178,4 +181,16 @@ function gfBox(save: SaveData, it: Item, reopen: () => void): HTMLElement {
     canGodforge(it) && c ? h("button", { class: `btn ${gfAffordable(save, it) ? "btn-gold" : "btn-gray"} btn-wide`, disabled: !gfAffordable(save, it), onclick: () => {
       if (godforge(save, it.uid)) { writeSave(save); sfx("levelup"); toast(`${d.name} 神鍛 ★${it.gf}`); reopen(); }
     } }, `★${g + 1}へ ✨${fmt(save.essence)}/${c.essence}`, c.crystals ? ` ${sr.icon}${save.crystals[sr.id] ?? 0}/${c.crystals}` : "", c.cores ? ` 🔆${save.cores}/${c.cores}` : "") : null);
+}
+
+/** 付けかえたら 戦力は どう かわる？（▲▼） */
+function powerCompare(save: SaveData, it: Item, isEq: boolean): HTMLElement | null {
+  const now = powerOf(loadoutOf(save));
+  const trial = { ...save, equipped: { ...save.equipped } } as SaveData;
+  const slot = ITEM_MAP[it.id].slot;
+  if (isEq) delete trial.equipped[slot]; else trial.equipped[slot] = it.uid;
+  const next = powerOf(loadoutOf(trial)), diff = next - now;
+  if (!diff) return null;
+  return h("div", { class: `pw-cmp ${diff > 0 ? "up" : "down"}` },
+    h("span", null, isEq ? "はずすと 戦力" : "付けると 戦力"), h("b", null, `${fmt(now)} → ${fmt(next)}`), h("b", { class: "pw-d" }, `${diff > 0 ? "▲" : "▼"}${fmt(Math.abs(diff))}`));
 }

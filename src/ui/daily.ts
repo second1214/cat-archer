@@ -22,7 +22,7 @@ export function openDaily(save: SaveData, rerender: () => void, shell: HTMLEleme
     const today = todayStr();
     body.replaceChildren(...[
       h("h2", null, "毎日の挑戦"),
-      h("p", { class: "muted small" }, `1日 ${DAILY_TRIES}回ずつ。${DAILY_STAGES}面（5面めは ボス）。やられても 進んだ分 もらえる`),
+      h("p", { class: "muted small" }, `1日 ${DAILY_TRIES}回ずつ。${DAILY_STAGES}面（5面めは ボス）。やられても 進んだ分 もらえる。クリアした レベルは「スキップ」で 戦わずに もらえる`),
       DAILIES.map((d) => {
         if (!dailyOpen(save, d.id)) return h("div", { class: "dl-card off" }, h("b", null, `${d.icon} ${d.name}`), h("div", { class: "muted small" }, `🔒 第${d.unlock}章で 解放`));
         const left = triesLeft(save, d.id, today);
@@ -41,10 +41,10 @@ export function openDaily(save: SaveData, rerender: () => void, shell: HTMLEleme
             h("button", { class: `btn ${left && best ? "btn-pink" : "btn-gray"}`, disabled: !left || !best, onclick: () => {
               const r = sweepDaily(save, d.id, today);
               if (!r) return;
-              writeSave(save); sfx("coin"); toast(`掃討（レベル${best}）: ${rewardText(r)}`); draw();
-            } }, best ? `掃討 Lv${best}` : "掃討")));
+              writeSave(save); sfx("coin"); toast(`スキップ（レベル${best}）: ${rewardText(r)}`); draw();
+            } }, best ? `スキップ Lv${best}` : "スキップ")));
       }),
-      h("button", { class: "btn btn-gray btn-wide", onclick: () => { m.close(); rerender(); } }, "とじる")].flat());
+      h("button", { class: "btn btn-ghost btn-wide", onclick: () => { m.close(); rerender(); } }, "とじる")].flat());
   };
   const play = (id: DailyId, lv: number) => {
     const def = DAILIES.find((x) => x.id === id)!;
