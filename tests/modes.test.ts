@@ -110,3 +110,18 @@ describe("パトロール・毎日のミッション", () => {
     expect(missionState(s, "2099-01-01").prog.kills).toBe(0);
   });
 });
+
+describe("タワーの 改修前の ごほうび", () => {
+  it("改修前の セーブで のぼった分の 鈴・核・ルーンを 1回だけ 受け取れる", async () => {
+    const { normalize } = await import("../src/core/save");
+    const { claimTowerBackpay } = await import("../src/core/tower");
+    const s = normalize({ unlocked: 20, towerBest: 63 });
+    expect(s.towerPaidTo).toBe(0);
+    const r = claimTowerBackpay(s, mulberry32(1))!;
+    expect(r.runes).toBe(2);
+    expect(r.cores).toBe(8);
+    expect(r.bells).toBe(5 * 2 + 10); // 25・50階で 5、ほかの 5の倍数 10個で 1
+    expect(s.runes).toHaveLength(2);
+    expect(claimTowerBackpay(s, mulberry32(1))).toBeNull();
+  });
+});

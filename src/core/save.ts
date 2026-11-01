@@ -55,6 +55,8 @@ export interface SaveData {
   daily: DailyState;
   /** キャットタワーで クリアした いちばん上の階 */
   towerBest: number;
+  /** タワーの ごほうびを 受け取った いちばん上の階（改修前に のぼった分の うけとり用） */
+  towerPaidTo: number;
   /** パトロールを 最後に 受け取った時刻（ミリ秒。0 は まだ） */
   patrolAt: number;
   /** 毎日のミッション */
@@ -104,6 +106,7 @@ export function newSave(): SaveData {
     runePity: 0,
     daily: emptyDaily(),
     towerBest: 0,
+    towerPaidTo: 0,
     patrolAt: 0,
     missions: emptyMissions(),
     hardBest: {},
@@ -204,6 +207,8 @@ export function normalize(raw: unknown): SaveData {
       best: Object.fromEntries(DAILIES.map((d) => [d.id, Math.max(0, Math.min(DAILY_LEVELS, Math.floor(num(r.daily?.best?.[d.id], 0))))])) as Record<DailyId, number>,
     },
     towerBest: Math.max(0, Math.floor(num(r.towerBest, 0))),
+    // 改修前の セーブ（towerPaidTo なし）は 0 から → のぼった分の 新しい ごほうびを 受け取れる
+    towerPaidTo: Math.max(0, Math.floor(num(r.towerPaidTo, 0))),
     patrolAt: Math.max(0, num(r.patrolAt, 0)),
     hardBest: stageMap(r.hardBest),
     bestiary: kindMap(r.bestiary),
@@ -241,6 +246,11 @@ export function loadSave(): SaveData {
   } catch {
     return newSave();
   }
+}
+
+/** 冒険の 記録を ぜんぶ 消して はじめから（もどせない） */
+export function resetSave(): void {
+  try { localStorage.removeItem(KEY); } catch { /* なし */ }
 }
 
 export function writeSave(save: SaveData): void {

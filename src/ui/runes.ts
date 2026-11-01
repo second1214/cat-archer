@@ -3,7 +3,7 @@ import { dismantleRune, equipRune, mergeAllRunes, mergeRune, rollRuneEnchant, ru
 import { mulberry32 } from "../core/rng";
 import { ENCHANT_COST, ENCHANT_Q_NAMES, enchantDesc, enchantSlots, FAMILY_NAMES, G, GRADE_NAMES, type Enchant, RUNE_MAP, RUNE_SLOTS, RUNE_TYPE_NAMES, RUNE_TYPES, RUNE_UNLOCK_CHAPTER, runeBase, type Rune } from "../core/runes";
 import { etchedSlotsOpen, writeSave, type SaveData } from "../core/save";
-import { fmt, h, overlay, toast } from "./dom";
+import { fmt, h, helpBtn, overlay, toast } from "./dom";
 import { sfx } from "./sfx";
 
 /** 品質の色（コモン〜ミシック） */
@@ -40,12 +40,12 @@ export function renderRunes(save: SaveData, rerender: () => void): HTMLElement {
   const junk = save.runes.filter((x) => x.g <= G.great && !eq.has(x.uid) && !x.en?.some(Boolean));
   return h("div", { class: "rn" },
     rows,
-    h("p", { class: "muted small" }, "銘刻の枠: 付けている 祝福・能力・強化が ぜんぶ エピック以上で1つ、レジェンドで2つ、レジェンド+2で3つ 開く"),
+    null,
     h("div", { class: "rn-res" },
       h("span", null, "🪨 爪とぎ石 ", h("b", null, fmt(save.stones))),
       h("span", { class: "muted small" }, "ルーン素材: ", GRADE_NAMES.map((n, g) => save.runeMats[g] ? `${n} ${save.runeMats[g]}` : "").filter(Boolean).join("・") || "なし")),
     h("div", { class: "eq-head" },
-      h("span", null, `ルーン ${save.runes.length}`),
+      h("span", null, `ルーン ${save.runes.length} `, helpBtn("ルーン", "銘刻の枠: 付けている 祝福・能力・強化が ぜんぶ エピック以上で1つ、レジェンドで2つ、レジェンド+2で3つ 開く", "同じルーン・同じ品質を 2つ合わせると、品質が1段上がります（コモン → … → ミシック）。相手がいなければ 同じ品質の ルーン素材（ルーンを分解して得る）を使えます。", `付与: エピック+2で 1つめ、ミシックで 2つめの枠が開く。爪とぎ石 ${ENCHANT_COST}個で 付与を引き、今のと 新しいのを 選べる。爪とぎ石は 5章から、5面をこえると・章クリアで もらえる。`)),
       h("button", { class: `btn btn-small ${junk.length ? "btn-pink" : "btn-gray"}`, disabled: !junk.length, onclick: () => {
         const n = junk.filter((x) => dismantleRune(save, x.uid)).length;
         if (n) { writeSave(save); sfx("coin"); toast(`コモン・グレートを ${n}個 分解した`); rerender(); }
@@ -57,8 +57,8 @@ export function renderRunes(save: SaveData, rerender: () => void): HTMLElement {
     save.runes.length
       ? h("div", { class: "eq-grid" }, sorted.map((r) => runeCard(r, { equipped: eq.has(r.uid), merge: !!runePartners(save, r, false), onclick: () => openRune(save, r.uid, rerender) })))
       : h("p", { class: "muted small" }, "5章からの ボスや 宝箱で 手に入る"),
-    h("p", { class: "muted small" }, "同じルーン・同じ品質を 2つ合わせると、品質が1段上がります（コモン → … → ミシック）。相手がいなければ 同じ品質の ルーン素材（ルーンを分解して得る）を使えます。"),
-    h("p", { class: "muted small" }, `付与: エピック+2で 1つめ、ミシックで 2つめの枠が開く。爪とぎ石 ${ENCHANT_COST}個で 付与を引き、今のと 新しいのを 選べる。爪とぎ石は 5章から、5面をこえると・章クリアで もらえる。`));
+    null,
+    null);
 }
 
 function openRune(save: SaveData, uid: number, rerender: () => void): void {

@@ -45,3 +45,14 @@ export function toast(msg: string): void {
   clearTimeout(toastTimer);
   toastTimer = window.setTimeout(() => el.remove(), 1800);
 }
+
+/** 「？」ボタン: 説明を 窓で出す（画面に 長い文を 置かないため） */
+export function helpBtn(title: string, ...lines: string[]): HTMLElement {
+  return h("button", { class: "help-btn", "aria-label": `${title}の 説明`, onclick: (e: Event) => {
+    e.stopPropagation();
+    const m = overlay(h("div", { class: "pick help" },
+      h("h2", null, title),
+      lines.map((t) => h("p", { class: "help-p" }, t)),
+      h("button", { class: "btn btn-gray btn-wide", onclick: () => m.close() }, "とじる")), "", () => m.close());
+  } }, "？");
+}

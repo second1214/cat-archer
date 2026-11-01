@@ -5,7 +5,7 @@ import { activeTraits, allTraits, fodderRarity, ITEM_MAP, MYTHIC, itemStats, MAX
 import { dismantleItem, dismantleMany, equipItem, mergeAll, mergeItem, toggleLock, unequipItem, upgradeItem } from "../core/run";
 import { RUNE_UNLOCK_CHAPTER } from "../core/runes";
 import { equippedItems, equippedSet, loadoutOf, powerOf, writeSave, type SaveData } from "../core/save";
-import { fmt, h, overlay, toast } from "./dom";
+import { fmt, h, helpBtn, overlay, toast } from "./dom";
 import { renderRunes } from "./runes";
 import { sfx } from "./sfx";
 
@@ -73,7 +73,7 @@ export function renderEquip(save: SaveData, rerender: () => void): HTMLElement {
       SERIES.map((sr) => h("span", { class: "eq-mat" }, sr.icon, h("b", null, String(save.crystals[sr.id] ?? 0)))),
       h("span", { class: "eq-mat" }, "🔆", h("b", null, String(save.cores)))) : null,
     picking ? pickBar(save, sorted, rerender) : h("div", { class: "eq-head" },
-      h("span", null, `持ち物 ${save.items.length}`),
+      h("span", null, `持ち物 ${save.items.length} `, helpBtn("合成・分解", `同じ装備・同じ品質を ${MERGE_COUNT}つ合わせると、1段上がります（コモン → グレート → レア → エピック → レジェンド → ミシック）。ミシックから上（+1〜+4 → カオス）は、同じ装備の レジェンド 2つで 1段上がります。足りない分は 同じ品質の 合成素材で うめられます。いらない装備は 分解すると 同じ品質の 合成素材になります。`)),
       h("div", { class: "eq-head-btns" },
         h("button", { class: "btn btn-small", onclick: () => { picking = new Set(); sfx("tap"); rerender(); } }, "まとめて分解"),
         h("button", { class: `btn btn-small ${canMergeAny ? "btn-gold" : "btn-gray"}`, disabled: !canMergeAny, onclick: () => {
@@ -95,7 +95,7 @@ export function renderEquip(save: SaveData, rerender: () => void): HTMLElement {
       if (picking) card.classList.add(picking.has(it.uid) ? "picked" : can ? "pickable" : "unpickable");
       return card;
     })),
-    h("p", { class: "muted small" }, `同じ装備・同じ品質を ${MERGE_COUNT}つ合わせると、1段上がります（コモン → グレート → レア → エピック → レジェンド → ミシック）。ミシックから上（+1〜+4 → カオス）は、同じ装備の レジェンド 2つで 1段上がります。足りない分は 同じ品質の 合成素材で うめられます。いらない装備は 分解すると 同じ品質の 合成素材になります。`));
+    null);
 }
 
 /** まとめて分解の 操作の帯（えらんだ数・品質ごとに ぜんぶ えらぶ・分解・やめる） */
