@@ -11,11 +11,11 @@ const gradeClass = (g: number) => (g >= 10 ? "g-myth" : g >= 6 ? "g-leg" : g >= 
 const plus = (g: number) => (["", "", "", "", "+1", "+2", "", "+1", "+2", "+3", ""][g]);
 
 /** ルーンの 種類の ひとこと */
-const RUNE_TYPE_HINT: Record<string, string> = { blessing: "特別な力", ability: "体力＋技", enhancement: "攻撃＋技", etched: "そろえると 開く" };
+const RUNE_TYPE_HINT: Record<string, string> = { blessing: "特別な力", ability: "体力＋技", enhancement: "攻撃＋技", etched: "条件で 開く" };
 
 export function runeCard(r: Rune, opts: { equipped?: boolean; merge?: boolean; onclick?: () => void } = {}): HTMLElement {
   const d = RUNE_MAP[r.id];
-  return h("button", { class: `rcard ${gradeClass(r.g)}`, onclick: opts.onclick },
+  return h("button", { class: `rcard shape t-${d.type} ${gradeClass(r.g)}`, onclick: opts.onclick },
     h("div", { class: "rcard-ico" }, d.icon),
     plus(r.g) ? h("div", { class: "rcard-plus" }, plus(r.g)) : null,
     opts.equipped ? h("div", { class: "icard-eq" }, "装備中") : null,
@@ -34,14 +34,15 @@ export function renderRunes(save: SaveData, rerender: () => void): HTMLElement {
     h("div", { class: "rn-row-n" }, RUNE_TYPE_NAMES[t], h("small", null, RUNE_TYPE_HINT[t])),
     h("div", { class: "rn-slots" }, save.runeSlots[t].map((uid, i) => {
       const r = save.runes.find((x) => x.uid === uid);
-      if (t === "etched" && i >= openEtched) return h("div", { class: "rcard locked", title: "ほかのルーンを 育てると 開く" }, "🔒");
-      return r ? runeCard(r, { onclick: () => openRune(save, r.uid, rerender) }) : h("div", { class: "rcard empty" }, "＋");
+      if (t === "etched" && i >= openEtched) return h("div", { class: `rcard shape t-${t} locked` }, h("span", null, "🔒"));
+      return r ? runeCard(r, { onclick: () => openRune(save, r.uid, rerender) }) : h("div", { class: `rcard shape t-${t} empty` }, h("span", null, "＋"));
     }))));
   const sorted = [...save.runes].sort((a, b) =>
     RUNE_TYPES.indexOf(RUNE_MAP[a.id].type) - RUNE_TYPES.indexOf(RUNE_MAP[b.id].type) || b.g - a.g || a.id.localeCompare(b.id));
   const canMerge = save.runes.some((x) => runePartners(save, x, false));
   const junk = save.runes.filter((x) => x.g <= G.great && !eq.has(x.uid) && !x.en?.some(Boolean));
   return h("div", { class: "rn" },
+    h("div", { class: "rn-legend" }, RUNE_TYPES.map((t) => h("span", null, h("i", { class: `t-${t}` }), RUNE_TYPE_NAMES[t]))),
     rows,
     null,
     h("div", { class: "rn-res" },

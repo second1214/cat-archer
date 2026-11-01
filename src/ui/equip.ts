@@ -58,7 +58,11 @@ export function renderEquip(save: SaveData, rerender: () => void): HTMLElement {
   const canMergeAny = save.items.some((x) => mergePartners(save.items, x, eq));
   return h("div", { class: "screen equip" },
     tabs,
-    h("div", { class: "eq-slots five" }, slots),
+    // 本家と同じ: 猫を まん中に、左右に 装備の枠
+    h("div", { class: "eq-doll" },
+      h("div", { class: "eq-col" }, slots.slice(0, 3)),
+      h("div", { class: "eq-cat" }, h("img", { src: `cat/${save.cat}/sit.png`, alt: "" })),
+      h("div", { class: "eq-col" }, slots.slice(3))),
     sets.length ? h("div", { class: "eq-sets" }, sets.map((b) => h("div", { class: "eq-set" },
       h("b", null, `${b.series.icon} ${b.series.name} ${b.count}/5`),
       h("span", { class: b.count >= 2 ? "on" : "" }, `2つ: ${b.series.set2.desc}`),
