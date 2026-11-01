@@ -1,4 +1,4 @@
-# 調べもの: スカイタワーの ページを 取って 本文を research-strike ブランチに保存（ゲームには関係しない）
+# 調べもの（一時的）: 本家の プレイ動画から コマ画像を 取り出す。確認したら ブランチは 消す
 name: assets
 on:
   push:
@@ -9,53 +9,32 @@ jobs:
   fetch:
     runs-on: ubuntu-latest
     steps:
-      - name: fetch
+      - name: frames
         run: |
+          pip install -q yt-dlp
+          sudo apt-get -qq update && sudo apt-get -qq install -y ffmpeg >/dev/null
           mkdir -p out && cd out
-          UA="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/124 Safari/537.36"
-          get(){ curl -sSL -A "$UA" --max-time 40 "$2" -o "$1.html"; echo "$1 $2 $(wc -c < "$1.html")" >> sizes.txt; }
-          curl -sSL -A "$UA" --max-time 40 "https://archero2hub.com/en/skill/catalog" -o cat.raw
-          # 埋めこまれた データから ストライクの 所を 取る
-          python3 - <<'PY'
-          import re, json
-          raw = open("cat.raw", encoding="utf-8", errors="ignore").read()
-          raw2 = raw.encode().decode("unicode_escape", errors="ignore") if "\\u" in raw else raw
-          out = []
-          for m in re.finditer(r"(?i)(strike|sword|dragon)", raw2):
-              out.append(raw2[max(0, m.start()-400): m.end()+600].replace("\n", " "))
-          open("strike_snips.txt", "w").write("\n=====\n".join(out[:120]))
-          links = sorted(set(re.findall(r'/en/skill/[a-z0-9\-]+', raw)))
-          open("skill_links.txt", "w").write("\n".join(links))
-          PY
-          grep -iE 'strike|sword|dragon|blade' skill_links.txt | head -20 > strike_links.txt || true
-          i=0; while read -r l; do i=$((i+1)); get "sk_$i" "https://archero2hub.com$l"; echo "sk_$i $l" >> sk_map.txt; done < strike_links.txt
-          rm -f cat.raw
-          python3 - <<'PY'
-          import glob, re
-          from html.parser import HTMLParser
-          class P(HTMLParser):
-              def __init__(s): super().__init__(); s.out=[]; s.skip=0
-              def handle_starttag(s,t,a):
-                  if t in ("script","style","noscript","svg"): s.skip+=1
-                  if t in ("p","br","li","tr","h1","h2","h3","h4","div","td","th"): s.out.append("\n")
-                  if t in ("td","th"): s.out.append(" | ")
-              def handle_endtag(s,t):
-                  if t in ("script","style","noscript","svg") and s.skip: s.skip-=1
-              def handle_data(s,d):
-                  if not s.skip: s.out.append(d)
-          for f in glob.glob("*.html"):
-              raw=open(f,encoding="utf-8",errors="ignore").read()
-              if f.startswith("rd_"):
-                  open(f[:-5]+".txt","w").write(raw); continue
-              p=P(); p.feed(raw)
-              t=re.sub(r"[ \t]+"," ","".join(p.out)); t=re.sub(r"\n\s*\n+","\n",t)
-              open(f[:-5]+".txt","w").write(t.strip()+"\n")
-          PY
-          rm -f *.html
+          for q in "archero 2 sword strike build" "archero 2 dragon strike rune" "archero 2 strike build gameplay"; do
+            yt-dlp --flat-playlist --print "%(id)s|%(duration)s|%(title)s" "ytsearch6:$q" >> found.txt 2>>err.txt || true
+          done
+          sort -u found.txt -o found.txt
+          # 長すぎ・短すぎを はぶいて 4本
+          awk -F'|' '$2>90 && $2<1500' found.txt | head -4 > pick.txt
+          n=0
+          while IFS='|' read -r id dur title; do
+            n=$((n+1))
+            yt-dlp -q -f "bv*[height<=480][ext=mp4]/b[height<=480]" --download-sections "*60-100" -o "v$n.%(ext)s" "https://www.youtube.com/watch?v=$id" 2>>err.txt || continue
+            f=$(ls v$n.* 2>/dev/null | head -1); [ -z "$f" ] && continue
+            mkdir -p "v$n"
+            ffmpeg -loglevel error -i "$f" -vf "fps=4,scale=270:-2" -q:v 5 "v$n/f%03d.jpg"
+            echo "v$n|$id|$title" >> videos.txt
+            rm -f "$f"
+          done < pick.txt
+          ls -R | head -50 > list.txt
       - name: push
         run: |
           cd out
-          git init -q -b research-strike
+          git init -q -b research-video
           git config user.name "github-actions"; git config user.email "actions@github.com"
-          git add -A && git commit -qm "tower pages"
-          git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}" research-strike
+          git add -A && git commit -qm "frames (temporary)"
+          git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}" research-video
