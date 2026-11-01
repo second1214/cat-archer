@@ -1,0 +1,2 @@
+/en/skill/catalog
+/en/skill/tier
