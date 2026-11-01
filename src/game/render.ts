@@ -346,6 +346,25 @@ export class Renderer {
       g.beginPath(); g.arc(this.X(h.x), this.Y(h.y - 0.4), s * 0.4, 0, Math.PI * 2); g.fill();
     }
     g.globalAlpha = 1;
+    this.drawHeroHp(w);
+  }
+
+  /** 頭の上の 体力（数字つき。本家と同じ） */
+  private drawHeroHp(w: World): void {
+    const g = this.g, h = w.hero, s = this.s;
+    if (w.state !== "fight" && w.state !== "clear") return;
+    const bw = s * 1.15, bh = Math.max(6, s * 0.13);
+    const x = this.X(h.x) - bw / 2, y = this.Y(h.y) - s * 1.55;
+    const k = Math.max(0, Math.min(1, h.hp / h.maxHp));
+    g.fillStyle = "rgba(40,25,15,.75)";
+    g.fillRect(x - 2, y - 2, bw + 4, bh + 4);
+    g.fillStyle = k > 0.5 ? "#5fcf5a" : k > 0.25 ? "#f0c030" : "#e8473c";
+    g.fillRect(x, y, bw * k, bh);
+    g.font = `900 ${Math.round(Math.max(11, s * 0.24))}px "Zen Maru Gothic", sans-serif`;
+    g.textAlign = "center"; g.textBaseline = "bottom";
+    g.lineWidth = 3; g.strokeStyle = "rgba(40,25,15,.85)"; g.fillStyle = "#fff";
+    const t = String(Math.ceil(h.hp));
+    g.strokeText(t, this.X(h.x), y - 3); g.fillText(t, this.X(h.x), y - 3);
   }
 
   private drawEnemy(e: Enemy, t: number): void {

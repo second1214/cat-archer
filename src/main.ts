@@ -11,16 +11,17 @@ import { runePartners } from "./core/run";
 import { CHAPTER_NAMES, ENEMIES, newEnemiesIn, STAGES_PER_CHAPTER } from "./core/stages";
 import { loadCatImages } from "./game/render";
 import { startBattle } from "./ui/battle";
-import { openDaily } from "./ui/daily";
+import { openDaily, playDaily, skipDaily } from "./ui/daily";
 import { openTower } from "./ui/tower";
 import { openRecords } from "./ui/records";
 import { recordsReady } from "./core/records";
 import { HARD_FIRST_CHURU, hardOpen } from "./core/run";
 import { claimPatrol, patrolPending, PATROL_MAX_H } from "./core/patrol";
 import { claimBonus, claimMission, MISSION_BONUS, missionState, MISSIONS } from "./core/missions";
-import { DAILIES, DAILY_TRIES, dailyOpen, todayStr, triesLeft } from "./core/daily";
+import { DAILIES, DAILY_TRIES, dailyOpen, maxLevel, todayStr, triesLeft } from "./core/daily";
 import { TOWER_UNLOCK } from "./core/tower";
 import { fmt, h, helpBtn, overlay, toast } from "./ui/dom";
+import { icon } from "./ui/icons";
 import { renderEquip } from "./ui/equip";
 import { renderGacha } from "./ui/gacha";
 import { runeCard } from "./ui/runes";
@@ -65,9 +66,9 @@ function render(): void {
   const body = tab === "home" ? renderHome() : tab === "equip" ? renderEquip(save, render)
     : tab === "shop" ? renderGacha(save, render, chestCard()) : tab === "challenge" ? renderChallenge() : renderTrain();
   // 今いる タブには しるしを 出さない
-  const navBtn = (t: Tab, icon: string, label: string, badge = false) =>
+  const navBtn = (t: Tab, ic: string, label: string, badge = false) =>
     h("button", { class: `${tab === t ? "on" : ""} ${t === "home" ? "nav-main" : ""}`, onclick: () => { tab = t; sfx("tap"); render(); } },
-      h("span", null, icon), label, badge && tab !== t ? h("i", { class: "nav-dot" }) : null);
+      h("span", { class: "nav-ico" }, icon(ic, t === "home" ? 30 : 24)), label, badge && tab !== t ? h("i", { class: "nav-dot" }) : null);
   shell.replaceChildren(
     h("header", { class: "top" },
       h("div", { class: "money" },
@@ -75,14 +76,14 @@ function render(): void {
         res("🍥", save.churu, "チュール", "ガチャ（おみやげ・おみくじ）と 復活に使う。毎日・ステージ・ボス・章クリア・ミッション・パトロールで もらえる"),
         res("🪨", save.stones, "爪とぎ石", "ルーンの 付与に使う。5章から ステージ・爪とぎの祠・タワー・パトロールで もらえる"),
         res("🔔", save.wishBells, "ねがいの鈴", "宝物の 願いに使う。キャットタワー・毎日のミッション・実績で もらえる")),
-      h("button", { class: "mute", "aria-label": "設定", onclick: openSettings }, "⚙️")),
+      h("button", { class: "mute", "aria-label": "設定", onclick: openSettings }, icon("gear", 22))),
     body,
     h("nav", { class: "tabs five" },
-      navBtn("shop", "🛒", "ショップ", shopBadge()),
-      navBtn("equip", "🎒", "装備", equipBadge()),
-      navBtn("home", "⚔️", "冒険", homeBadge()),
-      navBtn("challenge", "🏆", "挑戦", challengeBadge()),
-      navBtn("train", "💪", "修行")));
+      navBtn("shop", "shop", "ショップ", shopBadge()),
+      navBtn("equip", "equip", "装備", equipBadge()),
+      navBtn("home", "adventure", "冒険", homeBadge()),
+      navBtn("challenge", "challenge", "挑戦", challengeBadge()),
+      navBtn("train", "train", "修行")));
   const sc = shell.querySelector(".screen");
   if (sc) sc.scrollTop = keep;
 }
@@ -93,8 +94,8 @@ function res(icon: string, v: number, name: string, desc: string): HTMLElement {
 }
 
 /** 丸い アイコンの ボタン（ホームの 左右） */
-function sideBtn(icon: string, label: string, onclick: () => void, badge = false): HTMLElement {
-  return h("button", { class: "side-btn", onclick: () => { sfx("tap"); onclick(); } }, h("span", { class: "side-ico" }, icon), h("small", null, label), badge ? h("i", { class: "nav-dot" }) : null);
+function sideBtn(ic: string, label: string, onclick: () => void, badge = false): HTMLElement {
+  return h("button", { class: "side-btn", onclick: () => { sfx("tap"); onclick(); } }, h("span", { class: "side-ico" }, icon(ic, 24)), h("small", null, label), badge ? h("i", { class: "nav-dot" }) : null);
 }
 
 function renderHome(): HTMLElement {
@@ -107,15 +108,15 @@ function renderHome(): HTMLElement {
   return h("div", { class: "screen home" },
     h("div", { class: "hero-stage" },
       h("div", { class: "side-col" },
-        sideBtn("📋", "ミッション", openMissions, missionReady()),
-        sideBtn("🐾", "パトロール", openPatrol, patrolReady()),
-        sideBtn("📖", "記録", () => openRecords(save, render), recordsReady(save))),
+        sideBtn("mission", "ミッション", openMissions, missionReady()),
+        sideBtn("patrol", "パトロール", openPatrol, patrolReady()),
+        sideBtn("records", "記録", () => openRecords(save, render), recordsReady(save))),
       h("div", { class: "hero-mid" },
         h("img", { class: "hero-cat", src: `cat/${save.cat}/sit.png`, alt: catName(save.cat) }),
         h("div", { class: "hero-pow" }, "戦力 ", h("b", null, fmt(powerOf(lo))))),
       h("div", { class: "side-col" },
-        sideBtn("🐱", "ねこ", pickCat),
-        sideBtn("🏋️", "修行", () => { tab = "train"; render(); }))),
+        sideBtn("cat", "ねこ", pickCat),
+        sideBtn("train", "修行", () => { tab = "train"; render(); }))),
     h("div", { class: "ch-card" },
       h("button", { class: "ch-arrow", disabled: ch <= 1, onclick: () => setCh(ch - 1) }, "◀"),
       h("div", { class: "ch-mid" },
@@ -135,20 +136,30 @@ function renderHome(): HTMLElement {
 /** 挑戦: キャットタワー・毎日の挑戦 */
 function renderChallenge(): HTMLElement {
   const t = todayStr();
-  const card = (icon: string, name: string, sub: string, status: string, open: boolean, lockText: string, go: () => void, badge = false) =>
-    h("button", { class: `chl-card ${open ? "" : "off"}`, onclick: () => { if (!open) { toast(lockText); return; } sfx("tap"); go(); } },
-      h("div", { class: "chl-ico" }, icon),
-      h("div", { class: "chl-mid" }, h("b", null, name), h("small", null, open ? sub : lockText)),
-      h("div", { class: "chl-st" }, open ? status : "🔒"),
-      badge ? h("i", { class: "nav-dot" }) : null);
+  const card = (o: { icon: string; name: string; sub: string; status: string; open: boolean; lock: string; detail: () => void; badge?: boolean; actions?: HTMLElement[] }) =>
+    h("div", { class: `chl-card ${o.open ? "" : "off"}` },
+      h("button", { class: "chl-top", onclick: () => { if (!o.open) { toast(o.lock); return; } sfx("tap"); o.detail(); } },
+        h("div", { class: "chl-ico" }, o.icon),
+        h("div", { class: "chl-mid" }, h("b", null, o.name), h("small", null, o.open ? o.sub : o.lock)),
+        h("div", { class: "chl-st" }, o.open ? o.status : "🔒")),
+      o.open && o.actions?.length ? h("div", { class: "chl-acts" }, o.actions) : null,
+      o.badge ? h("i", { class: "nav-dot" }) : null);
   const back = save.towerPaidTo < save.towerBest;
+  const towerOpen = save.unlocked >= TOWER_UNLOCK;
   return h("div", { class: "screen chl" },
     h("h2", { class: "scr-h" }, "挑戦"),
-    card("🗼", "キャットタワー", "1回 5階。階ごとに スキル、5階めは ボス。25階ごとに 大きな ごほうび",
-      back ? "受け取れる！" : `${save.towerBest}階`, save.unlocked >= TOWER_UNLOCK, `第${TOWER_UNLOCK}章で 解放`, () => openTower(save, render, shell), back),
+    card({ icon: "🗼", name: "キャットタワー", sub: "1回 5階。階ごとに スキル、5階めは ボス", status: `${save.towerBest}階`, open: towerOpen, lock: `第${TOWER_UNLOCK}章で 解放`,
+      detail: () => openTower(save, render, shell), badge: back,
+      actions: [h("button", { class: `btn btn-small ${back ? "btn-gold" : "btn-gold"}`, onclick: () => { sfx("tap"); openTower(save, render, shell); } }, back ? "🎁 ごほうびを 受け取る" : `${save.towerBest + 1}階から のぼる`)] }),
     DAILIES.map((d) => {
-      const left = dailyOpen(save, d.id) ? triesLeft(save, d.id, t) : 0;
-      return card(d.icon, d.name, d.desc, `のこり ${left}/${DAILY_TRIES}`, dailyOpen(save, d.id), `第${d.unlock}章で 解放`, () => openDaily(save, render, shell), left > 0);
+      const open = dailyOpen(save, d.id), left = open ? triesLeft(save, d.id, t) : 0, best = save.daily.best[d.id], top = maxLevel(save, d.id);
+      return card({ icon: d.icon, name: d.name, sub: d.desc, status: `のこり ${left}/${DAILY_TRIES}`, open, lock: `第${d.unlock}章で 解放`,
+        detail: () => openDaily(save, render, shell), badge: left > 0,
+        actions: [
+          h("button", { class: `btn btn-small ${left ? "btn-gold" : "btn-gray"}`, disabled: !left, onclick: () => { sfx("tap"); playDaily(save, d.id, top, render, shell); } }, `挑戦 Lv${top}`),
+          h("button", { class: `btn btn-small ${left && best ? "" : "btn-gray"}`, disabled: !left || !best, onclick: () => skipDaily(save, d.id, render) }, best ? `スキップ Lv${best}` : "スキップ"),
+          h("button", { class: "btn btn-small btn-ghost", onclick: () => openDaily(save, render, shell) }, "レベルを えらぶ"),
+        ] });
     }));
 }
 

@@ -499,3 +499,56 @@ body, button, .help-p, .gc-sub, .chl-mid small, .ch-new, .tr, .item-flavor { wor
 .art-set-icons .dim { filter: grayscale(1); opacity: .35; }
 .item-dis { min-height: 40px; font-size: 13px; }
 .ms-bar { background: #eadfcd; box-shadow: none; }
+
+/* ---- ルーンの 形: 種類で ちがう（強化=ひし形・能力=六角形・祝福=盾・銘刻=八角形） ---- */
+.g-common { --gbg: radial-gradient(circle at 50% 35%, #fff, #eef0f2); }
+.g-great { --gbg: radial-gradient(circle at 50% 35%, #fff, #e3f4df); }
+.g-rare { --gbg: radial-gradient(circle at 50% 35%, #fff, #dcefff); }
+.g-epic { --gbg: radial-gradient(circle at 50% 35%, #fff, #efe0ff); }
+.g-leg { --gbg: radial-gradient(circle at 50% 35%, #fff6d8, #ffd98a); }
+.g-myth { --gbg: radial-gradient(circle at 50% 35%, #ffe9e6, #ffb3a8); }
+.rcard.shape { background: none !important; box-shadow: none !important; border-radius: 0; border: 0; }
+.rcard.shape::before, .rcard.shape::after { content: ""; position: absolute; clip-path: var(--clip); }
+.rcard.shape::before { inset: 0; background: var(--line); }
+.rcard.shape::after { inset: 3px; background: var(--gbg, var(--card)); }
+.rcard.shape:not(.empty):not(.locked)::before { background: linear-gradient(var(--gc), var(--gc)), var(--line); background: var(--gc); box-shadow: none; }
+.rcard.shape > * { position: relative; z-index: 1; }
+.rcard.shape .rcard-plus, .rcard.shape .rcard-en, .rcard.shape .icard-eq, .rcard.shape .icard-mg { z-index: 2; }
+.rcard.shape.g-myth { filter: drop-shadow(0 0 6px rgba(232,71,60,.7)); }
+.rcard.shape.g-leg { filter: drop-shadow(0 0 4px rgba(240,160,32,.6)); }
+.t-enhancement { --clip: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); }
+.rcard.t-enhancement .rcard-ico { font-size: 20px; }
+.t-ability { --clip: polygon(25% 3%, 75% 3%, 100% 50%, 75% 97%, 25% 97%, 0 50%); }
+.t-blessing { --clip: polygon(50% 0, 96% 14%, 92% 58%, 50% 100%, 8% 58%, 4% 14%); }
+.t-etched { --clip: polygon(30% 0, 70% 0, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0 70%, 0 30%); }
+.rcard.shape.empty::before, .rcard.shape.locked::before { background: rgba(90,61,40,.3); }
+.rcard.shape.empty::after, .rcard.shape.locked::after { background: var(--bg2); }
+.rcard.shape.locked { border: 0; }
+.rn-legend { display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: 12px; color: var(--ink2); }
+.rn-legend span { display: inline-flex; align-items: center; gap: 4px; }
+.rn-legend i { display: inline-block; width: 14px; height: 14px; background: var(--ink2); clip-path: var(--clip); }
+
+/* ---- 装備: 猫を まん中に ---- */
+.eq-doll { display: grid; grid-template-columns: 76px 1fr 76px; align-items: center; gap: 6px; padding: 8px; border-radius: 20px; background: radial-gradient(circle at 50% 45%, #fff6e2, #f0d8b0 75%); box-shadow: inset 0 0 0 2px rgba(90,61,40,.25); }
+.eq-col { display: flex; flex-direction: column; gap: 8px; }
+.eq-col .eq-slot-n { font-size: 11px; }
+.eq-col .icard { width: 100%; }
+.eq-col .icard-ico { font-size: 26px; }
+.eq-cat { display: grid; place-items: center; min-height: 200px; }
+.eq-cat img { max-height: 210px; max-width: 100%; animation: breathe 3s ease-in-out infinite; transform-origin: 50% 100%; }
+/* 戦い: 体力は 頭の上へ。上は 太い 経験値 */
+.bt-hud .bt-hp { display: none; }
+.bt-xp { height: 12px; }
+.bt-lv { padding: 1px 8px; border-radius: 999px; background: #4aa3e0; text-shadow: none; box-shadow: 0 0 0 2px #fff; }
+/* 線画アイコン */
+.nav-ico { display: grid; place-items: center; height: 28px; color: #7a5a40; }
+.tabs button.on .nav-ico { color: var(--line); }
+.tabs button.nav-main .nav-ico { color: var(--line); height: 32px; }
+.side-ico { color: var(--line); }
+.mute { display: grid; place-items: center; color: var(--line); }
+.chl-card { display: flex; flex-direction: column; gap: 8px; }
+.chl-top { display: grid; grid-template-columns: 52px 1fr auto; gap: 10px; align-items: center; text-align: left; font: inherit; width: 100%; }
+.chl-acts { display: flex; flex-wrap: wrap; gap: 8px; }
+.chl-acts .btn { flex: 1; }
+.chl-acts .btn-ghost { flex: 0 0 auto; }
+.chl-card:active { transform: none; }

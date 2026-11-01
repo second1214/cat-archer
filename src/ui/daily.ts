@@ -46,9 +46,23 @@ export function openDaily(save: SaveData, rerender: () => void, shell: HTMLEleme
       }),
       h("button", { class: "btn btn-ghost btn-wide", onclick: () => { m.close(); rerender(); } }, "とじる")].flat());
   };
-  const play = (id: DailyId, lv: number) => {
+  const play = (id: DailyId, lv: number) => { m.close(); playDaily(save, id, lv, rerender, shell); };
+  draw();
+  const m = overlay(body, "", () => { m.close(); rerender(); });
+}
+
+/** すぐ スキップ（挑戦タブの カードから） */
+export function skipDaily(save: SaveData, id: DailyId, rerender: () => void): void {
+  const best = save.daily.best[id];
+  const r = sweepDaily(save, id, todayStr());
+  if (!r) return;
+  writeSave(save); sfx("coin"); toast(`スキップ（レベル${best}）: ${rewardText(r)}`); rerender();
+}
+
+/** 毎日の挑戦を 遊ぶ */
+export function playDaily(save: SaveData, id: DailyId, lv: number, rerender: () => void, shell: HTMLElement): void {
+  {
     const def = DAILIES.find((x) => x.id === id)!;
-    m.close();
     shell.style.display = "none";
     startBattle(save, levelChapter(lv), (r) => {
       const cleared = r.won ? DAILY_STAGES : Math.max(0, r.stage - 1);
@@ -59,7 +73,5 @@ export function openDaily(save: SaveData, rerender: () => void, shell: HTMLEleme
       rerender();
       if (got) toast(`${def.name} Lv${lv}: ${rewardText(got) || "なにも もらえなかった"}`);
     }, { stages: DAILY_STAGES, title: `${def.name} Lv${lv}` });
-  };
-  draw();
-  const m = overlay(body, "", () => { m.close(); rerender(); });
+  }
 }
