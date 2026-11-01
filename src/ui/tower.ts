@@ -3,7 +3,7 @@ import { addBestiary } from "../core/run";
 import { track } from "../core/missions";
 import { mulberry32 } from "../core/rng";
 import { RUNE_MAP } from "../core/runes";
-import { finishTower, floorReward, TOWER_FLOORS, TOWER_UNLOCK, towerChapter, towerRange, type TowerReward } from "../core/tower";
+import { claimTowerBackpay, finishTower, floorReward, towerBackpay, TOWER_FLOORS, TOWER_UNLOCK, towerChapter, towerRange, type TowerReward } from "../core/tower";
 import { writeSave, type SaveData } from "../core/save";
 import { startBattle } from "./battle";
 import { fmt, h, overlay, toast } from "./dom";
@@ -23,6 +23,7 @@ export function openTower(save: SaveData, rerender: () => void, shell: HTMLEleme
     h("h2", null, "🗼 キャットタワー"),
     h("p", { class: "muted small" }, `1回の挑戦で ${TOWER_FLOORS}階 のぼる。とちゅうで やられると その${TOWER_FLOORS}階は 数えない。階に はいるたびに スキルを1つ、クリアするたびに「タワーの番猫」が レア以上の スキルを1つ くれる（レベルアップは ない）。${TOWER_FLOORS}階めは ボス`),
     h("div", { class: "tw-best" }, "いちばん上 ", h("b", null, `${save.towerBest}階`)),
+    backBtn(save, () => { m.close(); rerender(); openTower(save, rerender, shell); }),
     h("div", { class: "small" }, `こんどは ${a}〜${b}階（第${towerChapter(a)}章くらい）`),
     h("div", { class: "tw-next small" },
       h("div", null, `${b}階まで のぼると: `, text(sum), rune ? "・エピックのルーン" : ""),
@@ -41,4 +42,17 @@ export function openTower(save: SaveData, rerender: () => void, shell: HTMLEleme
       }, { stages: TOWER_FLOORS, title: "キャットタワー", tower: a });
     } }, "のぼる"),
     h("button", { class: "btn btn-gray btn-wide", onclick: () => m.close() }, "とじる")), "", () => m.close());
+}
+
+/** 改修前に のぼった階の 新しい ごほうび */
+function backBtn(save: SaveData, reopen: () => void): HTMLElement | null {
+  if (save.towerPaidTo >= save.towerBest) return null;
+  const b = towerBackpay(save);
+  if (!b.bells && !b.cores && !b.runes) return null;
+  return h("button", { class: "btn btn-pink btn-wide btn-multi", onclick: () => {
+    const got = claimTowerBackpay(save, mulberry32((Date.now() ^ (save.seed += 23)) & 0x7fffffff));
+    writeSave(save);
+    if (got) { sfx("clear"); toast(`${save.towerBest}階までの ごほうび: ${text({ ...got, coins: 0 })}${got.runes ? `・エピックのルーン ×${got.runes}` : ""}`); }
+    reopen();
+  } }, h("span", null, "🎁 ", `${save.towerPaidTo + 1}〜${save.towerBest}階の ごほうびを 受け取る`, h("small", null, ` ${text({ ...b, coins: 0 })}${b.runes ? `・ルーン×${b.runes}` : ""}`)));
 }

@@ -47,7 +47,28 @@ export function finishTower(save: SaveData, won: boolean, rng: Rng): TowerReward
     }
   }
   save.towerBest = b;
+  save.towerPaidTo = Math.max(save.towerPaidTo, b);
   save.churu += sum.churu; save.stones += sum.stones; save.coins += sum.coins; save.runeMats[G.epic] += sum.epicMats; save.wishBells += sum.bells; save.cores += sum.cores;
   save.runes.push(...sum.runes);
   return sum;
+}
+
+/** 改修前に のぼった階の うち、まだ もらっていない 新しい ごほうび（ねがいの鈴・神鍛の核・エピックのルーン・25階ごとの チュール・爪とぎ石・素材） */
+export function towerBackpay(save: SaveData): Omit<TowerReward, "runes" | "coins"> & { runes: number } {
+  const sum = { churu: 0, stones: 0, epicMats: 0, bells: 0, cores: 0, runes: 0 };
+  for (let f = save.towerPaidTo + 1; f <= save.towerBest; f++) {
+    const r = floorReward(f);
+    sum.bells += r.bells; sum.cores += r.cores;
+    if (r.rune) { sum.runes++; sum.churu += r.churu; sum.stones += r.stones; sum.epicMats += r.epicMats; }
+  }
+  return sum;
+}
+export function claimTowerBackpay(save: SaveData, rng: Rng): ReturnType<typeof towerBackpay> | null {
+  const b = towerBackpay(save);
+  if (!b.bells && !b.cores && !b.runes) { save.towerPaidTo = save.towerBest; return null; }
+  save.wishBells += b.bells; save.cores += b.cores; save.churu += b.churu; save.stones += b.stones; save.runeMats[G.epic] += b.epicMats;
+  const pool = RUNES.filter((x) => x.type === "ability" || x.type === "enhancement");
+  for (let i = 0; i < b.runes; i++) save.runes.push({ uid: save.nextUid++, id: pool[Math.floor(rng() * pool.length)].id, g: G.epic });
+  save.towerPaidTo = save.towerBest;
+  return b;
 }
