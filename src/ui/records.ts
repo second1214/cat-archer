@@ -35,7 +35,7 @@ export function openRecords(save: SaveData, rerender: () => void): void {
             h("small", null, [goal > 1 ? `${fmt(Math.min(v, goal))} / ${fmt(goal)}　` : "", a.churu ? `🍥${a.churu} ` : "", a.stones ? `🪨${a.stones}` : ""].join(""))),
           h("button", { class: `btn btn-small ${ready ? "btn-gold" : "btn-gray"}`, disabled: !ready, onclick: () => {
             if (claimAchievement(save, a.id)) { writeSave(save); sfx("coin"); draw(); }
-          } }, got ? "済み" : "受け取る"));
+          } }, got ? "✓ 済み" : "受け取る"));
       }))
       : h("div", { class: "dx-grid" }, BESTIARY_KINDS.map((k) => {
         const n = save.bestiary[k] ?? 0, seen = n > 0, nx = bestiaryNext(save, k);
@@ -49,7 +49,7 @@ export function openRecords(save: SaveData, rerender: () => void): void {
           } }, `${BESTIARY_STEPS[nx.step].kills}匹 🍥${nx.churu}`) : h("small", { class: "muted" }, "コンプリート"));
       }));
     body.replaceChildren(h("h2", null, "📖 記録"), tabs, list,
-      h("button", { class: "btn btn-gray btn-wide", onclick: () => { m.close(); rerender(); } }, "とじる"));
+      h("button", { class: "btn btn-ghost btn-wide", onclick: () => { m.close(); rerender(); } }, "とじる"));
   };
   draw();
   const m = overlay(body, "", () => { m.close(); rerender(); });

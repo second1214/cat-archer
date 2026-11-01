@@ -3,12 +3,15 @@ import { dismantleRune, equipRune, mergeAllRunes, mergeRune, rollRuneEnchant, ru
 import { mulberry32 } from "../core/rng";
 import { ENCHANT_COST, ENCHANT_Q_NAMES, enchantDesc, enchantSlots, FAMILY_NAMES, G, GRADE_NAMES, type Enchant, RUNE_MAP, RUNE_SLOTS, RUNE_TYPE_NAMES, RUNE_TYPES, RUNE_UNLOCK_CHAPTER, runeBase, type Rune } from "../core/runes";
 import { etchedSlotsOpen, writeSave, type SaveData } from "../core/save";
-import { fmt, h, helpBtn, overlay, toast } from "./dom";
+import { confirmBox, fmt, h, helpBtn, overlay, toast } from "./dom";
 import { sfx } from "./sfx";
 
 /** 品質の色（コモン〜ミシック） */
 const gradeClass = (g: number) => (g >= 10 ? "g-myth" : g >= 6 ? "g-leg" : g >= 3 ? "g-epic" : g >= 2 ? "g-rare" : g >= 1 ? "g-great" : "g-common");
 const plus = (g: number) => (["", "", "", "", "+1", "+2", "", "+1", "+2", "+3", ""][g]);
+
+/** ルーンの 種類の ひとこと */
+const RUNE_TYPE_HINT: Record<string, string> = { blessing: "特別な力", ability: "体力＋技", enhancement: "攻撃＋技", etched: "そろえると 開く" };
 
 export function runeCard(r: Rune, opts: { equipped?: boolean; merge?: boolean; onclick?: () => void } = {}): HTMLElement {
   const d = RUNE_MAP[r.id];
@@ -28,7 +31,7 @@ export function renderRunes(save: SaveData, rerender: () => void): HTMLElement {
   const eq = runeEquipped(save);
   const openEtched = etchedSlotsOpen(save);
   const rows = RUNE_TYPES.map((t) => h("div", { class: "rn-row" },
-    h("div", { class: "rn-row-n" }, RUNE_TYPE_NAMES[t]),
+    h("div", { class: "rn-row-n" }, RUNE_TYPE_NAMES[t], h("small", null, RUNE_TYPE_HINT[t])),
     h("div", { class: "rn-slots" }, save.runeSlots[t].map((uid, i) => {
       const r = save.runes.find((x) => x.uid === uid);
       if (t === "etched" && i >= openEtched) return h("div", { class: "rcard locked", title: "ほかのルーンを 育てると 開く" }, "🔒");
@@ -47,8 +50,10 @@ export function renderRunes(save: SaveData, rerender: () => void): HTMLElement {
     h("div", { class: "eq-head" },
       h("span", null, `ルーン ${save.runes.length} `, helpBtn("ルーン", "銘刻の枠: 付けている 祝福・能力・強化が ぜんぶ エピック以上で1つ、レジェンドで2つ、レジェンド+2で3つ 開く", "同じルーン・同じ品質を 2つ合わせると、品質が1段上がります（コモン → … → ミシック）。相手がいなければ 同じ品質の ルーン素材（ルーンを分解して得る）を使えます。", `付与: エピック+2で 1つめ、ミシックで 2つめの枠が開く。爪とぎ石 ${ENCHANT_COST}個で 付与を引き、今のと 新しいのを 選べる。爪とぎ石は 5章から、5面をこえると・章クリアで もらえる。`)),
       h("button", { class: `btn btn-small ${junk.length ? "btn-pink" : "btn-gray"}`, disabled: !junk.length, onclick: () => {
-        const n = junk.filter((x) => dismantleRune(save, x.uid)).length;
-        if (n) { writeSave(save); sfx("coin"); toast(`コモン・グレートを ${n}個 分解した`); rerender(); }
+        confirmBox(`${junk.length}個 分解しますか？`, "付けていない コモン・グレートの ルーン（付与なし）が ルーン素材に なります。", `${junk.length}個 分解する`, () => {
+          const n = junk.filter((x) => dismantleRune(save, x.uid)).length;
+          if (n) { writeSave(save); sfx("coin"); toast(`コモン・グレートを ${n}個 分解した`); rerender(); }
+        });
       } }, "コモン・グレートを分解"),
       h("button", { class: `btn btn-small ${canMerge ? "btn-gold" : "btn-gray"}`, disabled: !canMerge, onclick: () => {
         const made = mergeAllRunes(save);
@@ -93,7 +98,7 @@ function openRune(save: SaveData, uid: number, rerender: () => void): void {
             writeSave(save); sfx("levelup"); m.close();
             if (!cur) { setRuneEnchant(save, uid, slot, en); writeSave(save); rerender(); openRune(save, uid, rerender); }
             else chooseEnchant(save, uid, slot, cur, en, rerender);
-          } }, `🪨${ENCHANT_COST} ${cur ? "付けなおす" : "付ける"}`));
+          } }, `🪨${ENCHANT_COST} ${cur ? "引きなおす" : "効果を引く"}`));
       })),
     h("div", { class: "item-btns two" },
       h("button", { class: "btn", onclick: () => {
@@ -104,10 +109,10 @@ function openRune(save: SaveData, uid: number, rerender: () => void): void {
       h("button", { class: `btn ${mates ? "btn-pink" : "btn-gray"}`, disabled: !mates, onclick: () => {
         if (mergeRune(save, uid)) { writeSave(save); sfx("levelup"); toast(`${d.name}が ${GRADE_NAMES[r.g]}になった！`); m.close(); rerender(); openRune(save, uid, rerender); }
       } }, mates ? (mates.mats ? `合成（素材 ${mates.mats}）` : "合成") : h("span", null, "合成 ", h("small", null, r.g >= 10 ? "最大" : "あと1つ")))),
-    !isEq && !r.en?.some(Boolean) ? h("button", { class: "btn btn-gray btn-wide", onclick: () => {
+    !isEq && !r.en?.some(Boolean) ? h("button", { class: "btn btn-wide danger", onclick: () => {
       if (dismantleRune(save, uid)) { writeSave(save); sfx("coin"); toast(`${GRADE_NAMES[r.g]}の ルーン素材 +1`); m.close(); rerender(); }
     } }, `分解して ${GRADE_NAMES[r.g]}の ルーン素材に`) : null,
-    h("button", { class: "btn btn-gray btn-wide", onclick: () => m.close() }, "とじる")), "", () => m.close());
+    h("button", { class: "btn btn-ghost btn-wide", onclick: () => m.close() }, "とじる")), "", () => m.close());
 }
 
 /** 付けなおし: 今の付与と 新しい付与の どちらを 残すか */

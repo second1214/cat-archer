@@ -39,6 +39,9 @@ export function startBattle(save: SaveData, chapter: number, onEnd: (r: BattleEn
       h("div", { class: "bt-xprow" }, lvEl, h("div", { class: "bar bt-xp" }, xpFill)),
       descEl,
       bossBar));
+  // はじめての人へ: 操作の 案内（動いたら 消える）
+  const hint = !mode && chapter === 1 && !save.best[1] ? h("div", { class: "bt-hint" }, "👆 指を すべらせて 動く", h("br"), "止まると 自動で 撃つ！") : null;
+  if (hint) root.append(hint);
   document.getElementById("app")!.append(root);
 
   const music = mode ? "tower" : "field";
@@ -96,7 +99,7 @@ export function startBattle(save: SaveData, chapter: number, onEnd: (r: BattleEn
         ? owned.map(([id, n]) => h("span", { class: "chip" }, SKILL_MAP[id as keyof typeof SKILL_MAP].icon, " ", SKILL_MAP[id as keyof typeof SKILL_MAP].name, n! > 1 ? ` ×${n}` : ""))
         : h("span", { class: "muted" }, "まだスキルはありません")),
       h("button", { class: "btn btn-gold", onclick: () => { modal?.close(); modal = null; paused = false; } }, "つづける"),
-      h("button", { class: "btn btn-gray", onclick: () => { modal?.close(); modal = null; world.state = "dead"; world.hero.hp = 0; } }, "あきらめる")));
+      h("button", { class: "btn btn-ghost", onclick: () => { modal?.close(); modal = null; world.state = "dead"; world.hero.hp = 0; } }, "あきらめる")));
   });
 
   const showChoices = () => {
@@ -147,7 +150,7 @@ export function startBattle(save: SaveData, chapter: number, onEnd: (r: BattleEn
         h("div", { class: "lvup-sub" }, `「技を おしえてやる。そのかわり 体力の上限を ${Math.round(world.devilCost * 100)}% もらうぜ」`),
         h("div", { class: "lvup-cards" },
           ev.skills.map((id) => skillCard(id, `（体力の上限 -${Math.round(world.devilCost * 100)}%）`)),
-          h("button", { class: "btn btn-gray", onclick: pick("refuse") }, "ことわる"))), "ov-lvup ov-devil");
+          h("button", { class: "btn btn-ghost", onclick: pick("refuse") }, "ことわる"))), "ov-lvup ov-devil");
   };
 
   /** やられたとき: チュールで 1回だけ 起き上がれる */
@@ -164,7 +167,7 @@ export function startBattle(save: SaveData, chapter: number, onEnd: (r: BattleEn
         save.churu -= REVIVE_COST; writeSave(save);
         sfx("levelup"); modal?.close(); modal = null; endTimer = 0; askedRevive = false;
       } }, `🍥${REVIVE_COST} で 続ける`),
-      h("button", { class: "btn btn-gray", onclick: () => { modal?.close(); modal = null; showResult(); } }, "あきらめる")));
+      h("button", { class: "btn btn-ghost", onclick: () => { modal?.close(); modal = null; showResult(); } }, "あきらめる")));
   };
 
   const showResult = () => {
@@ -194,7 +197,8 @@ export function startBattle(save: SaveData, chapter: number, onEnd: (r: BattleEn
   let raf = 0, last = performance.now(), acc = 0;
   const hudUpdate = () => {
     const hero = world.hero;
-    stageEl.textContent = `${mode ? mode.title : `第${chapter}章${hard ? "★ハード" : ""} ${CHAPTER_NAMES[chapter - 1]}`}　${mode?.tower ? `${world.stage}階（${world.stage - mode.tower + 1} / ${lastSt}）` : `${world.stage} / ${lastSt}`}`;
+    if (hint && hint.isConnected && (hero.dist > 3 || world.time > 12)) hint.remove();
+    stageEl.textContent = `${mode ? mode.title : `第${chapter}章${hard ? "★ハード" : ""} ${CHAPTER_NAMES[chapter - 1]}`}　${mode?.tower ? `${world.stage}階（${world.stage - mode.tower + 1} / ${lastSt}）` : `ステージ ${world.stage} / ${lastSt}`}`;
     hpFill.style.width = `${(hero.hp / hero.maxHp) * 100}%`;
     hpText.textContent = `${Math.ceil(hero.hp)} / ${hero.maxHp}`;
     xpFill.style.width = `${Math.min(1, hero.xp / world.xpNeed()) * 100}%`;

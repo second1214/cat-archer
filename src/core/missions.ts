@@ -8,7 +8,7 @@ export const MISSIONS: readonly MissionDef[] = [
   { id: "stages", name: "ステージを 10 クリア", goal: 10, churu: 10 },
   { id: "kills", name: "虫を 150匹 追いはらう", goal: 150, churu: 10 },
   { id: "grow", name: "装備・ルーンを 3回 強化・合成", goal: 3, churu: 10 },
-  { id: "daily", name: "毎日の挑戦を 2回（掃討も）", goal: 2, churu: 10 },
+  { id: "daily", name: "毎日の挑戦を 2回（スキップも）", goal: 2, churu: 10 },
 ];
 export const MISSION_BONUS = { churu: 20, stones: 5, bells: 2 };
 

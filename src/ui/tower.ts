@@ -41,7 +41,7 @@ export function openTower(save: SaveData, rerender: () => void, shell: HTMLEleme
         toast(r.won ? `キャットタワー ${b}階まで のぼった！ ${text(got)}${got.runes.length ? `・${got.runes.map((x) => RUNE_MAP[x.id].name).join("・")}` : ""}` : `${r.stage}階で やられた… この${TOWER_FLOORS}階は 数えない`);
       }, { stages: TOWER_FLOORS, title: "キャットタワー", tower: a });
     } }, "のぼる"),
-    h("button", { class: "btn btn-gray btn-wide", onclick: () => m.close() }, "とじる")), "", () => m.close());
+    h("button", { class: "btn btn-ghost btn-wide", onclick: () => m.close() }, "とじる")), "", () => m.close());
 }
 
 /** 改修前に のぼった階の 新しい ごほうび */
