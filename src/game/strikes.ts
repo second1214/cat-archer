@@ -18,6 +18,10 @@ const BEAM_HITS = 4;
 const RICOCHET_MAX = 3;
 const POTION_CATS = 5;
 const HOMING_TURN = 4.5;
+/** ためておける 数（本家は 主人公の まわりに 表示。上限は 資料に ないので 決めた） */
+export const MAX_STOCK = 30;
+/** ためた 助っ人ねこを 1匹ずつ 出す 間 */
+const RELEASE_GAP = 0.06;
 /** ボス猫が 現れてから 走りだすまで */
 export const DRAGON_WINDUP = 0.3;
 
@@ -53,6 +57,9 @@ export interface StrikeHost {
 
 export type StrikeKind = "normal" | "dragon" | "mini";
 
+/** ためている 助っ人ねこ（主人公の まわりに 浮かぶ） */
+export interface Stocked { dragon: boolean; beam: boolean }
+
 export interface Strike {
   x: number; y: number; vx: number; vy: number;
   kind: StrikeKind;
@@ -77,6 +84,10 @@ export class Strikes {
   list: Strike[] = [];
   pickups: Pickup[] = [];
   private tInstant = 0;
+  /** 呼ばれたが まだ 飛びだしていない（敵が 近くに いない あいだ たまる） */
+  stock: Stocked[] = [];
+  private relT = 0;
+  private clock = 0;
   private tBeam = 0;
   private tTime = 0;
   private tPotion = 6;
@@ -101,25 +112,37 @@ export class Strikes {
 
   // ---------- 呼ぶ ----------
 
-  /** n匹 呼ぶ（近くに敵が いなければ 来ない）。来たら true */
+  /** n匹 呼ぶ: まず 主人公の まわりに たまり、近くに 敵が いれば 順番に 飛びだす（本家と同じ） */
   summon(count: number, beamCat = false): boolean {
-    const h = this.w.hero;
-    const tg = this.w.nearest(h.x, h.y, undefined, STRIKE_RANGE);
-    if (!tg) return false;
-    for (let i = 0; i < count; i++) {
-      const dragon = this.w.rng() < this.w.rune.dragonChance;
-      const beam = beamCat || this.beamMode;
-      // ふつうは 攻撃だけが 猫の位置から飛ぶ。ボス猫は 猫のまわりに現れて、少し構えてから 走っていく
-      let x = h.x, y = h.y - 0.4;
-      if (dragon) {
-        const a = this.w.rng() * Math.PI * 2;
-        x = Math.max(0.3, Math.min(8.7, h.x + Math.cos(a) * 1.1)); y = Math.max(0.3, Math.min(14.7, h.y - 0.4 + Math.sin(a) * 0.7));
-        if (this.w.terrain.blocksShot(x, y + 0.3)) { x = h.x; y = h.y - 0.4; }
-      }
-      this.launch(x, y, tg, dragon ? "dragon" : "normal", this.baseDmg(dragon), beam);
-      if (dragon) this.list[this.list.length - 1].delay = DRAGON_WINDUP;
+    for (let i = 0; i < count && this.stock.length < MAX_STOCK; i++) {
+      this.stock.push({ dragon: this.w.rng() < this.w.rune.dragonChance, beam: beamCat || this.beamMode });
     }
     return true;
+  }
+
+  /** ためている i 番めの 位置（主人公の まわりを ゆっくり まわる） */
+  stockPos(i: number): [number, number] {
+    const h = this.w.hero, n = Math.max(1, this.stock.length);
+    const a = this.clock * 1.6 + (i / n) * Math.PI * 2;
+    const r = 0.85 + (n > 10 ? 0.25 * (i % 2) : 0);
+    return [h.x + Math.cos(a) * r, h.y - 0.45 + Math.sin(a) * r * 0.7];
+  }
+
+  /** 近くに 敵が いれば ためた 助っ人ねこを 1匹ずつ 出す */
+  private release(dt: number): void {
+    if (!this.stock.length) return;
+    this.relT -= dt;
+    if (this.relT > 0) return;
+    const h = this.w.hero;
+    const tg = this.w.nearest(h.x, h.y, undefined, STRIKE_RANGE);
+    if (!tg) return;
+    const [x0, y0] = this.stockPos(0);
+    const st = this.stock.shift()!;
+    let x = Math.max(0.3, Math.min(8.7, x0)), y = Math.max(0.3, Math.min(14.7, y0));
+    if (this.w.terrain.blocksShot(x, y + 0.3)) { x = h.x; y = h.y - 0.4; }
+    this.launch(x, y, tg, st.dragon ? "dragon" : "normal", this.baseDmg(st.dragon), st.beam);
+    if (st.dragon) this.list[this.list.length - 1].delay = DRAGON_WINDUP;
+    this.relT = RELEASE_GAP;
   }
 
   private launch(x: number, y: number, tg: StrikeEnemy, kind: StrikeKind, dmg: number, beam: boolean, homing = false): void {
@@ -146,13 +169,14 @@ export class Strikes {
   // ---------- 1コマ ----------
 
   update(dt: number, fighting: boolean): void {
-    if (fighting) this.timers(dt);
+    this.clock += dt;
+    if (fighting) { this.timers(dt); this.release(dt); }
     this.move(dt);
   }
 
   private timers(dt: number): void {
     const spd = this.w.speedMul;
-    // 時間で呼ぶものは、敵が遠くて来られなかったら 次のコマで また試す
+    // 時間で呼ぶものは 敵が いなくても たまる
     if (this.w.n("s_instant")) {
       this.tInstant -= dt;
       if (this.tInstant <= 0 && this.summon(1 * this.twin)) this.tInstant = 1 / spd;
