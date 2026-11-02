@@ -20,6 +20,23 @@ const place = (w: World, d: number) => {
 };
 
 describe("助っ人ねこ（ストライク）", () => {
+  it("近くに 敵が いないと 主人公の まわりに たまり、敵が 来ると 順番に 飛びだして へる", () => {
+    const w = world({ skills: { s_instant: 1 } });
+    for (const e of w.enemies) { e.x = 0.5; e.y = 0.5; }
+    w.hero.x = 8; w.hero.y = 14;
+    for (let i = 0; i < 60 * 3.5; i++) w.step(1 / 60, { mx: 0.0001, my: 0 });
+    expect(w.strikes.list.length).toBe(0);
+    expect(w.strikes.stock.length).toBeGreaterThanOrEqual(3);
+    const [sx, sy] = w.strikes.stockPos(0);
+    expect(Math.hypot(sx - w.hero.x, sy - w.hero.y)).toBeLessThan(1.5);
+    const n = w.strikes.stock.length;
+    place(w, 3);
+    for (let i = 0; i < 4; i++) w.step(1 / 60, { mx: 0.0001, my: 0 });
+    expect(w.strikes.list.length).toBeGreaterThan(0);
+    expect(w.strikes.stock.length).toBeLessThan(n);
+    for (let i = 0; i < 60; i++) w.step(1 / 60, { mx: 0.0001, my: 0 });
+    expect(w.strikes.stock.length).toBeLessThanOrEqual(1);
+  });
   it("助っ人ねこ: 移動中でも 来る（止まらなくてよい）", () => {
     const w = world({ skills: { s_instant: 1 } });
     place(w, 3);
@@ -61,9 +78,8 @@ describe("助っ人ねこ（ストライク）", () => {
     const w = world({ skills: { s_blitz: 1, s_twin: 1 } });
     w.startStage(1);
     for (const e of w.enemies) { e.def = { ...e.def, ai: "turret", speed: 0 }; e.t = 99; e.hp = e.maxHp = 1e6; }
-    place(w, 3);
-    w.strikes.onStageStart();
-    expect(w.strikes.list.length).toBe(10);
+    // ステージの はじめに 呼ばれた分は たまっている
+    expect(w.strikes.list.length + w.strikes.stock.length).toBe(10);
   });
   it("物は 通れない", () => {
     const w = world({ skills: { s_instant: 1 } });
@@ -83,7 +99,7 @@ describe("助っ人ねこ（ストライク）", () => {
     const t = world({ rune: ["timeSword", G.epic] });
     place(t, 3);
     t.step(1 / 60, { mx: 1, my: 0 });
-    expect(t.strikes.list.length).toBe(1);
+    expect(t.strikes.list.length + t.strikes.stock.length).toBe(1);
     const p = world({ rune: ["potion", G.epic] });
     place(p, 3);
     for (let i = 0; i < 60 * 7 && !p.strikes.pickups.length; i++) p.step(1 / 60, { mx: 0.0001, my: 0 });
@@ -91,12 +107,12 @@ describe("助っ人ねこ（ストライク）", () => {
     const pk = p.strikes.pickups[0];
     p.hero.x = pk.x; p.hero.y = pk.y;
     p.step(1 / 60, { mx: 0.0001, my: 0 });
-    expect(p.strikes.list.length).toBe(5);
+    expect(p.strikes.list.length + p.strikes.stock.length).toBe(5);
   });
   it("レーザー好きのねこ: ほかの助っ人ねこも レーザーを撃つ（ならんだ敵 ぜんぶ）", () => {
     const w = world({ skills: { s_instant: 1, s_beam: 1 } });
     const a = place(w, 3);
-    const b = w.enemies[1]; b.x = w.hero.x; b.y = w.hero.y - 6;
+    const b = w.enemies[1]; b.x = a.x; b.y = a.y - 1.2;
     for (let i = 0; i < 120; i++) w.step(1 / 60, { mx: 1, my: 0 });
     expect(a.hp).toBeLessThan(1e6);
     expect(b.hp).toBeLessThan(1e6);

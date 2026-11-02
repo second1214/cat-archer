@@ -428,6 +428,26 @@ export class Renderer {
         g.beginPath(); g.ellipse(x + ox * s, y + oy * s, s * 0.17, s * 0.08, a, 0, Math.PI * 2); g.fill();
       }
     }
+    // ためている 助っ人ねこ: 主人公の まわりに 浮かぶ（敵が 来ると 飛びだす）
+    w.strikes.stock.forEach((st, i) => {
+      const [px, py] = w.strikes.stockPos(i);
+      const x = this.X(px), y = this.Y(py) + Math.sin(w.time * 4 + i) * s * 0.04;
+      const col = st.dragon ? "255,200,60" : st.beam ? "255,90,90" : "255,150,200";
+      const gr = g.createRadialGradient(x, y, 0, x, y, s * 0.32);
+      gr.addColorStop(0, `rgba(${col},.75)`); gr.addColorStop(1, `rgba(${col},0)`);
+      g.fillStyle = gr; g.beginPath(); g.arc(x, y, s * 0.32, 0, Math.PI * 2); g.fill();
+      const im = st.dragon ? helperImg("taisho") : null;
+      if (im) {
+        const dw = (im.width / CAT_PX) * s * 0.5, dh = (im.height / CAT_PX) * s * 0.5;
+        g.drawImage(im, x - dw / 2, y - dh / 2, dw, dh);
+        return;
+      }
+      // 肉球
+      g.fillStyle = st.beam ? "#ff5a5a" : "#ff8fb8";
+      g.beginPath(); g.arc(x, y + s * 0.02, s * 0.09, 0, Math.PI * 2); g.fill();
+      g.fillStyle = "#fff";
+      for (const [ox, oy] of [[-0.08, -0.08], [0, -0.11], [0.08, -0.08]]) { g.beginPath(); g.arc(x + ox * s, y + oy * s, s * 0.032, 0, Math.PI * 2); g.fill(); }
+    });
     for (const st of w.strikes.list) {
       const x = this.X(st.x), y = this.Y(st.y);
       const sp = Math.hypot(st.vx, st.vy) || 1, ux = st.vx / sp, uy = st.vy / sp;
