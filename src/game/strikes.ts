@@ -18,8 +18,10 @@ const BEAM_HITS = 4;
 const RICOCHET_MAX = 3;
 const POTION_CATS = 5;
 const HOMING_TURN = 4.5;
-/** ためておける 数（本家は 主人公の まわりに 表示。上限は 資料に ないので 決めた） */
-export const MAX_STOCK = 30;
+/** ボス猫（ドラゴンストライク）の 軽い 追いかけ（1秒に 曲がれる 角度） */
+const DRAGON_TURN = 1.6;
+/** 主人公の まわりの 1つの輪に ならぶ 数 */
+const RING = 12;
 /** ためた 助っ人ねこを 1匹ずつ 出す 間 */
 const RELEASE_GAP = 0.06;
 /** ボス猫が 現れてから 走りだすまで */
@@ -30,7 +32,7 @@ export interface StrikeEnemy { id: number; x: number; y: number; hp: number; max
 /** 戦闘（World）から 借りるもの */
 export interface StrikeHost {
   readonly enemies: StrikeEnemy[];
-  readonly hero: { x: number; y: number; r: number };
+  readonly hero: { x: number; y: number; r: number; moving: boolean };
   readonly terrain: Terrain;
   readonly rng: () => number;
   readonly rune: RuneEffects;
@@ -114,23 +116,23 @@ export class Strikes {
 
   /** n匹 呼ぶ: まず 主人公の まわりに たまり、近くに 敵が いれば 順番に 飛びだす（本家と同じ） */
   summon(count: number, beamCat = false): boolean {
-    for (let i = 0; i < count && this.stock.length < MAX_STOCK; i++) {
+    for (let i = 0; i < count; i++) {
       this.stock.push({ dragon: this.w.rng() < this.w.rune.dragonChance, beam: beamCat || this.beamMode });
     }
     return true;
   }
 
-  /** ためている i 番めの 位置（主人公の まわりを ゆっくり まわる） */
+  /** ためている i 番めの 位置（主人公の まわりを ゆっくり まわる。12こ ごとに 外の輪へ） */
   stockPos(i: number): [number, number] {
-    const h = this.w.hero, n = Math.max(1, this.stock.length);
-    const a = this.clock * 1.6 + (i / n) * Math.PI * 2;
-    const r = 0.85 + (n > 10 ? 0.25 * (i % 2) : 0);
+    const h = this.w.hero, ring = Math.floor(i / RING), inRing = Math.min(RING, this.stock.length - ring * RING);
+    const a = this.clock * (1.6 - ring * 0.3) * (ring % 2 ? -1 : 1) + ((i % RING) / Math.max(1, inRing)) * Math.PI * 2;
+    const r = 0.85 + ring * 0.32;
     return [h.x + Math.cos(a) * r, h.y - 0.45 + Math.sin(a) * r * 0.7];
   }
 
-  /** 近くに 敵が いれば ためた 助っ人ねこを 1匹ずつ 出す */
+  /** 止まっていて 近くに 敵が いれば、ためた 助っ人ねこを 1匹ずつ 出す（移動中は 飛ばない） */
   private release(dt: number): void {
-    if (!this.stock.length) return;
+    if (!this.stock.length || this.w.hero.moving) return;
     this.relT -= dt;
     if (this.relT > 0) return;
     const h = this.w.hero;
@@ -246,12 +248,15 @@ export class Strikes {
           continue;
         }
       }
-      if ((s.homing || this.w.homing) && tg) {
+      // ボス猫は ねらいが いなくなったら 近くの敵へ（軽く 追いかける）
+      if (!tg && s.kind === "dragon") { tg = this.w.nearest(s.x, s.y + 0.3, s.hit, STRIKE_RANGE); if (tg) s.target = tg.id; }
+      if ((s.homing || this.w.homing || s.kind === "dragon") && tg) {
+        const turn = s.homing || this.w.homing ? HOMING_TURN : DRAGON_TURN;
         const sp = Math.hypot(s.vx, s.vy), cur = Math.atan2(s.vy, s.vx);
         let d = Math.atan2(tg.y - 0.3 - s.y, tg.x - s.x) - cur;
         while (d > Math.PI) d -= Math.PI * 2;
         while (d < -Math.PI) d += Math.PI * 2;
-        const na = cur + Math.max(-HOMING_TURN * dt, Math.min(HOMING_TURN * dt, d));
+        const na = cur + Math.max(-turn * dt, Math.min(turn * dt, d));
         s.vx = Math.cos(na) * sp; s.vy = Math.sin(na) * sp;
       }
       s.x += s.vx * dt; s.y += s.vy * dt;
